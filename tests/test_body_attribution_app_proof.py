@@ -201,3 +201,35 @@ def test_prove_refuses_bakes_made_by_other_code(tmp_path, monkeypatch):
         "implementation": {"revision": "b" * 40, "clean": False, "sha256": {}}}))
     with pytest.raises(ap.ba.AttributionError, match="other code"):
         ap.prove(plan, tmp_path, bakedir, "http://127.0.0.1:1")
+
+
+def test_a_new_institution_row_is_its_public_properties_not_an_existing_nodes_shape(tmp_path):
+    """The template institution carries search properties a fresh one never has: the expectation is the new node's
+    own public properties (public_props.PUBLIC_PROPS), never the template's."""
+    edges = [(r["id"], r["from"]) for r in ROWS]
+    before = bake(tmp_path / "b.sqlite", edges=edges)
+    con = sqlite3.connect(before)
+    con.execute("UPDATE nodes SET props = ? WHERE id = ?", (json.dumps({"name": "Lakeport Town Council",
+                                                                         "subtype": "government", "search_rank": 100}),
+                                                              COUNCIL))
+    con.commit()
+    con.close()
+    after = bake(tmp_path / "a.sqlite", edges=edges, nodes=(("org-lakeport-ferry-board", "Organization", "Lakeport Ferry Board"),))
+    con = sqlite3.connect(after)
+    con.execute("UPDATE nodes SET props = ? WHERE id = ?", (json.dumps({"name": "Lakeport Town Council",
+                                                                         "subtype": "government", "search_rank": 100}),
+                                                              COUNCIL))
+    con.execute("UPDATE nodes SET props = ? WHERE id = 'org-lakeport-ferry-board'",
+                (json.dumps({"name": "Lakeport Ferry Board", "subtype": "government"}),))
+    con.commit()
+    con.close()
+    created = {"org-lakeport-ferry-board": {"id": "org-lakeport-ferry-board", "name": "Lakeport Ferry Board",
+                                            "display_label": "Lakeport Ferry Board", "subtype": "government",
+                                            "jurisdiction_id": "place-lakeport", "promotion_state": "promoted"}}
+    planned = {"nodes_added": {"org-lakeport-ferry-board": "Lakeport Ferry Board"}, "node_props": created,
+               "at_institution": [], "in_jurisdiction_added": [], "template": COUNCIL}
+    assert "the bake differs from the baseline's only by the planned rows (full rows)" not in \
+        failing(ap.diff_checks(before, after, planned))
+    created["org-lakeport-ferry-board"]["website"] = "https://ferry.example"  # planned, but not baked: a difference
+    assert "the bake differs from the baseline's only by the planned rows (full rows)" in \
+        failing(ap.diff_checks(before, after, planned))

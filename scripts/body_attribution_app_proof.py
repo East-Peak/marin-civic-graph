@@ -87,8 +87,9 @@ def _table(con, sql) -> Counter:
 
 def diff_checks(before: Path, after: Path, planned: dict) -> list[dict]:
     """The candidate bake against the baseline bake: every table row, the search index and both sidecars differ by
-    exactly the planned rows. `planned`: nodes_added {id: name}, at_institution [(meeting, old, new)],
-    in_jurisdiction_added [(org, place)], template (an existing government stub's id: the shape new rows take)."""
+    exactly the planned rows. `planned`: nodes_added {id: name}, node_props {id: the created node's properties; its
+    row holds their public part (public_props)}, at_institution [(meeting, old, new)], in_jurisdiction_added
+    [(org, place)], template (an existing government institution: the type and browse shape new rows take)."""
     out: list[dict] = []
     a, b = _ro(after), _ro(before)
     try:
@@ -107,7 +108,7 @@ def diff_checks(before: Path, after: Path, planned: dict) -> list[dict]:
         juris_props = {p for (p,) in b.execute("SELECT props FROM edges WHERE rel = 'IN_JURISDICTION' AND source = ?",
                                                  (tpl,))}
         fts = {}
-        for oid, name in planned["nodes_added"].items():
+        for oid, name in planned["nodes_added"].items() if "search_fts" in tables else ():
             rowid = a.execute("SELECT rowid FROM nodes WHERE id = ?", (oid,)).fetchone()
             hits = {r for (r,) in a.execute("SELECT rowid FROM search_fts WHERE search_fts MATCH ?",
                                              ('search_label : "' + name.replace('"', " ") + '"',))}
@@ -115,9 +116,12 @@ def diff_checks(before: Path, after: Path, planned: dict) -> list[dict]:
     finally:
         a.close()
         b.close()
-    tpl_props = {k: v for k, v in json.loads(tpl_node[1]).items() if k != "name"}
-    want_nodes = Counter((oid, tpl_node[0], name, json.dumps({"name": name, **tpl_props}, sort_keys=True))
-                         for oid, name in planned["nodes_added"].items())
+    from public_props import COMMON_PUBLIC_PROPS, PUBLIC_PROPS
+
+    public = COMMON_PUBLIC_PROPS | PUBLIC_PROPS["Organization"]
+    want_nodes = Counter((oid, tpl_node[0], name, json.dumps(
+        {k: v for k, v in planned.get("node_props", {}).get(oid, {"name": name}).items() if k in public},
+        sort_keys=True)) for oid, name in planned["nodes_added"].items())
     got_nodes = Counter((i, t, label, json.dumps(json.loads(p), sort_keys=True))
                         for i, t, label, p in (rows["nodes"][1] - rows["nodes"][0]).elements())
     want_browse = Counter((oid, tpl_browse[1], name, name.lower(), *tpl_browse[4:])
@@ -268,7 +272,8 @@ def prove(plan: Path, map_dir: Path, bake: Path, base_url: str) -> dict:
     candidate, baseline = bake / "candidate" / "public-substrate.sqlite", bake / "baseline" / "public-substrate.sqlite"
     checks = sqlite_checks(candidate, rows, names)
     checks += diff_checks(baseline, candidate, {
-        "nodes_added": names, "at_institution": [(r["id"], r["from"], r["to"]) for r in ops["repoint"]],
+        "nodes_added": names, "node_props": {c["id"]: c["properties"] for c in ops["create_nodes"]},
+        "at_institution": [(r["id"], r["from"], r["to"]) for r in ops["repoint"]],
         "in_jurisdiction_added": [(e["start_id"], e["end_id"]) for e in ops["create_edges"]],
         "template": sorted({r["from"] for r in rows})[0]})
     con = _ro(candidate)
