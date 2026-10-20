@@ -183,10 +183,11 @@ def ctx(root: Path, world: FakeWorld, pings: list[str], alarm_pings: list[str]) 
     # Beside the fake repo, never inside it, and never the operator's ~/open-marin-staging.
     env = {**ENV, rw.CF_STAGING_ENV: str(root.parent / f"{root.name}-cf-staging"),
            rw.VOTES_REFRESH_ENV: str(root.parent / f"{root.name}-votes-refresh")}
+    # The agenda-items stage is off here; tests/test_refresh_weekly_agenda.py turns it on and drives it.
     return rw.Context(root=root, runner=world, env=env, python="py",
                       now=lambda: datetime(2026, 9, 28, 5, 0, 0, tzinfo=timezone.utc),
                       free_bytes=lambda path: 50 * 1024**3, meeting_registries=("granicus",),
-                      ping=ping, netfile_fetch=_no_network, sleep=lambda s: None)
+                      ping=ping, netfile_fetch=_no_network, sleep=lambda s: None, agenda_items=False)
 
 
 def _state(root: Path) -> dict:

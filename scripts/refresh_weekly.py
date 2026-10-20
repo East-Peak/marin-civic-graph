@@ -77,9 +77,9 @@ SAVED_PAGE_SCHEDULE = "saved-page"  # never fetched (robots.txt says no); the op
 SAVED_PAGE_DIR = Path("data/raw/manual")  # <YYYY-MM-DD>/<adapter>/<source id>.html; never moved or deleted
 SAVED_PAGE_FRESH_DAYS = 14
 SAVED_PAGE_RUNBOOK = "docs/runbooks/saved-pages.md"
-# The weekly agenda-items stage (scripts/agenda_items.py; docs/runbooks/weekly-agenda-items.md). Off until its
-# activation commit: a rehearsal turns it on through Context.agenda_items.
-AGENDA_ITEMS_ENABLED = False
+# The weekly agenda-items stage (scripts/agenda_items.py; docs/runbooks/weekly-agenda-items.md). On since its
+# activation commit; a rehearsal or test can still turn it off through Context.agenda_items.
+AGENDA_ITEMS_ENABLED = True
 AGENDA_DIR = "agenda-items"  # <run>/agenda-items/: the stage's phases, its report, and the pre/post exports
 MIN_FREE_BYTES = 5 * 1024**3  # live export + staged bake + a backup of the published one
 

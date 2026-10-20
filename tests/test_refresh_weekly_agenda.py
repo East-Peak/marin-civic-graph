@@ -51,8 +51,8 @@ def _load(ctx, enabled=True):
     return _state(ctx.root)
 
 
-def test_the_stage_is_off_until_activation(root, ctx, world):
-    assert rw.Context().agenda_items is False and rw.AGENDA_ITEMS_ENABLED is False
+def test_the_stage_is_on_since_activation_and_a_context_can_still_turn_it_off(root, ctx, world):
+    assert rw.Context().agenda_items is True and rw.AGENDA_ITEMS_ENABLED is True
     state = _load(ctx, enabled=False)
     assert "agenda_items.py" not in world.scripts() and "agenda_items" not in state
 

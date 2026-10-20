@@ -86,7 +86,20 @@ only if every check passes.
 
 ## After a real Monday run: check-loaded
 
-Take the post-export and run check-loaded together **while holding the run lock**, so no writer
+**With the agenda-items stage on** (and it ran in that run: `<run>/agenda-items/pre/complete.json` exists), a
+live export after the run also holds the stage's AgendaItems and their PART_OF_MEETING / EVIDENCED_BY edges, which
+the meeting plan does not, so check-loaded would FAIL on them. Check the meeting load against the stage's own
+pre-stage export instead (a full `--backup` export the run took under its lock, after the loads and before the
+stage), then check the stage itself. No lock or live export is needed:
+
+```
+cd ~/projects/marin-civic-graph && RUN=<run id> \
+  && .venv/bin/python scripts/crosswalk_rehearsal.py check-loaded $RUN --source san-rafael-city-council \
+       --post-export data/ingest-runs/$RUN/agenda-items/pre \
+  && .venv/bin/python scripts/crosswalk_rehearsal.py check-loaded $RUN --agenda-items
+```
+
+Without the stage in that run, take the post-export and run check-loaded together **while holding the run lock**, so no writer
 (a weekly run, votes apply) can land between them:
 
 ```

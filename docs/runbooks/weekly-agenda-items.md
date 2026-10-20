@@ -52,7 +52,7 @@ ledger; and checks that no AgendaItem or Decision that existed before the run ch
 backup vs post export). PASS is required.
 
 ## Activation
-The stage ships disabled (`AGENDA_ITEMS_ENABLED = False` in scripts/refresh_weekly.py). The registry qualifies
+The stage shipped disabled and is now on (`AGENDA_ITEMS_ENABLED = True` in scripts/refresh_weekly.py). The registry qualifies
 Corte Madera, Fairfax, Belvedere and Ross (outline v8 / flat v1; evidence in the staging REPORT), and Larkspur
 (decimal v1; evidence in ~/open-marin-staging/agenda-parsers-sr-larkspur/REPORT.md), which stays ineligible while
 `schedule: manual` and becomes eligible when its flip sets `weekly`, with no other change. San Rafael qualified at
