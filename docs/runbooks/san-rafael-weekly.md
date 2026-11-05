@@ -90,13 +90,22 @@ only if every check passes.
 live export after the run also holds the stage's AgendaItems and their PART_OF_MEETING / EVIDENCED_BY edges, which
 the meeting plan does not, so check-loaded would FAIL on them. Check the meeting load against the stage's own
 pre-stage export instead (a full `--backup` export the run took under its lock, after the loads and before the
-stage), then check the stage itself. No lock or live export is needed:
+stage). No lock or live export is needed, and a later run's load does not matter: that export is the run's own
+(check-loaded binds it by its exact path, the hashes in its `complete.json`, and its files predating every later
+run). Results go to a new staging directory (`--out` is required, and refused inside `data/`):
 
 ```
 cd ~/projects/marin-civic-graph && RUN=<run id> \
   && .venv/bin/python scripts/crosswalk_rehearsal.py check-loaded $RUN --source san-rafael-city-council \
        --post-export data/ingest-runs/$RUN/agenda-items/pre \
-  && .venv/bin/python scripts/crosswalk_rehearsal.py check-loaded $RUN --agenda-items
+       --out ~/open-marin-staging/check-loaded/$RUN/san-rafael-city-council
+```
+
+Then, only if that run's agenda-items stage finished (`state.json` → `agenda_items.status` is `done`), check the
+stage itself:
+
+```
+cd ~/projects/marin-civic-graph && .venv/bin/python scripts/crosswalk_rehearsal.py check-loaded <run id> --agenda-items
 ```
 
 Without the stage in that run, take the post-export and run check-loaded together **while holding the run lock**, so no writer
@@ -115,12 +124,15 @@ post = Path.home() / "open-marin-staging/sr-weekly" / "post-$RUN"
 with run_lock(Path(".").resolve()):  # RunLockHeld = a run is in progress: retry later
     subprocess.run([".venv/bin/python", "scripts/export_live_graph.py", "--backup", "--out-dir", str(post)], check=True)
     sys.exit(subprocess.run([".venv/bin/python", "scripts/crosswalk_rehearsal.py", "check-loaded", "$RUN",
-                             "--source", "san-rafael-city-council", "--post-export", str(post)]).returncode)
+                             "--source", "san-rafael-city-council", "--post-export", str(post),
+                             "--out", str(post.parent / "check-loaded-$RUN")]).returncode)
 EOF
 ```
 
-check-loaded binds itself to that run's pinned backup, capture, crosswalk and load report(s). It
-refuses if any later run attempted a load. It re-plans the load on the backup and compares:
+check-loaded binds itself to that run's pinned backup, capture, crosswalk and load report(s). With an
+ordinary post-export (this second form) it refuses if any later run attempted a load; with the run's own
+`agenda-items/pre` (the first form) only if that export was written after a later run started. It writes only
+under `--out`, into a new `expected-graph-<run>` (an existing one is refused, never removed). It re-plans the load on the backup and compares:
 
 - new San Rafael nodes and every relationship touching San Rafael's nodes against the plan, exactly;
 - every pre-existing San Rafael Meeting/Record (labels, every property), unchanged;

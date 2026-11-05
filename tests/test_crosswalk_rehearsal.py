@@ -8,6 +8,7 @@ its seed and its writes, then tampered with.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sys
@@ -264,3 +265,147 @@ def test_check_loaded_refuses_a_post_export_older_than_the_load(ran, tmp_path):
         os.utime(ran["post"] / f, (0, 0))
     with pytest.raises(cr.CheckRefused, match="predates"):
         _check(ran, tmp_path)
+
+
+# --- check-loaded writes only where it is told ----------------------------------------------------------------
+
+
+def _main_check(ran, post, out):
+    return cr.main(["check-loaded", ran["run_id"], "--source", SID, "--post-export", str(post),
+                    "--root", str(ran["root"]), *(["--out", str(out)] if out is not None else [])])
+
+
+def test_relative_out_and_post_export_resolve_from_the_callers_directory(ran, tmp_path, monkeypatch):
+    _post(ran)
+    monkeypatch.chdir(tmp_path)
+    assert _main_check(ran, os.path.relpath(ran["post"], tmp_path), "staging/out") == 0
+    results = json.loads((tmp_path / "staging/out/check-loaded.json").read_text())
+    assert results["verdict"] == "PASS" and (tmp_path / "staging/out" / f"expected-graph-{ran['run_id']}").is_dir()
+
+
+def test_out_is_required(ran, tmp_path):
+    _post(ran)
+    with pytest.raises(SystemExit) as exc:
+        _main_check(ran, ran["post"], None)
+    assert exc.value.code == 2
+    assert not (ran["post"] / "check-loaded").exists()
+
+
+def test_out_inside_the_repos_data_is_refused(ran, tmp_path):
+    _post(ran)
+    inside = ran["root"] / "data/ingest-runs" / ran["run_id"] / "check"
+    with pytest.raises(cr.CheckRefused, match="data/"):
+        cr.check_loaded(ran["root"], ran["run_id"], SID, ran["post"], inside)
+    assert not inside.exists()
+
+
+def test_an_existing_expected_graph_is_refused_and_left_alone(ran, tmp_path):
+    _post(ran)
+    graph = tmp_path / "out" / f"expected-graph-{ran['run_id']}"
+    graph.mkdir(parents=True)
+    (graph / "keep.txt").write_text("someone else's")
+    with pytest.raises(cr.CheckRefused, match="already exists"):
+        _check(ran, tmp_path)
+    assert (graph / "keep.txt").read_text() == "someone else's"
+
+
+LATER = "2026-01-12T120000Z"  # a later run that loaded; the fixture's run is 2026-01-05T120000Z
+
+
+def _later_loaded(ran, run_id=LATER):
+    later = ran["root"] / "data/ingest-runs" / run_id
+    later.mkdir(parents=True)
+    (later / "state.json").write_text(json.dumps({"run_id": run_id, "history": [{"status": "loaded"}]}))
+
+
+def _pinned_pre(ran, run_id=None, taken="2026-01-05T13:00:00+00:00", marker=True):
+    pre = ran["root"] / "data/ingest-runs" / (run_id or ran["run_id"]) / "agenda-items/pre"
+    pre.mkdir(parents=True, exist_ok=True)  # the rehearsal's run may have taken one (fixture tmp only)
+    for f in ("complete.json", "nodes.jsonl", "edges.jsonl"):  # its stand-in exports are symlinks to the seed
+        (pre / f).unlink(missing_ok=True)
+    (pre / "nodes.jsonl").write_text("".join(json.dumps(n) + "\n" for n in ran["nodes"]))
+    (pre / "edges.jsonl").write_text("".join(json.dumps(e) + "\n" for e in ran["edges"]))
+    if marker:
+        (pre / "complete.json").write_text(json.dumps({f: hashlib.sha256((pre / f).read_bytes()).hexdigest()
+                                                       for f in ("edges.jsonl", "nodes.jsonl")}))
+    when = datetime.fromisoformat(taken).timestamp()
+    for f in ("nodes.jsonl", "edges.jsonl"):
+        os.utime(pre / f, (when, when))
+    return pre
+
+
+def test_the_runs_own_pinned_pre_export_is_checked_after_a_later_load(ran, tmp_path):
+    pre = _pinned_pre(ran)
+    _later_loaded(ran)
+    assert cr.check_loaded(ran["root"], ran["run_id"], SID, pre, tmp_path / "out")["verdict"] == "PASS"
+
+
+def test_another_runs_pinned_pre_export_is_not_this_runs(ran, tmp_path):
+    other = _pinned_pre(ran, run_id="2026-01-04T120000Z")
+    _later_loaded(ran)
+    with pytest.raises(cr.CheckRefused, match="after"):
+        cr.check_loaded(ran["root"], ran["run_id"], SID, other, tmp_path / "out")
+
+
+@pytest.mark.parametrize("problem", ["no-marker", "changed-bytes", "bad-marker"])
+def test_a_pinned_pre_export_that_does_not_match_its_marker_is_not_bound(ran, tmp_path, problem):
+    pre = _pinned_pre(ran, marker=problem != "no-marker")
+    if problem == "changed-bytes":
+        with open(pre / "nodes.jsonl", "a") as fh:
+            fh.write(json.dumps({"id": "x", "labels": ["Record"], "properties": {}}) + "\n")
+        when = datetime.fromisoformat("2026-01-05T13:00:00+00:00").timestamp()
+        os.utime(pre / "nodes.jsonl", (when, when))
+    if problem == "bad-marker":
+        (pre / "complete.json").write_text("not json")
+    _later_loaded(ran)
+    with pytest.raises(cr.CheckRefused, match="after"):
+        cr.check_loaded(ran["root"], ran["run_id"], SID, pre, tmp_path / "out")
+
+
+def test_a_pre_export_taken_after_the_later_run_started_is_not_bound(ran, tmp_path):
+    # A interrupted before its pre-export, B staged and loaded, A resumed: A's "pre" shows B's graph.
+    pre = _pinned_pre(ran, taken="2026-01-12T13:00:00+00:00")
+    _later_loaded(ran)
+    with pytest.raises(cr.CheckRefused, match="after"):
+        cr.check_loaded(ran["root"], ran["run_id"], SID, pre, tmp_path / "out")
+
+
+@pytest.mark.parametrize("via", ["through-the-data-symlink", "at-the-symlinks-target", "beside-it-in-that-repo"])
+def test_out_in_a_data_layer_reached_through_a_symlink_is_refused(ran, tmp_path, via):
+    _post(ran)
+    private = tmp_path / "private-data-repo" / "layer"
+    private.mkdir(parents=True)
+    (ran["root"] / "data" / "layer").symlink_to(private, target_is_directory=True)  # as data/normalized is
+    out = {"through-the-data-symlink": ran["root"] / "data/layer/check", "at-the-symlinks-target": private / "check",
+           "beside-it-in-that-repo": private.parent / "review-output"}[via]  # the private repo, not just its layers
+    with pytest.raises(cr.CheckRefused, match="data"):
+        cr.check_loaded(ran["root"], ran["run_id"], SID, ran["post"], out)
+    assert sorted(p.name for p in private.parent.iterdir()) == ["layer"] and list(private.iterdir()) == []
+
+
+@pytest.mark.parametrize("name", ["check-loaded.json", "check-loaded.md"])
+def test_an_existing_report_in_out_is_refused_before_anything_is_written(ran, tmp_path, name):
+    _post(ran)
+    victim = tmp_path / "victim.txt"
+    victim.write_text("keep")
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / name).symlink_to(victim)
+    assert _main_check(ran, ran["post"], out) == 2
+    assert victim.read_text() == "keep" and not (out / f"expected-graph-{ran['run_id']}").exists()
+
+
+@pytest.mark.parametrize("redirect", ["pre-dir", "export-file"])
+def test_a_redirected_pinned_pre_export_is_not_bound(ran, tmp_path, redirect):
+    pre = _pinned_pre(ran)
+    elsewhere = tmp_path / "elsewhere"
+    if redirect == "pre-dir":  # the run's pre is a link to some other (internally consistent) export
+        pre.rename(elsewhere)
+        pre.symlink_to(elsewhere, target_is_directory=True)
+    else:
+        elsewhere.mkdir()
+        (pre / "nodes.jsonl").rename(elsewhere / "nodes.jsonl")
+        (pre / "nodes.jsonl").symlink_to(elsewhere / "nodes.jsonl")
+    _later_loaded(ran)
+    with pytest.raises(cr.CheckRefused, match="after"):
+        cr.check_loaded(ran["root"], ran["run_id"], SID, pre, tmp_path / "out")

@@ -3,7 +3,7 @@
 
     crosswalk_rehearsal.py rehearse --source <id> --export <dir> --work <staging dir> [--identity-cache <json>]
                                     [--responses <dir>] [--expected <json>]
-    crosswalk_rehearsal.py check-loaded <run-id> --source <id> --post-export <dir> [--root <repo>] [--out <dir>]
+    crosswalk_rehearsal.py check-loaded <run-id> --source <id> --post-export <dir> --out <staging dir> [--root <repo>]
 
 `rehearse` (staging only; no graph writes) runs the real weekly chain: refresh_weekly.stage ->
 ingest.py -> the adapter -> the robots gate, then refresh_weekly.load, whose meeting step is the real
@@ -19,7 +19,8 @@ reviewed listing inventory), and the source's own registry file is the one stage
 
 `check-loaded` (read only) repeats the checks after a real Monday run: from that run's pinned backup,
 capture, crosswalk and load report, plus a full-property export taken after it
-(`export_live_graph.py --backup --out-dir <dir>`).
+(`export_live_graph.py --backup --out-dir <dir>`, or the run's own pinned `agenda-items/pre`). It writes only
+under `--out` (outside the repo's data/), into a new expected-graph dir; it never removes anything.
 
 `ingest-shim` is the rehearsal's own: the runner wraps ingest.py in it to record or replay responses
 and freeze the clock. Nothing in the production path knows it exists. A replay serves each URL's final
@@ -33,6 +34,7 @@ import base64
 import hashlib
 import io
 import json
+import os
 import shutil
 import sys
 from collections import Counter
@@ -577,18 +579,60 @@ def _owned(nodes: dict[str, dict], edges: list[dict], source_id: str, institutio
     return owned, Counter(_edge_key(e) for e in edges if e["start_id"] in owned or e["end_id"] in owned)
 
 
+REPORT_FILES = ("check-loaded.json", "check-loaded.md")
+
+
+def _refuse_protected_out(root: Path, out: Path) -> None:
+    """--out may not be inside the repo's data/, as written or as resolved, nor inside the repo a data/ symlink
+    leads into (data/normalized and data/extracted are layers of the private data repo: all of it is protected)."""
+    data = Path(os.path.abspath(root)) / "data"
+    links = [p.resolve() for p in (data.iterdir() if data.is_dir() else ()) if p.is_symlink()]
+    protected = [data.resolve(), *(link.parent for link in links)]
+    if Path(os.path.abspath(out)).is_relative_to(data) or any(out.resolve().is_relative_to(p) for p in protected):
+        raise CheckRefused(f"--out {out} is inside {data}/ (or where it links); results go to a staging directory")
+
+
+def _run_started(run_id: str) -> datetime:
+    return datetime.strptime(run_id, "%Y-%m-%dT%H%M%SZ").replace(tzinfo=timezone.utc)
+
+
+def _pinned_pre_taken(root: Path, run_id: str, post_export: Path) -> datetime | None:
+    """When `post_export` is exactly this run's own agenda-items/pre, matching the marker the run wrote after
+    that export finished: when its files were last written. Else None (an ordinary post-export)."""
+    import refresh_weekly as rw
+
+    pre = rw.run_dir(root, run_id) / rw.AGENDA_DIR / "pre"  # `root` is resolved: no link may sit below it
+    if post_export != pre or pre.resolve() != pre:
+        return None
+    try:
+        marker = json.loads((pre / "complete.json").read_text(encoding="utf-8"))
+        files = [pre / f for f in rw.STAGED_FILES]
+        if not isinstance(marker, dict) or any(p.is_symlink() or rw._sha256(p) != marker.get(p.name) for p in files):
+            return None
+    except (OSError, ValueError):
+        return None
+    return max(datetime.fromtimestamp(p.stat().st_mtime, timezone.utc) for p in files)
+
+
 def check_loaded(root: Path, run_id: str, source_id: str, post_export: Path, out: Path) -> dict:
     import refresh_weekly as rw
     import yaml
 
-    root, post_export = Path(root).resolve(), Path(post_export).resolve()
+    _refuse_protected_out(Path(root), Path(out))
+    root, post_export, out = Path(root).resolve(), Path(post_export).resolve(), Path(out).resolve()
+    for name in REPORT_FILES:  # refused now, before the expected graph is made: never written through
+        if (out / name).exists() or (out / name).is_symlink():
+            raise CheckRefused(f"{out / name} already exists; choose a new --out")
     state = rw.read_state(root, run_id)
     if "loaded" not in {h["status"] for h in state["history"]}:
         raise CheckRefused(f"run {run_id} never reached `loaded`")
+    pinned_pre = _pinned_pre_taken(root, run_id, post_export)
     for path in sorted((root / rw.RUNS_DIR).glob("*/state.json")):
         later = json.loads(path.read_text())
         if path.parent.name > run_id and ("backup" in later or
                                           {h["status"] for h in later["history"]} & {"loaded", "load_failed"}):
+            if pinned_pre is not None and pinned_pre < _run_started(path.parent.name):
+                continue  # the run's own export, taken before that run could load anything
             raise CheckRefused(f"run {path.parent.name} attempted a load after {run_id}; the graph is not that run's")
     source = state["sources"].get(source_id) or {}
     if not ({"crosswalk_sha256", "identity"} & set(source)) or not source.get("load_report"):
@@ -620,11 +664,10 @@ def check_loaded(root: Path, run_id: str, source_id: str, post_export: Path, out
     attempts = [json.loads(p.read_text()) for p in reports]
     final = json.loads((rw.run_dir(root, run_id) / "load-reports" / source["load_report"]["path"]).read_text())
 
-    out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     graph_dir = out / f"expected-graph-{run_id}"
-    if graph_dir.exists():
-        shutil.rmtree(graph_dir)
+    if graph_dir.exists() or graph_dir.is_symlink():  # never removed: it is not this invocation's
+        raise CheckRefused(f"{graph_dir} already exists; choose a new --out")
     graph = guarded_load.FakeGraphPort.create(graph_dir, seed=backup)
     with guarded_load.open_port(f"fakegraph://{graph}") as port:
         expected = guarded_load.load_capture(port, capture, config, root=root)
@@ -723,7 +766,7 @@ def main(argv: list[str] | None = None) -> int:
     ck.add_argument("--post-export", type=Path,
                     help="export_live_graph.py --backup --out-dir <dir>, taken after the run")
     ck.add_argument("--root", type=Path, default=REPO)
-    ck.add_argument("--out", type=Path, help="where results go (default: <post-export>/check-loaded)")
+    ck.add_argument("--out", type=Path, help="a staging directory for the results (required with --source)")
     sh = sub.add_parser("ingest-shim", help=argparse.SUPPRESS)
     sh.add_argument("--responses", type=Path, required=True)
     sh.add_argument("--mode", choices=("record", "replay", "fill"), required=True)
@@ -749,17 +792,19 @@ def main(argv: list[str] | None = None) -> int:
         import agenda_rehearsal
 
         return agenda_rehearsal.main(["check-loaded", args.run_id, "--root", str(args.root)])
-    if not args.source or not args.post_export:
-        parser.error("check-loaded needs --source and --post-export (or --agenda-items)")
-    out = args.out or args.post_export / "check-loaded"
+    if not args.source or not args.post_export or not args.out:
+        parser.error("check-loaded needs --source, --post-export and --out (or --agenda-items)")
+    out = args.out.resolve()
     try:
-        results = check_loaded(args.root, args.run_id, args.source, args.post_export, out)
+        results = check_loaded(args.root, args.run_id, args.source, args.post_export, args.out)
     except CheckRefused as exc:
         print(f"Refused: {exc}", file=sys.stderr)
         return 2
     text = render_check(results)
-    (out / "check-loaded.json").write_text(json.dumps(results, indent=1, default=dict) + "\n")
-    (out / "check-loaded.md").write_text(text)
+    with open(out / REPORT_FILES[0], "x") as fh:  # exclusive: never through a file or link left there since
+        fh.write(json.dumps(results, indent=1, default=dict) + "\n")
+    with open(out / REPORT_FILES[1], "x") as fh:
+        fh.write(text)
     print(text)
     return 0 if results["verdict"] == "PASS" else 1  # HELD: nothing of the source loaded; not a pass
 

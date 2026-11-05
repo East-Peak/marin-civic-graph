@@ -90,8 +90,18 @@ listing inventory (a staging tool independent of the adapter), never from the ad
 ## After a real Monday run: check-loaded
 
 Use the San Rafael snippet ([san-rafael-weekly.md](san-rafael-weekly.md), "After a real Monday run")
-with `--source larkspur-city-council` and the post-export under `~/open-marin-staging/larkspur-council/`;
-when the agenda-items stage ran, use the run's `agenda-items/pre` export as that snippet's first form says.
+with `--source larkspur-city-council`, `--out ~/open-marin-staging/check-loaded/$RUN/larkspur-city-council`
+(required), and, without the stage, the post-export under `~/open-marin-staging/larkspur-council/`. When the
+agenda-items stage ran, use the run's `agenda-items/pre` export as that snippet's first form says:
+
+```
+cd ~/projects/marin-civic-graph && RUN=<run id> \
+  && .venv/bin/python scripts/crosswalk_rehearsal.py check-loaded $RUN --source larkspur-city-council \
+       --post-export data/ingest-runs/$RUN/agenda-items/pre \
+       --out ~/open-marin-staging/check-loaded/$RUN/larkspur-city-council
+```
+
+Then `check-loaded <run id> --agenda-items`, only if that run's agenda-items stage is `done`.
 For a native-only source, check-loaded does two things the crosswalk version does not:
 
 - it refuses if the registry's load policy changed since the run;

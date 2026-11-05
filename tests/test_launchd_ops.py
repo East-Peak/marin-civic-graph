@@ -71,6 +71,7 @@ def test_the_env_file_is_gitignored_and_only_its_example_is_committed():
 FAKE_PYTHON = """#!/bin/bash
 echo "cwd=$(pwd) args=$*"
 echo "neo4j=${NEO4J_URI:-unset} heartbeat=${OPEN_MARIN_HEARTBEAT_URL:+set}"
+echo "path=$PATH"
 exit "${FAKE_EXIT:-0}"
 """
 
@@ -104,6 +105,20 @@ def test_the_wrapper_sources_the_env_file_and_runs_the_weekly_pipeline_from_the_
     assert f"cwd={REPO} args=scripts/refresh_weekly.py weekly" in log
     assert "neo4j=bolt://localhost:7688 heartbeat=set" in log
     assert SECRET not in log
+
+
+def test_the_wrapper_sets_the_tracked_path_so_homebrew_tools_resolve_under_launchd(wrapper_env):
+    code, log = _wrap(wrapper_env)  # launchd's PATH: /usr/bin:/bin:/usr/sbin:/sbin, no Homebrew
+
+    assert code == 0 and "path=/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin\n" in log
+
+
+def test_an_operator_path_in_the_env_file_still_wins(wrapper_env):
+    Path(wrapper_env["OPEN_MARIN_ENV_FILE"]).write_text("PATH=/opt/local/bin:/usr/bin:/bin\n")
+
+    code, log = _wrap(wrapper_env)
+
+    assert code == 0 and "path=/opt/local/bin:/usr/bin:/bin\n" in log
 
 
 def test_the_wrapper_passes_the_runs_exit_code_through(wrapper_env):

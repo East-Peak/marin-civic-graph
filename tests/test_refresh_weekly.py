@@ -187,7 +187,8 @@ def ctx(root: Path, world: FakeWorld, pings: list[str], alarm_pings: list[str]) 
     return rw.Context(root=root, runner=world, env=env, python="py",
                       now=lambda: datetime(2026, 9, 28, 5, 0, 0, tzinfo=timezone.utc),
                       free_bytes=lambda path: 50 * 1024**3, meeting_registries=("granicus",),
-                      ping=ping, netfile_fetch=_no_network, sleep=lambda s: None, agenda_items=False)
+                      ping=ping, netfile_fetch=_no_network, sleep=lambda s: None, agenda_items=False,
+                      which=lambda tool, path=None: f"/stub/bin/{tool}")  # every tool present (see _tools tests)
 
 
 def _state(root: Path) -> dict:

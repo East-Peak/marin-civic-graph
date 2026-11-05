@@ -100,6 +100,21 @@ STEP_TIMEOUTS = {
     "agenda": 90 * 60,  # agenda-pre / agenda-items / agenda-post / agenda-delta
 }
 DEFAULT_STEP_TIMEOUT = 60 * 60
+
+# Every external program the run's steps invoke by bare name (resolved on the run's PATH, which the LaunchAgent's
+# wrapper sets from the tracked ops/launchd/path.sh), with the steps that need it: a step name, or a family prefix
+# ending in "-" (`snapshot-` covers `snapshot-push`). Such a step is refused with the tool's name when the tool is
+# missing, before any subprocess. python is ctx.python, an absolute path. Kept by hand from the programs the run executes
+# (agenda_parsers/votes_text call pdftotext; normalize_campaign_finance/cf_migration_plan call git;
+# refresh_reconciliation.sh is bash and its utilities).
+RECONCILIATION_TOOLS = ("bash", "date", "mkdir", "cp", "shasum", "dirname", "mktemp")
+TOOLS: dict[str, tuple[str, ...]] = {
+    "pdftotext": ("agenda-items", "votes-minutes"),  # votes-minutes: the digest's list (_votes_minutes)
+    "git": ("snapshot-", "cf-normalize-", "cf-plan-"),
+    **{tool: ("reconciliation",) for tool in RECONCILIATION_TOOLS},
+}
+# What ops/launchd/run-weekly.sh runs itself, before Python starts: reported, never refusable.
+WRAPPER_TOOLS = ("bash", "dirname", "mkdir", "wc", "mv", "ls", "cut", "date")
 TIMEOUT_ENV = "OPEN_MARIN_TIMEOUT_"
 
 # The external dead-man's switch (Healthchecks.io check "Open Marin weekly refresh"). Its URL
@@ -247,6 +262,7 @@ class Context:
     monotonic: Callable[[], float] = lambda: time.monotonic()
     prepare_campaign_exports: bool = True  # tests of the alarm alone switch preparation off (it has its own)
     agenda_items: bool = AGENDA_ITEMS_ENABLED
+    which: Callable[..., str | None] = shutil.which  # (tool, path=) -> its path on that PATH, or None
 
 
 # --- files and state ---------------------------------------------------------
@@ -385,12 +401,41 @@ def _require(state: dict, action: str, *statuses: str) -> None:
         raise Refused(f"run {state['run_id']} is {state['status']}; {action} needs {' or '.join(statuses)}")
 
 
+def resolve_tools(env: Mapping[str, str], which: Callable[..., str | None] = shutil.which,
+                  cwd: Path | None = None) -> dict[str, str | None]:
+    """Each inventoried tool's path on `env`'s PATH (the run's own environment, not this process's), or None.
+    A relative (or empty) PATH entry is taken from `cwd`, where the program that looks it up runs."""
+    base = Path(cwd) if cwd is not None else Path.cwd()
+    path = os.pathsep.join(str(base / entry) for entry in env.get("PATH", os.defpath).split(os.pathsep))
+    return {tool: which(tool, path=path) for tool in sorted({*TOOLS, *WRAPPER_TOOLS})}
+
+
+def blocking_tools(name: str, found: Mapping[str, str | None]) -> list[str]:
+    """The missing tools step `name` needs (of those `found` resolved): by exact name or family prefix."""
+    return sorted(tool for tool, consumers in TOOLS.items() if tool in found and found[tool] is None
+                  and any(name.startswith(c) if c.endswith("-") else name == c for c in consumers))
+
+
+def _missing_tool(tools: list[str], name: str) -> str:
+    return f"preflight: {', '.join(tools)} not found on the run's PATH (needed by {name}); see ops/launchd/path.sh"
+
+
+def _record_tools(ctx: Context, state: dict) -> None:
+    found = resolve_tools(ctx.env, ctx.which, ctx.root)
+    state["tools"] = {"resolved": found, "missing": {t: list(TOOLS.get(t, ("run-weekly.sh",)))
+                                                     for t, p in found.items() if p is None}}
+
+
 def _step(ctx: Context, run_id: str, name: str, cmd: list[str]) -> Result:
     """Run one external command through the injected runner and keep its log."""
     # Children that take the run lock themselves (ingest.py) run under ours.
     env = {var: value for var, value in ctx.env.items() if var not in MONITOR_ENVS}
-    raw = ctx.runner(cmd, ctx.root, {**env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())},
-                     step_timeout(ctx.env, name))
+    missing = blocking_tools(name, resolve_tools(ctx.env, ctx.which, ctx.root))  # the step runs in ctx.root
+    if missing:  # refused by name: never a FileNotFoundError traceback from deep inside the child
+        raw = Result(127, _missing_tool(missing, name))
+    else:
+        raw = ctx.runner(cmd, ctx.root, {**env, "PYTHON": ctx.python, OWNER_ENV: str(os.getpid())},
+                         step_timeout(ctx.env, name))
     result = Result(raw.returncode, scrub(raw.output, ctx.env), raw.timed_out_after)
     end = (f"[timed out after {result.timed_out_after:g}s; killed]" if result.timed_out_after is not None
            else f"[exit {result.returncode}]")
@@ -627,6 +672,7 @@ def _stage(ctx: Context, state: dict) -> dict:
     run_id = state["run_id"]
     reasons = preflight(ctx, credentials=False)
     state["preflight"] = {"ok": not reasons, "reasons": reasons}
+    _record_tools(ctx, state)  # a missing tool fails only the steps that need it (_step), by name
     if reasons:
         return _fail(ctx, state, "preflight failed; nothing was fetched")
 
@@ -925,6 +971,7 @@ def _agenda_interrupted(state: dict) -> bool:
 
 def load(ctx: Context, run_id: str) -> dict:
     state = read_state(ctx.root, run_id)
+    _record_tools(ctx, state)  # this invocation's environment (a manual retry may have fixed a missing tool)
     if _agenda_interrupted(state):  # the meetings are loaded; finish the agenda stage, then export + bake
         _persist(ctx, _agenda_stage(ctx, state, run_id))
         return _export_and_bake(ctx, state, run_id, reconcile=True)
@@ -1164,6 +1211,10 @@ def _export_and_bake_steps(ctx: Context, state: dict, run_id: str, *, reconcile:
 
 def _votes_minutes(ctx: Context) -> dict:
     """Read-only: the votes refresh's pending minutes as of this run's export (votes_refresh.digest_snapshot)."""
+    # Not "unreadable" saved PDFs. votes_text runs pdftotext from this process, so this process's PATH counts.
+    if blocking_tools("votes-minutes", resolve_tools(os.environ, ctx.which)):
+        return {"today": ctx.now().date().isoformat(),
+                "error": "pdftotext not found on the run's PATH; saved PDF minutes cannot be checked"}
     refresh = Path(ctx.env.get(VOTES_REFRESH_ENV) or votes_refresh.REFRESH_ROOT)
     return votes_refresh.digest_snapshot(ctx.root, ctx.root / EXPORTS / "live-graph-export", refresh,
                                          today=ctx.now().date().isoformat())
@@ -1173,6 +1224,7 @@ def rebake(ctx: Context, run_id: str) -> dict:
     """Redo export + bake for a run that failed after its approved data was loaded."""
     state = read_state(ctx.root, run_id)
     _require(state, "rebake", "failed")
+    _record_tools(ctx, state)
     if "loaded" not in {h["status"] for h in state["history"]}:
         raise Refused(f"run {run_id} failed before loading; rebake only recovers export/bake failures")
     newer = _newer_loaded_run(ctx.root, run_id)
@@ -1428,6 +1480,10 @@ def render_digest(state: dict) -> str:
                   "this run as missing; the staged data is unaffected.", ""]
     if not state.get("preflight", {}).get("ok", True):
         lines += ["## Preflight", "", *(f"- {reason}" for reason in state["preflight"]["reasons"]), ""]
+    missing = (state.get("tools") or {}).get("missing")
+    if missing:
+        lines += ["## Tools", "", "Not found on the run's PATH (ops/launchd/path.sh); the steps that need them "
+                  "were refused:", "", *(f"- **{tool}**: {', '.join(needs)}" for tool, needs in missing.items()), ""]
     if sources:
         lines += ["## Sources", "", "| Source | Kind | Verdict | Rows | Last good | Δ |", "|---|---|---|---:|---:|---:|"]
         for sid, s in sources:

@@ -1,6 +1,6 @@
 #!/bin/bash
-# What the weekly LaunchAgent runs: rotate the logs, source the operator-local env file,
-# then `refresh_weekly.py weekly` (stage, load, publish, snapshot, heartbeat) from the repo,
+# What the weekly LaunchAgent runs: set the run's PATH (path.sh, tracked), rotate the logs, source the
+# operator-local env file, then `refresh_weekly.py weekly` (stage, load, publish, snapshot, heartbeat) from the repo,
 # passing its exit code back to launchd.
 #
 # weekly.env (gitignored; see weekly.env.example) holds secrets: the heartbeat URL and the
@@ -15,6 +15,8 @@
 set -uo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=path.sh
+. "$here/path.sh"
 repo="$(cd "$here/../.." && pwd)"
 env_file="${OPEN_MARIN_ENV_FILE:-$here/weekly.env}"
 log_dir="${OPEN_MARIN_LOG_DIR:-$repo/data/ingest-runs/launchd}"
