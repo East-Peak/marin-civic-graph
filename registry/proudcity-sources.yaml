@@ -48,7 +48,10 @@ sources:
   # docs/runbooks/san-rafael-weekly.md).
   - id: san-rafael-city-council
     adapter: proudcity
-    url: https://www.cityofsanrafael.org/city-council-meetings/
+    # The city moved to sanrafael.gov (cityofsanrafael.org 302s here, 2026-10). Its listing shows the newest
+    # 10; its archive (/city-council-meeting-archive/) is not read until its rows are reconciled against the
+    # graph (docs/runbooks/san-rafael-weekly.md).
+    url: https://sanrafael.gov/city-council-meetings/
     jurisdiction_id: place-san-rafael
     institution_id: org-san-rafael-city-council
     # Its agenda tab's body links staff reports, minutes and correspondence; the agenda is

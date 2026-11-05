@@ -1,5 +1,6 @@
 """Tests for the ProudCity WordPress adapter."""
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -449,3 +450,26 @@ class TestAttachedAgendaBoundaries:
         html = _detail(SR_BODY + _file_block(packet), packet=packet)
         assert self._agenda(html) == {"available": False, "url": None,
                                       "reason": "the agenda tab's attached file is this meeting's packet"}
+
+
+def test_a_listing_moved_to_a_new_domain_captures_the_same_rows_but_the_domain(tmp_path):
+    # San Rafael's move: the same pages, served from the new host, are the same meetings.
+    listing = ('<table><tr><td><a href="/meetings/city-council-march-2-2026/">City Council – March 2, 2026</a></td>'
+               '<td><a href="/meetings/city-council-march-16-2026-special/">City Council – March 16, 2026 (Special)'
+               '</a></td></tr></table>')
+    detail = ('<div id="tab-agenda"><a href="https://storage.googleapis.com/proudcity/lakeport/2026/03/a.pdf">'
+              'Agenda</a></div>')
+
+    def capture(host):
+        config = {"id": "lakeport-city-council", "adapter": "proudcity", "url": f"https://{host}/city-council-meetings/",
+                  "jurisdiction_id": "place-lakeport", "institution_id": "org-lakeport-city-council",
+                  "agenda_artifact": "attached", "backfill_from": "2019-01-01"}
+        adapter = ProudCityAdapter(config, tmp_path / host)
+        adapter._request_delay = 0
+        adapter._fetch_page = lambda url: detail if "/meetings/city-council-" in url else listing
+        adapter.utc_now_iso = lambda: "2026-11-02T13:00:02Z"
+        return json.dumps(adapter.capture(), sort_keys=True)
+
+    old, new = capture("www.cityoflakeport.example"), capture("lakeport.example")
+    assert old.count("www.cityoflakeport.example") == 3 and "lakeport.example/" not in old.replace("cityoflakeport", "")
+    assert old.replace("www.cityoflakeport.example", "lakeport.example") == new

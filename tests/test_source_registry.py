@@ -80,6 +80,14 @@ def test_san_rafael_takes_its_ids_only_from_its_reviewed_crosswalk():
     assert len(xw.entries) >= 261
 
 
+def test_san_rafael_reads_its_listing_where_the_city_moved_it_without_an_archive():
+    # cityofsanrafael.org 302s to sanrafael.gov (2026-10); the archive stays off until its rows are reconciled
+    # (docs/runbooks/san-rafael-weekly.md).
+    sr = _all_sources()["san-rafael-city-council"]
+    assert sr["url"] == "https://sanrafael.gov/city-council-meetings/"
+    assert "archive_pages" not in sr
+
+
 def test_larkspur_reads_only_its_archive_page_with_native_ids_from_2019():
     # Agendas only: minutes (records.cityoflarkspur.org) and the second CivicPlus host are robots `Disallow: /`,
     # so the source may reach www.larkspur.ca.gov and nothing else, whatever any robots.txt says.
