@@ -26,9 +26,11 @@ from pathlib import Path
 from typing import Callable
 from zoneinfo import ZoneInfo
 
+import robots_gate
 from cf_inventory import ConfigError, LandedProblem, SourceInventory, inventory
 
 API_BASE = "https://netfile.com/api/public/sites/"
+API_HOSTS = frozenset({"netfile.com"})  # the gate refuses any other host, redirects included
 PACIFIC = ZoneInfo("America/Los_Angeles")
 REQUEST_GAP_SECS = 1.0
 FILINGS_PAGE_SIZE = 100
@@ -47,10 +49,21 @@ def pacific_today(now: datetime) -> date:
     return now.astimezone(PACIFIC).date()
 
 
+_GATE: robots_gate.RobotsGate | None = None
+
+
+def _gate() -> robots_gate.RobotsGate:
+    """This process's robots gate (robots.txt read once per origin, its crawl-delay kept)."""
+    global _GATE
+    if _GATE is None:
+        _GATE = robots_gate.RobotsGate()
+    return _GATE
+
+
 def fetch_json(url: str) -> dict:
     request = urllib.request.Request(url, headers={"User-Agent": "open-marin-export-due",
                                                    "Accept": "application/json"})
-    with urllib.request.urlopen(request, timeout=30) as resp:
+    with _gate().open(request, timeout=30, hosts=API_HOSTS) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
 
@@ -68,12 +81,13 @@ class NetFileApi:
             wait = REQUEST_GAP_SECS - (self.monotonic() - self._last)
             if wait > 0:
                 self.sleep(wait)
-        self._last = self.monotonic()
         self.requests += 1
         try:
             payload = self.fetch(f"{self.base}{route}?{urllib.parse.urlencode(params)}")
         except Exception as exc:
             raise ApiError(f"NetFile API unreachable: {type(exc).__name__}: {exc}") from None
+        finally:  # from when this request ended: the gate may have spent seconds on robots.txt before sending
+            self._last = self.monotonic()
         if not isinstance(payload, dict):
             raise ApiError(f"NetFile API changed shape: {route} returned {type(payload).__name__}")
         return payload

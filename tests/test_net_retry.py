@@ -245,6 +245,15 @@ def _adapter(cls, tmp_path):
     return cls(dict(CONFIG), tmp_path, gate=_gate())
 
 
+def _form700_post():
+    """Through the module's gate (netfile.com only), here one that never fetches robots.txt."""
+    ingest_form700._GATE = _gate()
+    try:
+        return ingest_form700._post_json(ingest_form700.API_URL, {"aid": "X"})
+    finally:
+        ingest_form700._GATE = None
+
+
 URLLIB_HELPERS = {
     "granicus.fetch_html": lambda tmp: granicus.fetch_html("https://example.test", gate=_gate()),
     "civicplus._fetch_page": lambda tmp: _adapter(civicplus.CivicPlusAdapter, tmp)._fetch_page("https://example.test"),
@@ -256,7 +265,7 @@ URLLIB_HELPERS = {
     "netfile._fetch_page": lambda tmp: _adapter(netfile.NetFileAdapter, tmp)._fetch_page("https://example.test"),
     "netfile._post_export": lambda tmp: _adapter(netfile.NetFileAdapter, tmp)._post_export(
         "https://example.test", {"a": "b"}),
-    "ingest_form700._post_json": lambda tmp: ingest_form700._post_json("https://example.test", {"aid": "X"}),
+    "ingest_form700._post_json": lambda tmp: _form700_post(),
 }
 
 

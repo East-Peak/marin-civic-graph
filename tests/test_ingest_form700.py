@@ -123,36 +123,6 @@ class TestBuildSearchBody:
         }
 
 
-class TestPostJson:
-    def test_sends_json_post_with_curl_style_user_agent(self, monkeypatch):
-        seen = {}
-
-        class FakeResp:
-            def __enter__(self):
-                return self
-
-            def __exit__(self, *a):
-                return False
-
-            def read(self):
-                return json.dumps(PAGE_LAST).encode()
-
-        def fake_urlopen(req, timeout):
-            seen["req"] = req
-            return FakeResp()
-
-        monkeypatch.setattr(ingest_form700.urllib.request, "urlopen", fake_urlopen)
-        out = ingest_form700._post_json(ingest_form700.API_URL, {"aid": "ROSS"})
-        req = seen["req"]
-        assert out == PAGE_LAST
-        assert req.full_url == "https://netfile.com/api/public/sites/api/searchfilings"
-        assert req.get_method() == "POST"
-        assert json.loads(req.data) == {"aid": "ROSS"}
-        assert req.get_header("Content-type") == "application/json"
-        # The WAF 403s urllib's default UA; a curl-style UA is required.
-        assert req.get_header("User-agent").startswith("curl/")
-
-
 # ---------------------------------------------------------------------------
 # Parser: JSON page → row dicts (same shape the HTML parser produced)
 # ---------------------------------------------------------------------------
@@ -646,3 +616,31 @@ class TestPartialRunsNeedAnExplicitOutputDir:
         out, snapshot, _ = combined
         assert main(["--all"]) == 0
         assert {p.name: p.read_bytes() for p in out.iterdir()} != snapshot
+
+
+def test_post_json_goes_through_the_robots_gate_as_a_post(monkeypatch):
+    seen = []
+
+    class Gate:
+        def open(self, request, *, timeout, handlers=(), hosts=None):
+            seen.append((request.get_method(), request.full_url, json.loads(request.data),
+                         request.get_header("User-agent"), request.get_header("Content-type"), hosts))
+
+            class Resp:
+                def __enter__(self):
+                    return self
+
+                def __exit__(self, *a):
+                    return False
+
+                def read(self):
+                    return json.dumps(PAGE_LAST).encode()
+            return Resp()
+
+    monkeypatch.setattr(ingest_form700, "_gate", lambda: Gate())
+    monkeypatch.setattr(ingest_form700.urllib.request, "urlopen", lambda *a, **k: pytest.fail("bypassed the gate"))
+    assert ingest_form700._post_json(ingest_form700.API_URL, {"aid": "ROSS"}) == PAGE_LAST
+    (method, url, body, ua, content_type, hosts), = seen
+    assert (method, url, body) == ("POST", "https://netfile.com/api/public/sites/api/searchfilings", {"aid": "ROSS"})
+    assert content_type == "application/json" and hosts == {"netfile.com"}
+    assert ua.startswith("curl/")  # the WAF 403s urllib's default UA; unchanged by the gate

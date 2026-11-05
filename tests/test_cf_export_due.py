@@ -336,3 +336,69 @@ def test_the_real_registry_gives_the_alarm_everything_it_needs():
     assert due.check_sources(sources) == []
     assert {s["agency_code"] for s in sources} == {"CMAR", "NVO"}
     assert all(s["portal_url"] == f"https://netfile.com/public/{s['agency_code']}/campaign" for s in sources)
+
+
+# --- every NetFile request goes through the robots gate -------------------------------------------------------
+
+
+class _FakeGate:
+    def __init__(self, body=b'{"totalCount": 0, "items": []}', refuse=None):
+        self.seen, self.body, self.refuse = [], body, refuse
+
+    def open(self, request, *, timeout, handlers=(), hosts=None):
+        self.seen.append((request.get_method(), request.full_url, dict(request.header_items()), hosts))
+        if self.refuse:
+            raise self.refuse
+        body = self.body
+
+        class Resp:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+            def read(self):
+                return body
+        return Resp()
+
+
+def test_fetch_json_goes_through_the_robots_gate_with_its_own_headers(monkeypatch):
+    gate = _FakeGate()
+    monkeypatch.setattr(due, "_gate", lambda: gate)
+    monkeypatch.setattr(due.urllib.request, "urlopen", lambda *a, **k: pytest.fail("bypassed the gate"))
+    assert due.fetch_json("https://netfile.com/api/public/sites/api/x?aid=LKP") == {"totalCount": 0, "items": []}
+    (method, url, headers, hosts), = gate.seen
+    assert (method, url) == ("GET", "https://netfile.com/api/public/sites/api/x?aid=LKP")
+    assert headers["User-agent"] == "open-marin-export-due" and headers["Accept"] == "application/json"
+    assert hosts == {"netfile.com"}
+
+
+def test_a_robots_refusal_is_the_alarms_ordinary_unreachable_api(monkeypatch):
+    import robots_gate
+
+    gate = _FakeGate(refuse=robots_gate.RobotsDisallowed("https://netfile.com/api/x", {"rule": "Disallow: /api"}))
+    monkeypatch.setattr(due, "_gate", lambda: gate)
+    api = due.NetFileApi(sleep=lambda s: None)
+    with pytest.raises(due.ApiError, match="unreachable: RobotsDisallowed"):
+        api.transactions_between("LKP", date(2026, 1, 1), date(2026, 10, 1))
+
+
+def test_requests_stay_a_second_apart_even_when_one_takes_long():
+    # The gate may spend seconds on robots.txt before the first send; the gap counts from when a request ended.
+    clock, sends, sleeps = [0.0], [], []
+
+    def fetch(url):
+        if not sends:
+            clock[0] += 2.0  # robots discovery, then the send
+        sends.append(clock[0])
+        return {"totalCount": 0, "items": []}
+
+    def sleep(s):
+        sleeps.append(s)
+        clock[0] += s
+
+    api = due.NetFileApi(fetch, sleep=sleep, monotonic=lambda: clock[0])
+    api.transactions_between("LKP", date(2026, 1, 1), date(2026, 2, 1))
+    api.transactions_between("LKP", date(2026, 2, 1), date(2026, 3, 1))
+    assert sends[1] - sends[0] >= due.REQUEST_GAP_SECS and sleeps == [due.REQUEST_GAP_SECS]

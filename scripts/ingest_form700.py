@@ -60,6 +60,7 @@ from net_retry import retry_transient  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = ROOT / "data" / "normalized" / "form700"
 API_URL = "https://netfile.com/api/public/sites/api/searchfilings"
+API_HOSTS = frozenset({"netfile.com"})  # the robots gate refuses any other host, redirects included
 USER_AGENT = "curl/8.7.1"  # the WAF 403s urllib's default UA
 PAGE_SIZE = 100
 MAX_PAGES = 1_000  # runaway guard: cmar, the largest agency, is ~70 pages
@@ -273,8 +274,21 @@ def _post_json(url: str, body: dict[str, Any]) -> Any:
             "Accept": "application/json",
         },
     )
-    with urllib.request.urlopen(req, timeout=120) as resp:
+    with _gate().open(req, timeout=120, hosts=API_HOSTS) as resp:
         return json.loads(resp.read().decode("utf-8"))
+
+
+_GATE = None
+
+
+def _gate():
+    """This process's robots gate (scripts/robots_gate.py): robots.txt once per origin, its crawl-delay kept."""
+    global _GATE
+    if _GATE is None:
+        from robots_gate import RobotsGate
+
+        _GATE = RobotsGate()
+    return _GATE
 
 
 def build_search_body(
