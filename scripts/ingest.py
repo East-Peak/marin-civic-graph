@@ -16,6 +16,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import crosswalk
+import record_url_aliases
 from adapters import get_adapter_class
 from ingest_guard import BASELINE_WINDOW, Floors, RunLedger, Verdict, evaluate, newest_past_date, write_if_ok
 from meeting_identity import MeetingIdentityMap, merge_duplicate_meetings
@@ -118,15 +119,23 @@ def run_source(
     crosswalk ends it `crosswalk_invalid` before any request, and two meetings
     claiming one id end it `crosswalk_conflict`; neither writes a capture.
     `identity: native-only` keeps the adapter's ids (checked the same way) and
-    pins the load policy it was staged under in the capture.
+    pins the load policy it was staged under in the capture. Either kind, with
+    reviewed Record-URL aliases (scripts/record_url_aliases.py), pins that list
+    too; an invalid list ends it `record_url_aliases_invalid` before any request.
     """
     source_id = source_config["id"]
-    xw = None
+    xw = aliases = None
     if crosswalk.required(source_config):
         try:
             xw = crosswalk.load(root / source_config.get("crosswalk", ""), source_id)
         except crosswalk.CrosswalkError as exc:
             return _crosswalk_failed(ledger, source_id, "crosswalk_invalid", exc, {"meetings": [], "errors": [str(exc)]})
+    if crosswalk.guarded(source_config):
+        try:
+            aliases = record_url_aliases.binding(root, source_id)
+        except record_url_aliases.AliasError as exc:
+            return _crosswalk_failed(ledger, source_id, "record_url_aliases_invalid", exc,
+                                     {"meetings": [], "errors": [str(exc)]})
     adapter_cls = adapter_cls or get_adapter_class(source_config["adapter"])
     options = {k: v for k, v in (("gate", gate), ("saved_page", saved_page)) if v is not None}
     adapter = adapter_cls(source_config, root, **options)
@@ -173,6 +182,8 @@ def run_source(
             identity = None
         elif identity is not None:
             identity.canonicalize(source_id, result["meetings"])
+        if aliases is not None:
+            result["record_url_aliases"] = aliases
         result["meetings"] = merge_duplicate_meetings(result["meetings"])
         result["meeting_count"] = len(result["meetings"])
     if write_if_ok(adapter.extracted_path(), json.dumps(result, indent=2) + "\n", verdict) and identity:
@@ -184,6 +195,8 @@ def run_source(
         provenance["crosswalk_sha256"] = xw.sha256
     if source_config.get("identity") == crosswalk.NATIVE:
         provenance["identity"] = crosswalk.NATIVE
+    if aliases is not None and "record_url_aliases" in result:
+        provenance["record_url_aliases_sha256"] = aliases["sha256"]
     ledger.append(source_id, _now(), rows, newest, verdict, **provenance)
     return result, verdict
 

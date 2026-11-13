@@ -10,8 +10,9 @@ source (scripts/crosswalk.py) loads through here instead:
   * the only writes are creates: new Meetings, new Records, and relationships touching a node created
     in the same load (an edge between two existing nodes is skipped and counted);
   * every Record id for an artifact comes from one resolver, for nodes and edges alike: the meeting's
-    established Record of that kind (its url must not have changed), else an existing Record another
-    meeting holds for the url (reused by a new meeting), else a new id from the template;
+    established Record of that kind (its url must not have changed, unless a reviewed Record-URL alias the
+    capture pinned matches exactly: scripts/record_url_aliases.py), else an existing Record another meeting
+    holds for the url or an alias of it (reused by a new meeting), else a new id from the template;
   * the graph is the memory for identity: a crosswalk target must be a Meeting of the institution whose
     page carries the slug; a meeting arriving native must not carry an existing meeting's slug;
   * a native-only source (its ids are the city's item ids) loads under the policy pinned in its capture,
@@ -37,6 +38,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import crosswalk
+import record_url_aliases
 
 NEW_NODE_TYPES = ("Meeting", "Record")
 REQUIRED_CONSTRAINTS = ("Meeting", "Record")
@@ -446,6 +448,30 @@ def _check_policy(capture: dict, config: dict, root: Path, holds: _Holds):
     return _check_crosswalk_policy(capture, config, root, holds), frozenset()
 
 
+def _check_aliases(capture: dict, config: dict, root: Path, holds: _Holds) -> list[dict] | None:
+    """The source's reviewed Record-URL aliases, only from the list the capture pinned at stage time: [] for a
+    capture that pinned none (it never consumes aliases), None (a hold) for a list that is not the pinned one."""
+    if "record_url_aliases" not in capture:
+        return []
+    pinned = capture["record_url_aliases"]
+    try:
+        aliases = record_url_aliases.load(root)
+    except record_url_aliases.AliasError as exc:
+        holds.add("policy_mismatch", detail=f"record url aliases: {exc}")
+        return None
+    if not isinstance(pinned, dict) or pinned.get("path") != record_url_aliases.PATH \
+            or not pinned.get("sha256") or pinned.get("sha256") != aliases.sha256:
+        holds.add("policy_mismatch", detail=f"record url aliases: staged with {pinned}, now "
+                                            f"{record_url_aliases.PATH} {aliases.sha256}")
+        return None
+    return aliases.entries(config["id"])
+
+
+def _pinned_sha(capture: dict) -> str | None:
+    pinned = capture.get("record_url_aliases")
+    return pinned.get("sha256") if isinstance(pinned, dict) else None
+
+
 def _check_crosswalk_policy(capture: dict, config: dict, root: Path, holds: _Holds):
     header = capture.get("crosswalk")
     if not crosswalk.required(config) or not isinstance(header, dict) or header.get("path") != config.get("crosswalk") \
@@ -575,8 +601,13 @@ def _check_meetings(tx, capture: dict, config: dict, xw, holds: _Holds) -> dict[
 
 
 def _resolve_records(tx, source_id: str, meetings: dict[str, dict], institution_id: str,
-                     holds: _Holds) -> dict[tuple[str, str], str]:
-    """(meeting id, art) -> Record id, for every available artifact; holds where identity is unclear."""
+                     holds: _Holds, aliases: list[dict] = ()) -> dict[tuple[str, str], str]:
+    """(meeting id, art) -> Record id, for every available artifact; holds where identity is unclear.
+
+    `aliases`: the source's reviewed Record-URL aliases (the pinned list). An entry counts only while its
+    Record's url is still the one reviewed; it resolves exactly its (Record, art, page url), and its page url
+    joins the url index for its Record, so a new meeting linking it (as that art) reuses that Record. A reviewed
+    page url whose entry no longer counts, or linked as another art, holds: it never mints a Record."""
     every = list(tx.institution_meetings(institution_id))
     linked = tx.linked_records(every)
     records = tx.nodes({r for rs in linked.values() for r in rs})
@@ -584,6 +615,15 @@ def _resolve_records(tx, source_id: str, meetings: dict[str, dict], institution_
     for rid, node in records.items():
         if node["props"].get("source_url"):
             by_url.setdefault(node["props"]["source_url"], set()).add(rid)
+    entries_of: dict[str, list[dict]] = {}
+    on_page: dict[str, list[dict]] = {}  # page url -> its entries
+    live: dict[str, str] = {}  # page url -> the art of its entry that still counts
+    for e in aliases:
+        entries_of.setdefault(e["record_id"], []).append(e)
+        on_page.setdefault(e["page_url"], []).append(e)
+        if e["record_id"] in records and records[e["record_id"]]["props"].get("source_url") == e["established_url"]:
+            by_url.setdefault(e["page_url"], set()).add(e["record_id"])
+            live[e["page_url"]] = e["art"]
     templates = tx.nodes({record_template(source_id, mid, art) for mid, x in meetings.items()
                           for art in _artifacts(x["meeting"])})
     resolved: dict[tuple[str, str], str] = {}
@@ -606,9 +646,15 @@ def _resolve_records(tx, source_id: str, meetings: dict[str, dict], institution_
                 only = next(iter(established))
                 if len(established) == 1 and props_of[only].get("source_url") == url:
                     resolved[(mid, art)] = only
+                elif len(established) == 1 and entries_of.get(only):
+                    _resolve_alias(mid, art, url, only, props_of[only], entries_of[only], by_url, resolved, holds)
                 else:
                     holds.add("artifact_url_changed", meeting=mid, art=art, url=url,
                               established={r: props_of[r].get("source_url") for r in sorted(established)})
+                continue
+            if url in on_page and live.get(url) != art:
+                holds.add("artifact_alias_mismatch", meeting=mid, art=art, url=url,
+                          entries=[{k: e[k] for k in ("record_id", "art", "established_url")} for e in on_page[url]])
                 continue
             others = sorted(by_url.get(url, ()))
             if others:
@@ -628,6 +674,20 @@ def _resolve_records(tx, source_id: str, meetings: dict[str, dict], institution_
     return resolved
 
 
+def _resolve_alias(mid: str, art: str, url: str, rid: str, props: dict, entries: list[dict],
+                   by_url: dict[str, set[str]], resolved: dict, holds: _Holds) -> None:
+    """A meeting's one established Record, whose url is not the page's: an exact reviewed entry, or a hold."""
+    exact = [e for e in entries if (e["art"], e["established_url"], e["page_url"]) == (art, props.get("source_url"), url)]
+    if not exact:
+        holds.add("artifact_alias_mismatch", meeting=mid, art=art, url=url, record=rid,
+                  source_url=props.get("source_url"),
+                  entries=[{k: e[k] for k in ("art", "established_url", "page_url")} for e in entries])
+    elif by_url.get(url, set()) - {rid}:
+        holds.add("artifact_url_on_other_record", meeting=mid, art=art, url=url, records=sorted(by_url[url]))
+    else:
+        resolved[(mid, art)] = rid
+
+
 def load_capture(graph, capture: dict, config: dict, *, root: Path) -> dict:
     """Load one capture without overwriting anything; returns the load report (outcome loaded | held)."""
     from normalize_meetings import normalize_rows
@@ -635,15 +695,17 @@ def load_capture(graph, capture: dict, config: dict, *, root: Path) -> dict:
     holds = _Holds()
     report = {"source_id": config["id"], "capture_id": capture.get("capture_id"),
               "crosswalk_sha256": (capture.get("crosswalk") or {}).get("sha256"),
+              "record_url_aliases_sha256": _pinned_sha(capture),
               "identity": config.get("identity"), "holds": holds,
               "created": {"nodes": {}, "edges": []}, "unchanged": {"nodes": 0, "edges": 0},
               "skipped_edges": {}, "protected_differences": {}}
     xw, stubs = _check_policy(capture, config, Path(root), holds)
-    if xw is None:
+    aliases = _check_aliases(capture, config, Path(root), holds) if xw is not None else None
+    if xw is None or aliases is None:
         return {**report, "outcome": "held"}
     with graph.transaction(REQUIRED_CONSTRAINTS + tuple(sorted({label for _, label in stubs}))) as tx:
         meetings = _check_meetings(tx, capture, config, xw, holds)
-        resolved = _resolve_records(tx, config["id"], meetings, config["institution_id"], holds)
+        resolved = _resolve_records(tx, config["id"], meetings, config["institution_id"], holds, aliases)
         if holds:
             return {**report, "outcome": "held"}
         nodes, edges = normalize_rows(

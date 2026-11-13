@@ -12,6 +12,7 @@ and its load never writes to anything that already exists.
 | Generator / validator | scripts/crosswalk.py |
 | Ingest identity mode | scripts/ingest.py (`run_source`) |
 | No-overwrite load, Record resolver | scripts/guarded_load.py, scripts/normalize_meetings.py |
+| Reviewed Record-URL aliases (re-hosted files) | registry/record-url-aliases.yaml; scripts/record_url_aliases.py, scripts/record_url_alias_evidence.py |
 | Weekly wiring (report, holds) | scripts/refresh_weekly.py (`load`, `_take_load_report`) |
 | Rehearsal, check-loaded | scripts/crosswalk_rehearsal.py |
 
@@ -42,11 +43,12 @@ The digest names the reason, and the report lists every hold:
 
 | Reason | Meaning | What to do |
 |---|---|---|
-| `artifact_url_changed` | A meeting's agenda/packet/minutes now points at a different url than its existing Record (A→B). | Look at both PDFs. If B replaces A, that's a reviewed migration (update the Record's url). Never let the load mint a second Record. |
+| `artifact_url_changed` | A meeting's agenda/packet/minutes now points at a different url than its existing Record (A→B), and no reviewed alias lists that pair. | Usually a re-host (the city's files moved). Add an evidence-bound alias with `scripts/record_url_alias_evidence.py build` (the real planner's holds, both urls fetched through the robots gate, files, texts and a hash-bound manifest in staging; a differing pair needs a reviewer's `same_document` verdict on the two texts), then `merge` it into registry/record-url-aliases.yaml and stage a fresh run (the capture pins the list). Never re-point a Record to clear a hold, and never let the load mint a second Record. |
+| `artifact_alias_mismatch` | The Record has reviewed aliases, but none matches exactly: its url is no longer the reviewed one, or the page links another url or artifact. | The hold names the entries. Re-run the evidence tool for the pair; never edit an entry in place (the list is append-only). |
 | `artifact_url_on_other_record` | An existing meeting's artifact url belongs to another meeting's Record. | Check the two meeting pages; usually a city posting error. |
 | `artifact_url_shared`, `artifact_url_shared_across_kinds` | One url on two artifact types (one meeting, or across new meetings). | Usually a city posting error; wait for a fix or hold the source manual. |
 | `crosswalk_target_mismatch`, `duplicate_native_meeting`, `crosswalk_entry_missing`, `crosswalk_disagrees` | The crosswalk and the graph disagree (a hand edit, a lost entry, an id that already exists). | Regenerate (below) and read the conflicts. Never hand-edit an entry to make a hold go away. |
-| `crosswalk_changed`, `crosswalk_invalid`, `policy_mismatch` | The crosswalk or the registry changed between stage and load. | Stage a fresh run. |
+| `crosswalk_changed`, `crosswalk_invalid`, `policy_mismatch`, `record_url_aliases_invalid` | The crosswalk, the registry or the alias list changed between stage and load (or the list is malformed). | Fix the list if malformed; stage a fresh run. A capture staged without the list never uses it. |
 | `missing_node` | A stub (org-san-rafael-city-council, place-san-rafael) is gone. | Investigate; the load never creates stubs. |
 
 ## Regenerating the crosswalk

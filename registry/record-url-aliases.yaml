@@ -1,0 +1,111 @@
+format: 1
+sources:
+  san-rafael-city-council:
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-august-17-2026-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/08/cc-minutes-2026-08-17-295fa156.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/08/cc-minutes-2026-08-17-295fa156.pdf
+    evidence: {kind: identical_bytes, sha256: 1bdd3172ae5cc4089787ab53e59e634ddd6a8485aabd4038c1b16d64dc6774dd}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-august-17-2026-packet
+    art: packet
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/08/cc-agenda-packet-2026-08-17-e2bf1333.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/08/cc-agenda-packet-2026-08-17-e2bf1333.pdf
+    evidence: {kind: identical_bytes, sha256: a275a37be2d75b0cac68a76e25226779daf506ee5cea3d642aa3b665444de2d2}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-august-17-2026-special-closed-session-agenda
+    art: agenda
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/08/spcc-agenda-2026-08-17-closed-session-combined-529adff0.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/08/spcc-agenda-2026-08-17-closed-session-combined-529adff0.pdf
+    evidence: {kind: identical_bytes, sha256: 735bd14144028f0031ce73da8ea9c012512ff70710a662c4fcacac92b00b4a9b}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-august-17-2026-special-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/08/ccsm-minutes-2026-08-17-closed-session-049baf55.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/08/ccsm-minutes-2026-08-17-closed-session-049baf55.pdf
+    evidence: {kind: identical_bytes, sha256: 02918d56bffe8a73854cf893369849de596171fe5cdbb510c8c628621bb5f309}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-october-19-2026-agenda
+    art: agenda
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/10/cc-agenda-2026-10-19-d8b037f2.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/10/cc-agenda-2026-10-19-d8b037f2.pdf
+    evidence: {kind: identical_bytes, sha256: c36a4d9fb87351e57a0086885bab4b34aa1201811ae418e2e07feea12b99ff09}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-october-19-2026-packet
+    art: packet
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/10/agenda-packet-2026-10-19-fb72d665.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/10/agenda-packet-2026-10-19-fb72d665.pdf
+    evidence: {kind: identical_bytes, sha256: 31a20c219226d1b60f7d40ff3bec37908a115461d2348cfc1a7215799dc90e35}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-october-19-2026-special-closed-session-agenda
+    art: agenda
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/10/spcc-agenda-2026-10-19-closed-session-av-aeb4cf37.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/10/spcc-agenda-2026-10-19-closed-session-av-aeb4cf37.pdf
+    evidence: {kind: identical_bytes, sha256: b954d25f780541731d60bdee46e586ab8304d4fc024f2b8957e61d4a20fde958}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-october-5-2026-agenda
+    art: agenda
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/09/cc-agenda-2026-10-05-1c5ead93.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/09/cc-agenda-2026-10-05-1c5ead93.pdf
+    evidence: {kind: identical_bytes, sha256: 44c8119e2fd4ab4cf6cf7c80e65173158ade7d99dc1e2b3228c4c14846cfed61}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-october-5-2026-packet
+    art: packet
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/09/agenda-packet-2026-10-05-6b1ac49c.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/09/agenda-packet-2026-10-05-6b1ac49c.pdf
+    evidence: {kind: identical_bytes, sha256: a362cfcf35cb493d5c0b0b9029bca0433c87d948d72ed07e7cf961c5dc04c8de}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-october-5-2026-special-agenda
+    art: agenda
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/10/ccsm-agenda-2026-10-05-pr-parb-interviews-6f10f719.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/10/ccsm-agenda-2026-10-05-pr-parb-interviews-6f10f719.pdf
+    evidence: {kind: identical_bytes, sha256: 0abd8d182c4703fe8bbb47fe69797888852807f6eec96a3dd41ccfe5e87ea97c}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-october-5-2026-special-packet
+    art: packet
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/10/agenda-packet-2026-10-05-special-0c538682.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/10/agenda-packet-2026-10-05-special-0c538682.pdf
+    evidence: {kind: identical_bytes, sha256: d77460e3615097a5d07fd9189cba22819f0cfe08d15cc3dac0d2dc60828937ac}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-september-21-2026-cancelled-agenda
+    art: agenda
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/09/cc-cancellation-4ef9ad14.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/09/cc-cancellation-4ef9ad14.pdf
+    evidence: {kind: identical_bytes, sha256: fcf700de0d732daaa8725903d5fb2e98d3a52aac0014a5536178740337e096c5}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-september-8-2026-special-tuesday-agenda
+    art: agenda
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/09/ccsm-agenda-2026-09-08-pc-bpac-interviews-bilingual-8fed821b.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/09/ccsm-agenda-2026-09-08-pc-bpac-interviews-bilingual-8fed821b.pdf
+    evidence: {kind: identical_bytes, sha256: 3b694d6572c9e21998f1bef4e67637638f0a7639b04714126a2991297a723d78}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-september-8-2026-special-tuesday-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/09/ccsm-minutes-2026-09-08-a59ba29b.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/10/ccsm-minutes-2026-09-08-pc-bpac-interviews-f7c5aa73.pdf
+    evidence: {established_sha256: 8e67f6b4ede8f118606af9ccb46b7c77bde2d09d433af6b6fd91c14479cd97b7, kind: reviewed_variant, page_sha256: eaea2a43924dbb615e99ce0b953714ea70c772f65e00cd01e58fda022d980439, rationale: 'Body text is identical after whitespace normalization; A only adds DocuSign headers, an approval date, and 4 certificate pages. B is the unsigned copy.'}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-september-8-2026-special-tuesday-packet
+    art: packet
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/09/agenda-packet-2026-09-08-special-62697b40.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/09/agenda-packet-2026-09-08-special-62697b40.pdf
+    evidence: {kind: identical_bytes, sha256: 0c04b122381715f46e89c5617fe20ec6b1031a9eeaa8cf9bcdc4e5cb353c1746}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-september-8-2026-tuesday-agenda
+    art: agenda
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/09/cc-agenda-2026-09-08-bilingual-53fbd9b7.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/09/cc-agenda-2026-09-08-bilingual-53fbd9b7.pdf
+    evidence: {kind: identical_bytes, sha256: f9092e48008f3be8dedd4bf5e3a08fdbb252d512b7025054744e224255b0e190}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-september-8-2026-tuesday-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/09/cc-minutes-2026-09-08-8a5ca9a6.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/10/cc-minutes-2026-09-08-093159d1.pdf
+    evidence: {established_sha256: bcad9641f37db5ad74f9b8bdd244056991092764d77a5256de8d55e493f4df5a, kind: reviewed_variant, page_sha256: 4bf2ecd7440ee6081f006dda65fe7c9750baa63648048fa9ec6628bb7ae55d13, rationale: 'Minutes body identical; A adds only DocuSign headers, a filled approval date (Oct 5), and an appended certificate. No change to attendance, motions or votes.'}
+    reviewed: '2026-11-12'
+  - record_id: record-san-rafael-city-council-san-rafael-city-council-city-council-september-8-2026-tuesday-packet
+    art: packet
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelminibetaca/2026/09/agenda-packet-2026-09-08-5a6e14b6.pdf
+    page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/09/agenda-packet-2026-09-08-5a6e14b6.pdf
+    evidence: {kind: identical_bytes, sha256: efd2be58e49fdd5470234d9a0282a908fe8c9f3fc43ac3dd2fb95a05ff9bb406}
+    reviewed: '2026-11-12'

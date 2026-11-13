@@ -409,3 +409,26 @@ def test_a_redirected_pinned_pre_export_is_not_bound(ran, tmp_path, redirect):
     _later_loaded(ran)
     with pytest.raises(cr.CheckRefused, match="after"):
         cr.check_loaded(ran["root"], ran["run_id"], SID, pre, tmp_path / "out")
+
+
+@pytest.mark.parametrize("pinned", ["0" * 64, None], ids=["pinned-another-version", "pinned-none-but-a-list-now"])
+def test_check_loaded_refuses_when_the_alias_list_is_not_the_one_the_run_pinned(ran, tmp_path, pinned):
+    import record_url_aliases as rua
+
+    _post(ran)
+    path = ran["root"] / rua.PATH
+    path.write_text(yaml.safe_dump({"format": 1, "sources": {SID: [{
+        "record_id": "record-x", "art": "minutes", "established_url": PDF.format("a"), "page_url": PDF.format("b"),
+        "evidence": {"kind": "identical_bytes", "sha256": "1" * 64}, "reviewed": "2026-11-12"}]}}))
+    run = ran["root"] / "data/ingest-runs" / ran["run_id"]
+    state = json.loads((run / "state.json").read_text())
+    capture = ran["root"] / state["sources"][SID]["capture"]["path"]
+    if pinned:
+        state["sources"][SID]["record_url_aliases_sha256"] = pinned
+        (run / "state.json").write_text(json.dumps(state))
+    else:  # the run pinned nothing, its capture has no binding: the planner simply ignores the list
+        _check(ran, tmp_path)
+        return
+    with pytest.raises(cr.CheckRefused, match="alias list"):
+        _check(ran, tmp_path)
+    assert capture.is_file()

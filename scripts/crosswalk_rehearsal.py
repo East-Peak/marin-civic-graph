@@ -48,6 +48,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 import crosswalk  # noqa: E402
 import guarded_load  # noqa: E402
+import record_url_aliases  # noqa: E402
 
 LINK_TYPES = ("EVIDENCED_BY", "RELATES_TO_MEETING")
 LISTING_RECORD = {"proudcity": "meetings-page", "civicplus_archive": "archive-page"}  # record-<sid>-<this>-<day>
@@ -652,6 +653,9 @@ def check_loaded(root: Path, run_id: str, source_id: str, post_export: Path, out
             raise CheckRefused("the crosswalk changed since the run; check out the pinned version first")
     elif capture.get("load_policy") != crosswalk.load_policy(config):
         raise CheckRefused("the registry's load policy changed since the run; check out the run's version first")
+    if source.get("record_url_aliases_sha256") and \
+            record_url_aliases.load(root).sha256 != source["record_url_aliases_sha256"]:
+        raise CheckRefused("the Record-URL alias list changed since the run; check out the pinned version first")
     loaded_at = next(h["at"] for h in state["history"] if h["status"] == "loaded")
     post_files = {f: post_export / f for f in ("nodes.jsonl", "edges.jsonl")}
     if not all(p.is_file() for p in post_files.values()):

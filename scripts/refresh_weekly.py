@@ -514,6 +514,8 @@ def _meeting_source(ctx: Context, sid: str, registry: str, entry: dict, history:
         source["crosswalk_sha256"] = entry["crosswalk_sha256"]
     if entry.get("identity"):  # native-only: its capture pins the load policy, which the load re-checks
         source["identity"] = entry["identity"]
+    if entry.get("record_url_aliases_sha256"):  # the reviewed Record-URL alias list it pinned; load re-checks it
+        source["record_url_aliases_sha256"] = entry["record_url_aliases_sha256"]
     capture = _latest_capture(ctx.root, sid) if source["ok"] else None
     if capture is not None:
         source["capture"] = {"path": capture.relative_to(ctx.root).as_posix(), "sha256": _sha256(capture)}
@@ -1146,8 +1148,8 @@ def _take_load_report(state: dict, sid: str, path: Path) -> str | None:
     """Record a crosswalk source's load report in the run; the problem, if it is not this load's own.
 
     The no-overwrite load (scripts/guarded_load.py) exits 0 whether it loaded or held, so a success
-    without a fresh report naming this source, its approved capture and its pinned crosswalk is no
-    success. A `held` report fails only this source: nothing of it was written, and the run goes on.
+    without a fresh report naming this source, its approved capture, its pinned crosswalk and its pinned
+    Record-URL alias list is no success. A `held` report fails only this source: nothing of it was written, and the run goes on.
     """
     source = state["sources"][sid]
     try:
@@ -1155,7 +1157,8 @@ def _take_load_report(state: dict, sid: str, path: Path) -> str | None:
     except (OSError, ValueError):
         return f"wrote no load report ({path.name})"
     expected = {"source_id": sid, "capture_sha256": source["capture"]["sha256"],
-                "crosswalk_sha256": source.get("crosswalk_sha256")}  # none pinned: the report must say none
+                "crosswalk_sha256": source.get("crosswalk_sha256"),  # none pinned: the report must say none
+                "record_url_aliases_sha256": source.get("record_url_aliases_sha256")}
     wrong = sorted(k for k, v in expected.items() if report.get(k) != v)
     if wrong or report.get("outcome") not in ("loaded", "held"):
         return f"its load report does not match this load ({', '.join(wrong) or 'outcome ' + repr(report.get('outcome'))})"
