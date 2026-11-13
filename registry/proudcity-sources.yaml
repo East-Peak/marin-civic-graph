@@ -49,9 +49,20 @@ sources:
   - id: san-rafael-city-council
     adapter: proudcity
     # The city moved to sanrafael.gov (cityofsanrafael.org 302s here, 2026-10). Its listing shows the newest
-    # 10; its archive (/city-council-meeting-archive/) is not read until its rows are reconciled against the
-    # graph (docs/runbooks/san-rafael-weekly.md).
+    # 10; the archive (100 a page; 2022 onward) was reconciled against the graph before it was read: every row
+    # is crosswalked, already loaded or proven new, and the re-hosted files resolve through the reviewed
+    # Record-URL aliases (registry/record-url-aliases.yaml; docs/runbooks/san-rafael-weekly.md).
     url: https://sanrafael.gov/city-council-meetings/
+    archive_pages:
+      - https://sanrafael.gov/city-council-meeting-archive/
+      - https://sanrafael.gov/public-meeting-archive/?filter_categories%5B0%5D=87&tlpage=2
+    floors:
+      min_rows: 183
+      note: >-
+        min_rows is the reviewed listing + archive inventory of 2026-11-12 (183 meetings, 2022-01-18 on), so a
+        listing-only or partial archive parse cannot pass against the old 10-row baseline. The archive is two
+        pages of 100: when a third appears, add it here (and re-check this floor). If the city prunes old
+        meetings, check the archive by hand and lower it with a reason.
     jurisdiction_id: place-san-rafael
     institution_id: org-san-rafael-city-council
     # Its agenda tab's body links staff reports, minutes and correspondence; the agenda is

@@ -22,7 +22,9 @@ and its load never writes to anything that already exists.
    source ends `crosswalk_invalid` and nothing is fetched. Each meeting's id becomes its crosswalk
    target, or stays the adapter's own. Two meetings claiming one id end it `crosswalk_conflict`. The
    date/title identity map is never used for San Rafael. The capture and the ledger pin the crosswalk's
-   sha256.
+   sha256, and the reviewed Record-URL alias list's (registry/record-url-aliases.yaml). The capture reads
+   the listing (the newest 10) and the archive (`archive_pages`, 2022 onward; reconciled 2026-11-12: every
+   row crosswalked, already loaded or proven new).
 2. **Load.** `normalize_meetings.py --load` takes San Rafael through `guarded_load`, in one transaction
    under the run lock:
    - It **creates** new Meetings, new Records, and the edges that touch them.
@@ -30,8 +32,10 @@ and its load never writes to anything that already exists.
      `promotion_state`. The org/place stubs are included. Differences are only counted
      (`protected_differences` in the load report).
    - It **skips** an edge between two existing nodes (counted in `skipped_edges`).
-   - Each artifact's Record is the meeting's established Record of that kind, then another meeting's
-     Record for the same url (only for a new meeting), then a new `record-san-rafael-city-council-<meeting>-<art>`.
+   - Each artifact's Record is the meeting's established Record of that kind (its url, or a reviewed alias
+     of it that matches exactly), then another meeting's Record for the same url or alias (only for a new
+     meeting, as the same art), then a new `record-san-rafael-city-council-<meeting>-<art>`. A Record keeps the
+     url it was made with; the agenda stage keeps fetching that url.
 3. **Report.** The load writes `data/ingest-runs/<run>/load-reports/san-rafael-city-council.<n>.json`.
    `loaded` → the source is loaded. `held` → nothing of San Rafael was written. The source shows as
    FAILED in the digest's Failures with the hold reasons, the heartbeat goes `/fail` (an email), and

@@ -109,3 +109,759 @@ sources:
     page_url: https://storage.googleapis.com/proudcity/sanrafael/2026/09/agenda-packet-2026-09-08-5a6e14b6.pdf
     evidence: {kind: identical_bytes, sha256: efd2be58e49fdd5470234d9a0282a908fe8c9f3fc43ac3dd2fb95a05ff9bb406}
     reviewed: '2026-11-12'
+  - record_id: record-2022-01-18-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/02/CC-SA-Minutes-2022-01-18.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/02/CC-SA-Minutes-2022-01-18-1.pdf
+    evidence: {kind: identical_bytes, sha256: e77f881b1f4120c8a19d49a36eb64511506c6cb771889124042d373cdfba4eda}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-02-07-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/02/CC-SA-Minutes-2022-02-07.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/02/CC-SA-Minutes-2022-02-07-1.pdf
+    evidence: {kind: identical_bytes, sha256: 595d408cda1905e00157ed49b2d92e92572479272fc8a332ebbd411d0f872475}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-02-22-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/04/CC-SA-Minutes-2022-02-22..pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/04/CC-SA-Minutes-2022-02-22-1.pdf
+    evidence: {kind: identical_bytes, sha256: 9efe0a2c72bfd276f0f6702a9f27614431cc5b09b5c5073cca3b26e1bcccaef8}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-03-07-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/04/CC-SA-Minutes-2022-03-07..pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/04/CC-SA-Minutes-2022-03-07-1.pdf
+    evidence: {kind: identical_bytes, sha256: 1cb22dbc25ed84a6b3e7c3fcac0597a042bfe058d5093959acb999f6249410a8}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-03-07-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/03/CCSM-Minutes-2022-03-07-FC-Interviews.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/03/CCSM-Minutes-2022-03-07-FC-Interviews-1.pdf
+    evidence: {kind: identical_bytes, sha256: 2d2f569dc9fa154e269d83c3ca21d49a47b166f19ae582e70a07212f20bbac94}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-03-21-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/04/CC-SA-Minutes-2022-03-21..pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/04/CC-SA-Minutes-2022-03-21-1.pdf
+    evidence: {kind: identical_bytes, sha256: 07652698dd795798ac09855daa03a366bc0cc6aea258000fc3a73d290fc86a45}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-04-04-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/04/CC-SA-Minutes-2022-04-04..pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/04/CC-SA-Minutes-2022-04-04-1.pdf
+    evidence: {kind: identical_bytes, sha256: bad29b306297511b3c8a33482a1d02c608e677f9fb21ca3af099940cd811f896}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-04-11-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/04/CCSM-Minutes-2022-04-11-PC-Interviews.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/04/CCSM-Minutes-2022-04-11-PC-Interviews-1.pdf
+    evidence: {kind: identical_bytes, sha256: 26a057c03e64a7674c93134a4fdcbfa2942f6e783d441b06e55a3d5cb58180ab}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-04-18-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/05/CC-SA-Minutes-2022-04-18.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/05/CC-SA-Minutes-2022-04-18-1.pdf
+    evidence: {kind: identical_bytes, sha256: 158503e953ff24ab6fcb653b14cdb731cad2c3da935d8882eb3056c9f1eb9b6c}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-05-02-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/05/CC-SA-Minutes-2022-05-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/05/CC-SA-Minutes-2022-05-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: f8c168e28aa36d3074b17cac4517cf9b434789288f3163b3660af3d5c6d84748}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-05-16-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/06/CC-SA-Minutes-2022-05-16.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/06/CC-SA-Minutes-2022-05-16-1.pdf
+    evidence: {kind: identical_bytes, sha256: 60078e13514c6ba10efbb51603d64945b2e8db28008105915138e3bdebb7be0b}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-06-06-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/07/CC-SA-Minutes-2022-06-06.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/07/CC-SA-Minutes-2022-06-06-1.pdf
+    evidence: {kind: identical_bytes, sha256: 90c667c0838ef4ea9f3945b678582e2f57c5b24c1485086322222a65e4489214}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-06-16-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/07/CCSM-Minutes-2022-06-16-retreat.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/07/CCSM-Minutes-2022-06-16-retreat-1.pdf
+    evidence: {kind: identical_bytes, sha256: f55b6a8f31d9d911f42bd7f1790698285373510f564b0554f1f14d3fd0159dfd}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-06-21-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/07/CC-SA-Minutes-2022-06-21.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/07/CC-SA-Minutes-2022-06-21-1.pdf
+    evidence: {kind: identical_bytes, sha256: be62a5f92a1ca973d26c6244c2a70d76ed97d8342a1fa5f4366b0d30a792a645}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-06-23-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/07/CCSM-Minutes-2022-06-23.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/07/CCSM-Minutes-2022-06-23-1.pdf
+    evidence: {kind: identical_bytes, sha256: 982183afa0190367da951b2ae7ad5a32174d8dcc535309873af1ee251ce4802d}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-07-05-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/07/CC-SA-Minutes-2022-07-05.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/07/CC-SA-Minutes-2022-07-05-1.pdf
+    evidence: {kind: identical_bytes, sha256: a0c92e954c8135395bf2e90624689a073866a0e73f20cda00d5b993192171a1f}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-07-18-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/08/CC-SA-Minutes-2022-07-18.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/08/CC-SA-Minutes-2022-07-18-1.pdf
+    evidence: {kind: identical_bytes, sha256: ea57b81197f5a57757b82d14cd0bc34ac299ea16d7ed6b9551d53cf71f1f6b60}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-08-01-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/09/CC-SA-Minutes-2022-08-01.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/09/CC-SA-Minutes-2022-08-01-1.pdf
+    evidence: {kind: identical_bytes, sha256: a165c510412f13716c2afe7b60829bbf17ce38907cfd272340a3d039400f2e97}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-08-08-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/09/CCSM-Minutes-2022-08-08..pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/09/CCSM-Minutes-2022-08-08-1.pdf
+    evidence: {kind: identical_bytes, sha256: d64b8a44e201bcf8e7d62fe76be932bfe76a019b2bbc7c0b578a2ede3ef716c9}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-08-29-san-rafael-city-council-special-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/09/CCSM-Minutes-2022-08-29.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/09/CCSM-Minutes-2022-08-29-1.pdf
+    evidence: {kind: identical_bytes, sha256: e83518df0090a07c5239936e39e46cd418b14ed1586f9298ffc47ce640a4ba91}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-09-06-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/09/CC-SA-Minutes-2022-09-06.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/09/CC-SA-Minutes-2022-09-06-1.pdf
+    evidence: {kind: identical_bytes, sha256: 056a159e66e357b72bd5e72bc3108c9861d26800f039ff09b9934b16adc09c00}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-09-19-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/11/CC-SA-Minutes-2022-09-19.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/11/CC-SA-Minutes-2022-09-19-1.pdf
+    evidence: {kind: identical_bytes, sha256: 5bbf4a917747e1782cf7c5fbf0cb7754946b58379248265db01274ebc6a5db00}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-09-19-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/11/CCSM-Minutes-2022-09-19.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/11/CCSM-Minutes-2022-09-19-1.pdf
+    evidence: {kind: identical_bytes, sha256: ab5cd69fd6440fba4b907cfe777359f151cc2e49875c7aaf421184bf236b1a70}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-10-03-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/11/CC-SA-Minutes-2022-10-03.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/11/CC-SA-Minutes-2022-10-03-1.pdf
+    evidence: {kind: identical_bytes, sha256: 7be58a3218a61d00bbea74aefd7ec263e4c335122aa56d6c12476ba063adca0e}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-10-17-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/11/CC-SA-Minutes-2022-10-17.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/11/CC-SA-Minutes-2022-10-17-1.pdf
+    evidence: {kind: identical_bytes, sha256: afe54a9e40e9a8f0793280cc7af26fa21c68f58705846541a586fd587570d99b}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-11-02-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/12/CCSM-Minutes-2022-11-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/12/CCSM-Minutes-2022-11-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: 5c892d97db905a9c364eedcdbd808046d443c1306f6b3571f0a8ea3769e8e8f1}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-11-07-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/12/CC-SA-Minutes-2022-11-07.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/12/CC-SA-Minutes-2022-11-07-1.pdf
+    evidence: {kind: identical_bytes, sha256: ae7fb7c3a774a9e5db6f4f228d70db395206dd0af120cecabecce1bee24a17ac}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-11-07-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/12/CCSM-Minutes-2022-11-07-Study-Session.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/12/CCSM-Minutes-2022-11-07-Study-Session-1.pdf
+    evidence: {kind: identical_bytes, sha256: a46d69e5e7ed77c67a619c114ab26a1bea94482b742e7c578516d2051cccf1a4}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-11-21-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/12/CC-SA-Minutes-2022-11-21.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/12/CC-SA-Minutes-2022-11-21-1.pdf
+    evidence: {kind: identical_bytes, sha256: 082e934e17645eccfdf8e251bf74a88ca8ae5318cc55ec0b0683a9b0044f380e}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-12-05-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/12/CC-SA-Minutes-2022-12-05.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/12/CC-SA-Minutes-2022-12-05-1.pdf
+    evidence: {kind: identical_bytes, sha256: 0af162f1aa13ddf8b107187b1c8d42f45666d2c25a27a16d47a9ee2bcd050327}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-12-05-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2022/12/CCSM-Minutes-2022-12-05-Special-Meeting.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2022/12/CCSM-Minutes-2022-12-05-Special-Meeting-1.pdf
+    evidence: {kind: identical_bytes, sha256: 72e97890be414a4932dff6ba203d24a9687aa7e3304b94b5d95cbe7f0b731367}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-12-19-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/01/CC-SA-Minutes-2022-12-19.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/01/CC-SA-Minutes-2022-12-19-1.pdf
+    evidence: {kind: identical_bytes, sha256: 73fc3dc7217df2dc9a281a5985222bf1bf4cab48c20323c1a05b142ca05698d7}
+    reviewed: '2026-11-12'
+  - record_id: record-2022-12-19-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/01/CCSM-Minutes-2022-12-19-Special-Meeting.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/01/CCSM-Minutes-2022-12-19-Special-Meeting-1.pdf
+    evidence: {kind: identical_bytes, sha256: a62bc4c4d56c4b4fd351bf07f11cb829ecfc6229836780295bd8b15ef34eb278}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-01-17-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/02/CC-SA-Minutes-2023-01-17.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/02/CC-SA-Minutes-2023-01-17-1.pdf
+    evidence: {kind: identical_bytes, sha256: 56d5f5c3c3deab802de2360be1fe3bc2c39982957c71dbf9d838c17d0838e461}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-01-30-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/02/CCSM-Minutes-2023-01-30-Study-Session.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/02/CCSM-Minutes-2023-01-30-Study-Session-1.pdf
+    evidence: {kind: identical_bytes, sha256: 04ecdc1f4beddbd791ef8e574aa7b705ced17b8ef4ee2e57ee4f75f0aab12626}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-02-02-san-rafael-city-council-special-retreat-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/02/CCSM-Minutes-2023-02-02-Retreat.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/02/CCSM-Minutes-2023-02-02-Retreat-1.pdf
+    evidence: {kind: identical_bytes, sha256: 015fafad1931dbae85182cb2ffd98c3e907b1aff7cc9b46f56a805bf129023ee}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-02-06-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/02/CC-SA-Minutes-2023-02-06.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/02/CC-SA-Minutes-2023-02-06-1.pdf
+    evidence: {kind: identical_bytes, sha256: 54841c34b6a67ad7a4c67e55f5cdb06142e67414c068eca985d06a2c9bc35a31}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-02-21-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/03/CC-SA-Minutes-2023-02-21..pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/03/CC-SA-Minutes-2023-02-21-1.pdf
+    evidence: {kind: identical_bytes, sha256: e9deaf1ac642663e74484212bf3c14a7849e68359097111e7df094cc3384fb2f}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-03-06-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/03/CC-SA-Minutes-2023-03-06.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/03/CC-SA-Minutes-2023-03-06-1.pdf
+    evidence: {kind: identical_bytes, sha256: ffb802c5438c68290d22065d5b0c1436f9ff13405a0215359b1b07cf1da9be9a}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-03-20-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/04/CC-SA-Minutes-2023-03-20.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/04/CC-SA-Minutes-2023-03-20-1.pdf
+    evidence: {kind: identical_bytes, sha256: 2db57d1f7ecd1e36d4bb4ee276c0c4f29629829854cbc15658e62af955677081}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-04-03-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/03/CC-SA-Minutes-2023-04-03.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/03/CC-SA-Minutes-2023-04-03-1.pdf
+    evidence: {kind: identical_bytes, sha256: 458693eb921d644a6552d55b07f0cbab73f1ae72b2df1e3e78db8b8381506744}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-04-17-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/05/CC-SA-Minutes-2023-04-17.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/05/CC-SA-Minutes-2023-04-17-1.pdf
+    evidence: {kind: identical_bytes, sha256: e343c2aea899d200d08b95734ae7b6ce9225fe70e15f59bd3d7e0a941f281c42}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-04-17-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/05/CCSM-Minutes-2023-04-17.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/05/CCSM-Minutes-2023-04-17-1.pdf
+    evidence: {kind: identical_bytes, sha256: d11497cdfd088916a537df9b7bac7bad3e6df383264f17607164ddfd974c3aca}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-05-01-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/06/CC-SA-MINUTES-2023-05-01.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/06/CC-SA-MINUTES-2023-05-01-1.pdf
+    evidence: {kind: identical_bytes, sha256: d93269f171d0e46d688d42113abee6de54854340cde9ead1396e0595735300a7}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-05-08-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/05/CCSM-Minutes-2023-05-08-Appeal.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/05/CCSM-Minutes-2023-05-08-Appeal-1.pdf
+    evidence: {kind: identical_bytes, sha256: c83a0bc5a7a8311831427cdfdbdbdfe4adce16a63b5ad0ae5d5480fa9672cc2c}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-05-09-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/05/CCSM-Minutes-2023-05-09-BLT-Interviews.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/05/CCSM-Minutes-2023-05-09-BLT-Interviews-1.pdf
+    evidence: {kind: identical_bytes, sha256: dc73532309893b6768272b71a7e505f751f21d34a07c38f702cf5898277b8a82}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-05-15-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/06/CC-SA-MINUTES-2023-05-15r.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/06/CC-SA-MINUTES-2023-05-15r-1.pdf
+    evidence: {kind: identical_bytes, sha256: 19d222d9b5492664b46d59daaab442de4d485ae2e57a0ed3536eba273aed983b}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-06-05-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/06/CC-SA-MINUTES-2023-06-05.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/06/CC-SA-MINUTES-2023-06-05-1.pdf
+    evidence: {kind: identical_bytes, sha256: e4faae20735cc5d923ea1de22a7449bc4129e7d0279e9e737320216bdc86aa21}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-06-20-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/07/CC-SA-MINUTES-2023-06-20.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/07/CC-SA-MINUTES-2023-06-20-1.pdf
+    evidence: {kind: identical_bytes, sha256: 5165600ed1c3591761a3623e21c57dd8efc5e52029185afc80ab9410dbd12051}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-07-10-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/07/CC-SA-MINUTES-2023-07-10-Special.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/07/CC-SA-MINUTES-2023-07-10-Special-1.pdf
+    evidence: {kind: identical_bytes, sha256: 1ddc5cc69f97ff71c17ef3aa71856b11617181169ec0580e60899fa361d6863c}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-07-17-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/08/CC-SA-Minutes-2023-07-17.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/08/CC-SA-Minutes-2023-07-17-1.pdf
+    evidence: {kind: identical_bytes, sha256: c904d440df98ae9b0b79b08b264db7d2e9eccfbd3c90c15db95e7ac6f1829ae1}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-08-21-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/09/CC-SA-Minutes-2023-08-21.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/09/CC-SA-Minutes-2023-08-21-1.pdf
+    evidence: {kind: identical_bytes, sha256: 71d664d1f65d8a9bcd6b39c8a45eae5ae8e7524030c476f96afe73d7dca573a9}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-09-05-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/09/CC-SA-Minutes-2023-09-05.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/09/CC-SA-Minutes-2023-09-05-1.pdf
+    evidence: {kind: identical_bytes, sha256: e1fa40ea1c4c5f7d41f0a581c6aa8b76cf499c3e7df24e65217ed28d29624ab7}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-09-18-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/10/CC-SA-Minutes-2023-09-18.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/10/CC-SA-Minutes-2023-09-18-1.pdf
+    evidence: {kind: identical_bytes, sha256: d17a3427c108aab40a842789fa6f04a5d909173fdd9e511619ff425fc3161cf9}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-10-02-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/11/CC-SA-Minutes-2023-10-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/11/CC-SA-Minutes-2023-10-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: 1343772feb3922ca94e50446f253f6eec8347e187dbd485abc55b258deb0f634}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-10-02-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/11/CC-SM-Minutes-2023-10-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/11/CC-SM-Minutes-2023-10-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: f70f7990e0ce0196904473bf883f00e09fc7774cb7803d4aa1026908738ad230}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-10-16-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/11/CC-SM-Minutes-2023-10-16.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/11/CC-SM-Minutes-2023-10-16-1.pdf
+    evidence: {kind: identical_bytes, sha256: e65537f8e270f6161f991d8acf8e2fc7fb0ffdad097c02bf6999a283da5b159e}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-10-23-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/11/CC-SM-Minutes-2023-10-23.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/11/CC-SM-Minutes-2023-10-23-1.pdf
+    evidence: {kind: identical_bytes, sha256: 52a9b3edc99436a6367aef6737b5f408c0633559f5098ee03a653e4d1ed31c39}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-11-06-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2023/11/CC-SA-Minutes-2023-11-06.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2023/11/CC-SA-Minutes-2023-11-06-1.pdf
+    evidence: {kind: identical_bytes, sha256: 3351308a46a650b99b54b7c2d2bcdc56caddec2497b037684b6c8ffdcfaa8d32}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-11-20-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/01/CC-SA-MINUTES-2023-11-20.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/01/CC-SA-MINUTES-2023-11-20-1.pdf
+    evidence: {kind: identical_bytes, sha256: fb0e21597855213c9be02694b7bee4fd1551dc93a70b923de2e1e1c7ffe6573e}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-12-04-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/01/CC-SA-Minutes-2023-12-04.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/01/CC-SA-Minutes-2023-12-04-1.pdf
+    evidence: {kind: identical_bytes, sha256: 1bc05dae19fc55ee7c8d5b5eb74bc7db9d7c92f74347beecc977f0af83597e72}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-12-04-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/01/CC-SM-Minutes-2023-12-04.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/01/CC-SM-Minutes-2023-12-04-1.pdf
+    evidence: {kind: identical_bytes, sha256: 868e1627b6feae697adeb2584df1fc418d6699619d5449d82844331bc67f319d}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-12-18-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/01/CC-SA-Minutes-2023-12-18.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/01/CC-SA-Minutes-2023-12-18-1.pdf
+    evidence: {kind: identical_bytes, sha256: 38108b65c3c07d48998613e08c522d1f8e3849a460d3061d57da72fbb0038576}
+    reviewed: '2026-11-12'
+  - record_id: record-2023-12-20-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/01/CC-SM-Minutes-2023-12-20.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/01/CC-SM-Minutes-2023-12-20-1.pdf
+    evidence: {kind: identical_bytes, sha256: bc74856771204332ba7b1fda678cdf2da34d79fd516c488ff988229a0bb157f7}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-01-16-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/02/CC-SA-Minutes-2024-01-16.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/02/CC-SA-Minutes-2024-01-16-1.pdf
+    evidence: {kind: identical_bytes, sha256: 47220a0b9454b7e779c33eb9fc3bd40501e3b0e597444db38432937cc527b410}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-01-16-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/02/CC-SM-Minutes-2024-01-16.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/02/CC-SM-Minutes-2024-01-16-1.pdf
+    evidence: {kind: identical_bytes, sha256: 20f35b10a1f503cd7942a94ced449fe63fe2f2f68c4f69bf2ff487ac023e5ae5}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-02-05-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/02/CC-SA-Minutes-2024-02-05.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/02/CC-SA-Minutes-2024-02-05-1.pdf
+    evidence: {kind: identical_bytes, sha256: 42c78ad59a05eb463258799e7a111b1c6f7130ac7249ca50c62417092b9d8786}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-02-20-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/03/CC-SA-Minutes-2024-02-20.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/03/CC-SA-Minutes-2024-02-20-1.pdf
+    evidence: {kind: identical_bytes, sha256: 4b613a2baf9921425b7b406ea6c7813c5f479d53249af11175309a4664aa83c3}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-03-04-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/uploads/2024/03/CC-SA-Minutes-2024-03-04.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/03/CC-SA-Minutes-2024-03-04-1.pdf
+    evidence: {kind: identical_bytes, sha256: 7a98f23c796e4b7f789e5bc8551c2b8bff380e1d1f5f8a95ed626b5de91a9d0f}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-03-18-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/04/CC-SA-Minutes-2024-03-18.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/04/CC-SA-Minutes-2024-03-18-1.pdf
+    evidence: {kind: identical_bytes, sha256: fecc396fffd1c53fa8368d45dcb87cf9d05b0872fdf29195b556d76d4b610db2}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-04-02-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/04/CC-SA-Minutes-2024-04-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/04/CC-SA-Minutes-2024-04-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: 40eff3a56096e21b4317e576d3cdc148c9147bdf496f941bf641647dbc24e7f4}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-04-15-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/04/CC-SA-Minutes-2024-04-15.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/04/CC-SA-Minutes-2024-04-15-1.pdf
+    evidence: {kind: identical_bytes, sha256: 4a0881ee7761edd2c4f8b7e493562df67204a81f968bc7c7a78b417b91dfe136}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-05-06-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/05/CC-SA-Minutes-2024-05-06.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/05/CC-SA-Minutes-2024-05-06-1.pdf
+    evidence: {kind: identical_bytes, sha256: 02ce7ede0390a7aecfb31f616fc809705aa0ce6c7db27f0279cf107e6bbf8f91}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-05-20-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/06/CC-SA-Minutes-2024-05-20.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/06/CC-SA-Minutes-2024-05-20-1.pdf
+    evidence: {kind: identical_bytes, sha256: 556775de01f3ab1a107d17b82352b2a06fd52d3d68f788842eea73b34932ceee}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-06-03-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/05/CC-SA-Minutes-2024-06-03.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/05/CC-SA-Minutes-2024-06-03-1.pdf
+    evidence: {kind: identical_bytes, sha256: 88eecf3631d2fb3d8724bddc2ed56cfbc5956a3c825906c29cae809097b0ae7b}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-06-17-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/07/CC-SA-Minutes-2024-06-17.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/07/CC-SA-Minutes-2024-06-17-1.pdf
+    evidence: {kind: identical_bytes, sha256: b686ac327d6babc1a52671fba809ce1bb4aa03759406cf1167423fe633a0c113}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-06-21-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/07/CC-SM-Minutes-2024-06-21.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/07/CC-SM-Minutes-2024-06-21-1.pdf
+    evidence: {kind: identical_bytes, sha256: 39afcff33cd6e570837176f20b3c9ebb288d3e31f8edcfd2fcfaf839c6da5b00}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-07-15-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/09/CC-SA-Minutes-2024-07-15.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/09/CC-SA-Minutes-2024-07-15-1.pdf
+    evidence: {kind: identical_bytes, sha256: 22e4ca9567dd04e39baafc5ab1969550ef512d5371f7a4440ba2e1e92a5658bd}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-08-19-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/09/CC-SA-Minutes-2024-08-19.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/09/CC-SA-Minutes-2024-08-19-1.pdf
+    evidence: {kind: identical_bytes, sha256: 050080f3e92387b57cc3ade3335031205cf7f5694795453436727539f974abd4}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-09-03-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/09/CC-SA-Minutes-2024-09-03.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/09/CC-SA-Minutes-2024-09-03-1.pdf
+    evidence: {kind: identical_bytes, sha256: b6adb926e374e20185438586ef6f45a851bea143b8ff56d791bfe8a24087bf7e}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-09-16-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/10/CCSA-Minutes-2024-09-16.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/10/CCSA-Minutes-2024-09-16-1.pdf
+    evidence: {kind: identical_bytes, sha256: ca089647894125b5f22b62652edc96abefb5d3c9d505b64d41fd7c1d77c9bba3}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-10-07-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/11/CC-SM-MINUTES-2024-10-07.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/11/CC-SM-MINUTES-2024-10-07-1.pdf
+    evidence: {kind: identical_bytes, sha256: a99177aef35b305639e519d967d4664db4f3d9d537700a74293bbee7b7412010}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-10-21-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/10/CC-SA-Minutes-2024-10-21.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/10/CC-SA-Minutes-2024-10-21-1.pdf
+    evidence: {kind: identical_bytes, sha256: a5d44c82d9b608bfc1be0179460a90b194f06217e2cb198f9660d5f3067ad7b5}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-11-04-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/11/CC-SA-Minutes-2024-11-04.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/11/CC-SA-Minutes-2024-11-04-1.pdf
+    evidence: {kind: identical_bytes, sha256: f45560e277306b49a95a591c750572354332a3f4403324f5e10623793dd19467}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-11-18-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/11/CC-SA-Minutes-2024-11-18.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/11/CC-SA-Minutes-2024-11-18-1.pdf
+    evidence: {kind: identical_bytes, sha256: 86e1fa41f70f5f14e9bd71da5d81c2c25788b4ff42a6461e796df114f47c917a}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-12-02-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2024/11/CC-SA-Minutes-2024-12-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2024/11/CC-SA-Minutes-2024-12-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: 63d66602eeddc1515640a5a709fa9a183ed3c6348639b7005c299b62ff8844b5}
+    reviewed: '2026-11-12'
+  - record_id: record-2024-12-16-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/02/CC-SA-Minutes-2024-12-16.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/02/CC-SA-Minutes-2024-12-16-1.pdf
+    evidence: {kind: identical_bytes, sha256: 2c79a9058ad0ebbb1be89e7074cb0193e440963b1a99a4505f5a9d792e82a131}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-01-21-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/02/CC-Minutes-2025-01-21.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/02/CC-Minutes-2025-01-21-1.pdf
+    evidence: {kind: identical_bytes, sha256: 86b3e096d6015be60864656d1942f89d9c9ec1d15af70fd18367965da365c85d}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-02-03-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/03/CC-Minutes-2025-02-03.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/03/CC-Minutes-2025-02-03-1.pdf
+    evidence: {kind: identical_bytes, sha256: 9ccfa8a5d45f63093c0e04c9fbfc97818d18c8da3433fb25cba58f79e2582f7d}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-02-18-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/02/CC-Minutes-2025-02-18r.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/02/CC-Minutes-2025-02-18r-1.pdf
+    evidence: {kind: identical_bytes, sha256: 0abeea7ab81afec419060070f08ef13e30b61d13540fd1b76081300744ec1b54}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-03-03-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/04/CC-Minutes-2025-03-03.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/04/CC-Minutes-2025-03-03-1.pdf
+    evidence: {kind: identical_bytes, sha256: 5685fcd9b65f04c723dc34f2ac6a355dfed4613998704955e4733f5d133200c9}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-03-03-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/04/CCSM-Minutes-2025-03-03r.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/04/CCSM-Minutes-2025-03-03r-1.pdf
+    evidence: {kind: identical_bytes, sha256: 2a33ae9bd94f5d4c7741a7fa831cf74caccac0fce755ddf9f24926aeedd780a3}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-03-17-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/03/CC-Minutes-2025-03-17.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/03/CC-Minutes-2025-03-17-1.pdf
+    evidence: {kind: identical_bytes, sha256: e8ecc5e20e927622cbd47dc9aa43a522bdc8b24afaf1040f8292555ecd8d992e}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-04-07-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/04/CC-Minutes-2025-04-07.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/04/CC-Minutes-2025-04-07-1.pdf
+    evidence: {kind: identical_bytes, sha256: 4708804131e1620b68e0a46959562e3b3148371f5021e18fadb4e4bc4c8a5e2a}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-04-21-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/05/CC-Minutes-2025-04-21r.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/05/CC-Minutes-2025-04-21r-1.pdf
+    evidence: {kind: identical_bytes, sha256: bf19bbab033527ae837ebc7a2280fdd83f8383f035bce69366f636429a5c5c31}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-05-05-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/05/CC-Minutes-2025-05-05.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/05/CC-Minutes-2025-05-05-1.pdf
+    evidence: {kind: identical_bytes, sha256: 10047820289a60edbbe949841ecaac5325f05e43cec0b90914c5daf9b205245a}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-05-05-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/05/CCSM-Minutes-2025-05-05.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/05/CCSM-Minutes-2025-05-05-1.pdf
+    evidence: {kind: identical_bytes, sha256: 9051d576f55e9b40f9267b93f92f10df2ca44afb07b05724aa8f3e4001ff3cca}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-05-19-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/05/CC-Minutes-2025-05-19.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/05/CC-Minutes-2025-05-19-1.pdf
+    evidence: {kind: identical_bytes, sha256: ce0bdd8b58fab2fb8b7a2f8a25b37a4f501b3c59fcae671949c38f000a9fa48c}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-06-02-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/05/CC-Minutes-2025-06-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/05/CC-Minutes-2025-06-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: 48def46fbd78a633ddf2e6c32f07c9d2b8e6afcfb3310cab9c4dbdbd0adf9c09}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-06-23-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/06/CC-Minutes-2025-06-23.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/06/CC-Minutes-2025-06-23-1.pdf
+    evidence: {kind: identical_bytes, sha256: 0b51453cb6726a1fdfbc71488538bec1290c9487b3a4e7c9c9f264a6e0c27875}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-07-21-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/08/CC-Minutes-2025-07-21.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/08/CC-Minutes-2025-07-21-1.pdf
+    evidence: {kind: identical_bytes, sha256: 3250dd5525172a8b603ab6aa0b3545b986ad1576104a3cf98a16da42bfade1e8}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-08-18-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/08/CC-Minutes-2025-08-18.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/08/CC-Minutes-2025-08-18-1.pdf
+    evidence: {kind: identical_bytes, sha256: 42f47fcb8eb46ce9c931fa79cafde3b7d94a371cd5bb4a9700bdea704aacbed1}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-09-02-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/08/CC-Minutes-2025-09-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/08/CC-Minutes-2025-09-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: 3de80074450b72c40290c8d31e3d533fd9ad3d5eccf09ebc7fa031c1ed7f41cd}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-09-15-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/09/CC-Minutes-2025-09-15.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/09/CC-Minutes-2025-09-15-1.pdf
+    evidence: {kind: identical_bytes, sha256: 08a7303492b2cc5cc82a0e617b71c18ce58b567cc4143c978fd772cd649aa286}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-10-06-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/10/db640875-cc-minutes-2025-10-06.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/10/db640875-cc-minutes-2025-10-06-1.pdf
+    evidence: {kind: identical_bytes, sha256: 428354793c729c062429374a78aab9a557e6557c33215052c6db7f840667be0d}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-10-20-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/21ab7fdb-cc-minutes-2025-10-20.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/11/21ab7fdb-cc-minutes-2025-10-20-1.pdf
+    evidence: {kind: identical_bytes, sha256: cbf9cf189a388938494a6d5cdcd4a95fdae465fc2fdefe651f981dde1f9eb4e7}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-11-03-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/082e500e-cc-minutes-2025-11-03.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/12/082e500e-cc-minutes-2025-11-03-1.pdf
+    evidence: {kind: identical_bytes, sha256: 29eef52eaa16bb4e3d72d7f4ab8d9b504720457bcad3450d174108bd4667eaf6}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-11-06-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/6d580aeb-ccsm-minutes-2025-11-06.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/11/6d580aeb-ccsm-minutes-2025-11-06-1.pdf
+    evidence: {kind: identical_bytes, sha256: 4551129054211db7f843fb08c48cc68582e6f354d2ff6e724ed7d3d272728d6c}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-11-12-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/11/4d9bb988-ccsm-minutes-2025-11-12.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/11/4d9bb988-ccsm-minutes-2025-11-12-1.pdf
+    evidence: {kind: identical_bytes, sha256: ae5cff95dac839d4fd7cd0c13861e870ca485cbdae7974c4cee2442e6fe45a97}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-11-17-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/d2ca1a56-cc-minutes-2025-11-17.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/12/d2ca1a56-cc-minutes-2025-11-17-1.pdf
+    evidence: {kind: identical_bytes, sha256: 79eb8339eef6859ef5db2e78f7ab0df58781170ab737937000098823ed15bb98}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-12-01-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2025/12/a8d08824-cc-minutes-2025-12-01.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2025/12/a8d08824-cc-minutes-2025-12-01-1.pdf
+    evidence: {kind: identical_bytes, sha256: 6312a6be47c39e79d9810be9f991a9070e3efa64f77aeceb3e01d30ada71b753}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-12-15-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/01/65cb4206-cc-minutes-2025-12-15.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/01/65cb4206-cc-minutes-2025-12-15-1.pdf
+    evidence: {kind: identical_bytes, sha256: d838ae3a3a89922bff65544be4501bea38361ff9f62fbe571627556bd95da00b}
+    reviewed: '2026-11-12'
+  - record_id: record-2025-12-15-san-rafael-city-council-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/01/ace3e051-cc-minutes-2025-12-15-closed-session.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/01/ace3e051-cc-minutes-2025-12-15-closed-session-1.pdf
+    evidence: {kind: identical_bytes, sha256: 385c36bd0375ddf3d96e9e7f8abe94d68c5153a7288f39732acd875516f82646}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-01-20-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/de0b0931-cc-minutes-2026-01-20.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/02/de0b0931-cc-minutes-2026-01-20-1.pdf
+    evidence: {kind: identical_bytes, sha256: 4ff0e9599defc00d22d98afc1ff4042157605708f2a72668ccb49f93dc4fe845}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-01-20-san-rafael-city-council-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/326071bf-cc-minutes-2026-01-20-closed-session.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/02/326071bf-cc-minutes-2026-01-20-closed-session-1.pdf
+    evidence: {kind: identical_bytes, sha256: ad1bd54e309f4d36643844e5acc8b2e4245301aacb18e6447e55d20ad2ad3164}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-02-02-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/cfc30382-cc-minutes-2026-02-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/02/cfc30382-cc-minutes-2026-02-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: 5667b8952b2bb5da8fcef3c2efeb14841cdfee79a10814d53ec81d91c0e93a20}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-02-02-san-rafael-city-council-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/42cc63a2-cc-minutes-2026-02-02-closed-session.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/02/42cc63a2-cc-minutes-2026-02-02-closed-session-1.pdf
+    evidence: {kind: identical_bytes, sha256: b2653c2db5865a69e5a6c68c87f283f0a12de43f62c2f4a340792c92b492a463}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-02-02-san-rafael-city-council-special-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/c0abcf96-ccsm-minutes-2026-02-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/02/c0abcf96-ccsm-minutes-2026-02-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: 0dca137eb4b47c98cf2c9a1bfb818752a36f56c6de18fe9d20052be92eef73be}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-02-09-san-rafael-city-council-special-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/f236dbfc-cc-minutes-2026-02-09-closed-session.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/02/f236dbfc-cc-minutes-2026-02-09-closed-session-1.pdf
+    evidence: {kind: identical_bytes, sha256: 97fe9752ad7c6c61e8c20ee5ad71eb01e8c559af8cf58590ce67feaa9d3f2fa5}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-02-11-san-rafael-city-council-special-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/02/d22f36a3-ccsms-2026-02-11.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/02/d22f36a3-ccsms-2026-02-11-1.pdf
+    evidence: {kind: identical_bytes, sha256: c900d680781e9a9639803db02e5207ce3b814391ba35bca3b39d96f2e2988373}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-02-17-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/03/9ec66f80-cc-minutes-2026-02-17.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/03/9ec66f80-cc-minutes-2026-02-17-1.pdf
+    evidence: {kind: identical_bytes, sha256: 7296615e733401cd56d307ee04f18186e2d701c4f454d989dbac0a5ee2ec26e7}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-02-17-san-rafael-city-council-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/03/7d03155c-cc-minutes-2026-02-17-closed-session.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/03/7d03155c-cc-minutes-2026-02-17-closed-session-1.pdf
+    evidence: {kind: identical_bytes, sha256: 451cfb985716f679b1bcdaae56fe40f423b5fe14262552b7f8b894340dc7b50e}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-03-02-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/03/d0b3eac3-cc-minutes-2026-03-02.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/03/d0b3eac3-cc-minutes-2026-03-02-1.pdf
+    evidence: {kind: identical_bytes, sha256: e7282107b18dcf491babae2a8d755cf333a94ade8481501ef36fc02f55808d10}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-03-02-san-rafael-city-council-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/03/ea738266-cc-minutes-2026-03-02-closed-session.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/03/ea738266-cc-minutes-2026-03-02-closed-session-1.pdf
+    evidence: {kind: identical_bytes, sha256: 63891df664d197b6614c3a57810c73ac8232aff4f81736c0cc6680f7f02d3126}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-03-16-san-rafael-city-council-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/04/24e79735-cc-minutes-2026-03-16.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/04/24e79735-cc-minutes-2026-03-16-1.pdf
+    evidence: {kind: identical_bytes, sha256: ea543cf8550ce9f8158328b38290b11d8d519e38a1468ba13de027381fdc7e33}
+    reviewed: '2026-11-12'
+  - record_id: record-2026-03-16-san-rafael-city-council-closed-session-minutes
+    art: minutes
+    established_url: https://storage.googleapis.com/proudcity/sanrafaelca/2026/04/1722455a-cc-minutes-2026-03-16-closed-session.pdf
+    page_url: https://storage.googleapis.com/proudcity/citytemplate/uploads/2026/04/1722455a-cc-minutes-2026-03-16-closed-session-1.pdf
+    evidence: {kind: identical_bytes, sha256: 589cf7756705cf956e22830b27bed9628049a6f3787eddab2bf96e55971115e7}
+    reviewed: '2026-11-12'

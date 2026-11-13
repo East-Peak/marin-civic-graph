@@ -247,6 +247,8 @@ def _make_root(root: Path, repo: Path, source_id: str, registry_name: str, ident
     (root / "registry" / name).write_text(yaml.safe_dump(registry, sort_keys=False))
     if (repo / "registry" / "crosswalks").is_dir():
         shutil.copytree(repo / "registry" / "crosswalks", root / "registry" / "crosswalks")
+    if (repo / record_url_aliases.PATH).is_file():  # the stage pins it, the load re-checks it
+        shutil.copy(repo / record_url_aliases.PATH, root / record_url_aliases.PATH)
     (root / "scripts").symlink_to(repo / "scripts", target_is_directory=True)
     (root / "data" / "ingest-runs").mkdir(parents=True)
     if identity_cache is not None:
@@ -290,8 +292,14 @@ def run_variant(name: str, work: Path, repo: Path, source_id: str, *, store: Res
 
 
 def expected_records(capture: dict, nodes: dict[str, dict], edges: list[dict], source_id: str,
-                     institution_id: str) -> dict:
-    """An independent classification of every artifact Record a first load makes (not guarded_load's code)."""
+                     institution_id: str, aliases=(), jurisdiction_id: str | None = None) -> dict:
+    """An independent classification of every artifact Record a first load makes (not guarded_load's code).
+
+    `aliases`: the source's reviewed Record-URL aliases, as data. A changed url on an established Record is
+    expected only for an exactly listed pair whose Record still has the reviewed url; a reviewed page url is
+    reused by a new meeting only as its reviewed art; anything else about a reviewed page url is a hold.
+    `edges`: the relationships the load adds (a new Meeting's institution and place, and every Meeting -> Record
+    link that touches a new node)."""
     meetings = {i for i, n in nodes.items() if "Meeting" in n["labels"]
                 and n["properties"].get("institution_id") == institution_id}
     linked: dict[str, set[str]] = {}
@@ -306,14 +314,25 @@ def expected_records(capture: dict, nodes: dict[str, dict], edges: list[dict], s
         for r in filter(is_record, rs):
             if nodes[r]["properties"].get("source_url"):
                 by_url.setdefault(nodes[r]["properties"]["source_url"], set()).add(r)
+    reviewed = {(a["record_id"], a["art"], a["established_url"], a["page_url"]) for a in aliases}
+    on_page = {a["page_url"] for a in aliases}
+    live: dict[str, str] = {}  # reviewed page url -> its art, while its Record keeps the reviewed url
+    for a in aliases:
+        if is_record(a["record_id"]) and any(a["record_id"] in rs for rs in linked.values()) \
+                and nodes[a["record_id"]]["properties"].get("source_url") == a["established_url"]:
+            by_url.setdefault(a["page_url"], set()).add(a["record_id"])
+            live[a["page_url"]] = a["art"]
     kinds = guarded_load.ARTIFACT_KINDS
     classes: Counter = Counter()
     created: set[str] = {ref["id"] for ref in capture.get("record_refs", [])}
     classes["listing_snapshot"] = len(created)
     fresh: dict[str, list[tuple[str, str]]] = {}
-    problems = []
+    problems, links = [], []
     for m in capture["meetings"]:
         mid, new = m["meeting_id"], m["meeting_id"] not in meetings
+        if new:
+            links += [(mid, "AT_INSTITUTION", institution_id)] + \
+                ([(mid, "IN_JURISDICTION", jurisdiction_id)] if jurisdiction_id else [])
         urls = [a["url"] for a in (m.get("artifacts") or {}).values() if a.get("available") and a.get("url")]
         if len(set(urls)) != len(urls):
             classes["HOLD"] += 1
@@ -329,14 +348,21 @@ def expected_records(capture: dict, nodes: dict[str, dict], edges: list[dict], s
             established |= {template} if template in nodes else set()
             if established:
                 one = next(iter(established))
-                ok = len(established) == 1 and nodes[one]["properties"].get("source_url") == url
-                classes["existing_exact_match" if ok else "HOLD"] += 1
-                problems += [] if ok else [(mid, art, url)]
+                was = nodes[one]["properties"].get("source_url")
+                exact = len(established) == 1 and was == url
+                alias = len(established) == 1 and (one, art, was, url) in reviewed and not by_url.get(url, set()) - {one}
+                classes["existing_exact_match" if exact else "existing_alias_match" if alias else "HOLD"] += 1
+                problems += [] if exact or alias else [(mid, art, url)]
+                links += [(mid, "EVIDENCED_BY", one)] if new else []
+            elif url in on_page and live.get(url) != art:
+                classes["HOLD"] += 1
+                problems.append((mid, art, url))
             elif by_url.get(url):
                 ok = new and len(by_url[url]) == 1 and \
                     nodes[next(iter(by_url[url]))]["properties"].get("record_type") in kinds.get(art, ())
                 classes["existing_reused_by_new_meeting" if ok else "HOLD"] += 1
                 problems += [] if ok else [(mid, art, url)]
+                links += [(mid, "EVIDENCED_BY", next(iter(by_url[url])))] if ok else []
             else:
                 fresh.setdefault(url, []).append((mid, art, new))
     for url, users in fresh.items():
@@ -345,11 +371,21 @@ def expected_records(capture: dict, nodes: dict[str, dict], edges: list[dict], s
             problems.append((url, "*", "one new url across kinds"))
             continue
         owner = min(users)
-        created.add(f"record-{source_id}-{owner[0].split('meeting-', 1)[-1]}-{owner[1]}")
+        rid = f"record-{source_id}-{owner[0].split('meeting-', 1)[-1]}-{owner[1]}"
+        created.add(rid)
+        links += [(user[0], "EVIDENCED_BY", rid) for user in users]
         for user in users:
             classes[("artifact_on_new_meeting" if user[2] else "new_artifact_on_existing_meeting")
                     if user == owner else "shares_a_new_record"] += 1
-    return {"created": sorted(created), "classes": dict(classes), "holds": problems}
+    return {"created": sorted(created), "classes": dict(classes), "holds": problems, "edges": sorted(set(links))}
+
+
+def _edge_check(results: dict, expected, actual: list[dict]) -> None:
+    """The relationships the load created == the oracle's, exactly (as a multiset of start, type, end)."""
+    want, got = Counter(map(tuple, expected)), Counter((e["start_id"], e["type"], e["end_id"]) for e in actual)
+    _check(results, "new relationships == the independently expected set (endpoints and type, counted)", want == got,
+           {"expected": sum(want.values()), "created": sum(got.values()),
+            "missing": sorted(want - got)[:10], "unexpected": sorted(got - want)[:10]})
 
 
 def _check(results: dict, name: str, ok: bool, detail) -> None:
@@ -357,7 +393,8 @@ def _check(results: dict, name: str, ok: bool, detail) -> None:
 
 
 def rehearse(source_id: str, export: Path, work: Path, *, repo: Path = REPO, identity_cache: Path | None = None,
-             responses: Path | None = None, now: datetime | None = None, expected: Path | None = None) -> dict:
+             responses: Path | None = None, now: datetime | None = None, expected: Path | None = None,
+             inventory: Path | None = None) -> dict:
     work, export = Path(work).resolve(), Path(export).resolve()
     if work.is_relative_to(REPO) or work.is_relative_to(Path(repo).resolve()):
         raise ValueError(f"the rehearsal works in staging, never inside the repo ({work})")
@@ -389,10 +426,13 @@ def rehearse(source_id: str, export: Path, work: Path, *, repo: Path = REPO, ide
         runs[name] = run_variant(name, work, repo, source_id, store=store, mode=mode, frozen=at, graph=graph,
                                  seed=export, identity_cache=cache, registry_name=registry_name)
         overlays[name] = guarded_load.FakeGraphPort(graph).overlay()
-    return _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store, expect)
+    aliases = record_url_aliases.load(repo)
+    return _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store, expect,
+                             aliases=aliases, inventory=inventory)
 
 
-def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store, expect=None) -> dict:
+def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store, expect=None, *,
+                      aliases=record_url_aliases.Aliases(None), inventory: Path | None = None) -> dict:
     results = {"source_id": source_id, "export": str(export), "crosswalk_sha256": xw.sha256 if xw else None,
                "identity": config.get("identity"), "work": str(work), "responses": len(store), "runs": {},
                "checks": []}
@@ -410,6 +450,10 @@ def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store
         else:
             _check(results, f"{name}: the stage pinned the native-only identity",
                    run["source"].get("identity") == crosswalk.NATIVE, run["source"].get("identity"))
+        if aliases.entries(source_id):
+            _check(results, f"{name}: the stage pinned the reviewed alias list",
+                   run["source"].get("record_url_aliases_sha256") == aliases.sha256,
+                   run["source"].get("record_url_aliases_sha256"))
     if not all(c["ok"] for c in results["checks"]):
         return results
     first = runs["empty-cache"]
@@ -421,18 +465,22 @@ def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store
     if xw is None:
         return _native_checks(results, source_id, config, nodes, runs, overlays, expect)
 
-    # new Meetings == the listing-only set, by the generator's own report on this run's listing
-    listing = (first["root"] / "data" / "raw" / source_id / first["frozen"][:10] / "source.html").read_text()
-    base = "/".join(config["url"].split("/", 3)[:3])
-    _, xreport = crosswalk.generate(source_id, config["institution_id"], export, listing, base_url=base,
-                                    backfill_from=str(config.get("backfill_from", "")), previous=xw.entries)
-    expected_meetings = sorted(crosswalk.adapter_id(source_id, s) for s in xreport["listing_only"])
     created = first["report"]["created"]
-    results["crosswalk_report"] = {k: xreport[k] for k in ("counts", "listing_only", "kept", "graph_only", "conflicts")}
-    _check(results, "new Meetings == the listing-only (adapter-only) set",
+    if inventory is not None:  # listing + archive: the pinned, independently built inventory says what is new
+        expected_meetings = _inventory_meetings(results, source_id, capture, Path(inventory))
+    else:  # new Meetings == the listing-only set, by the generator's own report on this run's listing
+        listing = (first["root"] / "data" / "raw" / source_id / first["frozen"][:10] / "source.html").read_text()
+        base = "/".join(config["url"].split("/", 3)[:3])
+        _, xreport = crosswalk.generate(source_id, config["institution_id"], export, listing, base_url=base,
+                                        backfill_from=str(config.get("backfill_from", "")), previous=xw.entries)
+        expected_meetings = sorted(crosswalk.adapter_id(source_id, s) for s in xreport["listing_only"])
+        results["crosswalk_report"] = {k: xreport[k] for k in ("counts", "listing_only", "kept", "graph_only",
+                                                               "conflicts")}
+    _check(results, "new Meetings == the expected set (listing-only, or the inventory's proven-new class 5)",
            sorted(created["nodes"].get("Meeting", [])) == expected_meetings,
            {"created": len(created["nodes"].get("Meeting", [])), "expected": len(expected_meetings)})
-    expected = expected_records(capture, nodes, edges, source_id, config["institution_id"])
+    expected = expected_records(capture, nodes, edges, source_id, config["institution_id"],
+                                aliases=aliases.entries(source_id), jurisdiction_id=config.get("jurisdiction_id"))
     results["expected_records"] = expected["classes"]
     _check(results, "new Records == the independently classified set",
            sorted(created["nodes"].get("Record", [])) == expected["created"] and not expected["holds"],
@@ -440,6 +488,7 @@ def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store
             "classes": expected["classes"], "holds": expected["holds"]})
 
     o_nodes, o_edges = overlays["empty-cache"]
+    _edge_check(results, expected["edges"], o_edges)
     touched = [n["id"] for n in o_nodes if n["id"] in nodes]
     created_ids = {n["id"] for n in o_nodes}
     between_existing = [e for e in o_edges if e["start_id"] not in created_ids and e["end_id"] not in created_ids]
@@ -460,6 +509,26 @@ def _rehearsal_checks(source_id, config, xw, export, work, runs, overlays, store
 
     _replays(results, source_id, config, runs, overlays)
     return results
+
+
+def _inventory_meetings(results: dict, source_id: str, capture: dict, path: Path) -> list[str]:
+    """The pinned inventory's proven-new (class 5) Meetings; checks the capture is exactly the inventory's rows and
+    artifacts, and that nothing is unresolved (class 6)."""
+    import html
+
+    raw = path.read_bytes()
+    rows = {r["slug"]: r for r in json.loads(raw)["rows"]}
+    results["inventory"] = {"path": str(path), "sha256": hashlib.sha256(raw).hexdigest()}
+    got = {crosswalk.page_slug(m.get("source_url")): {a: x["url"] for a, x in (m.get("artifacts") or {}).items()
+                                                     if x.get("available") and x.get("url")}
+           for m in capture["meetings"]}
+    want = {slug: {a: html.unescape(fs[0]["url"]) for a, fs in r["artifacts"].items() if fs}
+            for slug, r in rows.items() if r["class"] != 1}
+    differ = sorted(s for s in set(got) | set(want) if got.get(s) != want.get(s))
+    _check(results, "the capture's meetings and artifacts == the pinned inventory's (none unresolved)",
+           not differ and not [s for s, r in rows.items() if r["class"] == 6],
+           {"differ": differ[:10], "unresolved": [s for s, r in rows.items() if r["class"] == 6][:10]})
+    return sorted(crosswalk.adapter_id(source_id, s) for s, r in rows.items() if r["class"] == 5)
 
 
 def _replays(results: dict, source_id: str, config: dict, runs: dict, overlays: dict) -> None:
@@ -763,6 +832,8 @@ def main(argv: list[str] | None = None) -> int:
     rh.add_argument("--responses", type=Path, help="recorded responses to replay instead of fetching")
     rh.add_argument("--expected", type=Path,
                     help="a native-only source's expected {meetings, records, stubs} (the reviewed inventory)")
+    rh.add_argument("--inventory", type=Path,
+                    help="the pinned listing + archive inventory (rows: slug, class, artifacts): new Meetings = class 5")
     ck = sub.add_parser("check-loaded", help="after a real run: what it wrote vs what it should have (read only)")
     ck.add_argument("run_id")
     ck.add_argument("--source", help="the guarded meeting source to check (or --agenda-items)")
@@ -786,7 +857,7 @@ def main(argv: list[str] | None = None) -> int:
         return _shim_main(args)
     if args.cmd == "rehearse":
         results = rehearse(args.source, args.export, args.work, identity_cache=args.identity_cache,
-                           responses=args.responses, expected=args.expected)
+                           responses=args.responses, expected=args.expected, inventory=args.inventory)
         text = render_rehearsal(results)
         (Path(args.work) / "rehearsal.json").write_text(json.dumps(results, indent=1, default=str) + "\n")
         (Path(args.work) / "rehearsal.md").write_text(text)

@@ -80,12 +80,27 @@ def test_san_rafael_takes_its_ids_only_from_its_reviewed_crosswalk():
     assert len(xw.entries) >= 261
 
 
-def test_san_rafael_reads_its_listing_where_the_city_moved_it_without_an_archive():
-    # cityofsanrafael.org 302s to sanrafael.gov (2026-10); the archive stays off until its rows are reconciled
-    # (docs/runbooks/san-rafael-weekly.md).
+def test_san_rafael_reads_its_listing_where_the_city_moved_it_and_its_reconciled_archive():
+    # cityofsanrafael.org 302s to sanrafael.gov (2026-10). The archive's two pages were read only once every row was
+    # reconciled and the re-hosted files had reviewed Record-URL aliases (docs/runbooks/san-rafael-weekly.md).
+    import record_url_aliases
+
+    from datetime import date
+
+    from ingest_guard import Floors, evaluate
+
     sr = _all_sources()["san-rafael-city-council"]
     assert sr["url"] == "https://sanrafael.gov/city-council-meetings/"
-    assert "archive_pages" not in sr
+    host = sr["url"].split("/city-council-meetings/")[0]
+    assert len(sr["archive_pages"]) == 2 and all(p.startswith(host + "/") for p in sr["archive_pages"])
+    assert len(record_url_aliases.load(ROOT).entries(sr["id"])) == 144
+    # the reviewed inventory's 183 rows are the floor: a listing-only or partial archive parse never passes, even
+    # against the old 10-row baseline
+    floors = Floors.from_config(sr)
+    assert floors.min_rows == 183
+    pull = dict(newest=date(2026, 11, 2), last_good_rows=10, baseline="b", today=date(2026, 11, 16), floors=floors,
+                errors=0)
+    assert not evaluate(rows=10, **pull).ok and not evaluate(rows=100, **pull).ok and evaluate(rows=183, **pull).ok
 
 
 def test_larkspur_reads_only_its_archive_page_with_native_ids_from_2019():

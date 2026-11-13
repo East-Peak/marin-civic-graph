@@ -234,10 +234,11 @@ def test_check_loaded_refuses_when_a_later_run_attempted_a_load(ran, tmp_path, l
 # --- the independent Record oracle refuses what the resolver must hold ----------------------------------------
 
 
-def _oracle(meetings, extra_nodes=(), extra_edges=()):
+def _oracle(meetings, extra_nodes=(), extra_edges=(), aliases=()):
     nodes = {n["id"]: n for n in [*SEED_NODES, *extra_nodes]}
     capture = {"meetings": meetings, "record_refs": []}
-    return cr.expected_records(capture, nodes, [*SEED_EDGES, *extra_edges], SID, INST)
+    return cr.expected_records(capture, nodes, [*SEED_EDGES, *extra_edges], SID, INST, aliases=aliases,
+                               jurisdiction_id=PLACE)
 
 
 def _cm(mid, **urls):
@@ -432,3 +433,135 @@ def test_check_loaded_refuses_when_the_alias_list_is_not_the_one_the_run_pinned(
     with pytest.raises(cr.CheckRefused, match="alias list"):
         _check(ran, tmp_path)
     assert capture.is_file()
+
+
+# --- reviewed Record-URL aliases and the pinned inventory ----------------------------------------------------
+
+REHOSTED = "https://storage.example/lakeport-rehosted/minutes-2020-03-02.pdf"
+
+
+def _alias(**over):
+    return {"record_id": "record-2020-03-02-lakeport-city-council-minutes", "art": "minutes",
+            "established_url": PDF.format("minutes-2020-03-02"), "page_url": REHOSTED,
+            "evidence": {"kind": "identical_bytes", "sha256": "1" * 64}, "reviewed": "2026-11-12", **over}
+
+
+def _rehost(world, *entries):
+    """The city re-hosts March 2's minutes; the repo lists `entries` as reviewed aliases."""
+    import record_url_aliases as rua
+
+    store = cr.ResponseStore(world["responses"])
+    store.put(f"{SITE}/meetings/city-council-march-2-2020/", status=200, headers={},
+              body=_detail({"minutes": REHOSTED}).encode(), error=None)
+    if entries:
+        (world["repo"] / rua.PATH).write_text(yaml.safe_dump({"format": 1, "sources": {SID: list(entries)}}))
+
+
+def test_a_rehosted_artifact_with_a_reviewed_alias_rehearses_clean_and_the_pin_is_checked(world):
+    import record_url_aliases as rua
+
+    _rehost(world, _alias())
+    results = _rehearse(world)
+    assert [c for c in results["checks"] if not c["ok"]] == []
+    pins = [c for c in results["checks"] if "alias list" in c["check"]]
+    assert len(pins) == 4 and all(c["detail"] == rua.load(world["repo"]).sha256 for c in pins)
+    assert results["expected_records"]["existing_alias_match"] == 1
+
+
+def test_a_rehosted_artifact_without_an_alias_fails_the_rehearsal(world):
+    _rehost(world)
+    results = _rehearse(world)
+    assert not all(c["ok"] for c in results["checks"])
+
+
+def test_the_oracle_accepts_a_mismatch_only_for_an_exactly_listed_pair():
+    rec = "record-2020-03-02-lakeport-city-council-minutes"
+    ok = _oracle([_cm(REG, minutes=REHOSTED)], aliases=[_alias()])
+    assert ok["holds"] == [] and ok["classes"] == {"listing_snapshot": 0, "existing_alias_match": 1}
+    for bad in (_alias(art="agenda"), _alias(established_url=PDF.format("stale")), _alias(page_url=PDF.format("x")),
+                _alias(record_id="record-other")):
+        assert _oracle([_cm(REG, minutes=REHOSTED)], aliases=[bad])["holds"], bad
+    assert _oracle([_cm(REG, minutes=REHOSTED)])["holds"]
+    assert rec in {e["end_id"] for e in SEED_EDGES}
+
+
+def test_the_oracle_expects_a_new_meeting_to_reuse_the_aliased_record_and_never_mint_one():
+    new = f"meeting-{SID}-city-council-march-2-2020-special-regular"
+    reuse = _oracle([_cm(new, minutes=REHOSTED)], aliases=[_alias()])
+    assert reuse["holds"] == [] and reuse["classes"]["existing_reused_by_new_meeting"] == 1 and reuse["created"] == []
+    for bad in (_alias(art="agenda"), _alias(established_url=PDF.format("stale"))):
+        assert _oracle([_cm(new, minutes=REHOSTED)], aliases=[bad])["holds"], bad
+
+
+def _inventory(world, rows):
+    path = world["work"].parent / "inventory.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"rows": rows}))
+    return path
+
+
+def _rows(**override):
+    rows = []
+    for slug, (_, tabs) in LISTED.items():
+        cls = 5 if slug == "city-council-may-4-2026" else 2
+        rows.append({"slug": slug, "class": override.get(slug, cls), "artifacts": {a: [{"url": u}] for a, u in tabs.items()}})
+    return rows
+
+
+def test_expected_meetings_come_from_the_pinned_inventory(world):
+    path = _inventory(world, _rows())
+    results = _rehearse(world, inventory=path)
+    assert [c for c in results["checks"] if not c["ok"]] == []
+    assert results["inventory"] == {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    assert any("inventory" in c["check"] for c in results["checks"])
+
+
+@pytest.mark.parametrize("damage", ["class", "artifact", "missing-row"])
+def test_a_capture_that_disagrees_with_the_inventory_fails(world, damage):
+    rows = _rows(**({"city-council-may-4-2026": 2} if damage == "class" else {}))
+    if damage == "artifact":
+        rows[0]["artifacts"]["minutes"] = [{"url": PDF.format("other")}]
+    if damage == "missing-row":
+        rows = rows[1:]
+    results = _rehearse(world, inventory=_inventory(world, rows))
+    assert not all(c["ok"] for c in results["checks"])
+
+
+def test_the_oracle_expects_exactly_the_edges_a_load_adds():
+    new = f"meeting-{SID}-city-council-march-2-2020-special-regular"
+    closed = "meeting-2020-03-02-lakeport-city-council-closed-session"
+    got = _oracle([_cm(new, minutes=REHOSTED, agenda=PDF.format("a-new")), _cm(closed, agenda=PDF.format("a-closed"))],
+                  aliases=[_alias()])
+    new_agenda = f"record-{SID}-{SID}-city-council-march-2-2020-special-regular-agenda"
+    closed_agenda = f"record-{SID}-2020-03-02-lakeport-city-council-closed-session-agenda"
+    assert sorted(got["edges"]) == sorted([
+        (new, "AT_INSTITUTION", INST), (new, "IN_JURISDICTION", PLACE),
+        (new, "EVIDENCED_BY", "record-2020-03-02-lakeport-city-council-minutes"),  # the shared, aliased Record
+        (new, "EVIDENCED_BY", new_agenda), (closed, "EVIDENCED_BY", closed_agenda)])  # existing -> new Record only
+
+
+@pytest.mark.parametrize("damage", ["missing", "wrong-target", "extra"])
+def test_the_edge_check_fails_on_any_edge_the_oracle_did_not_expect(damage):
+    expected = [("m", "EVIDENCED_BY", "r1"), ("m", "AT_INSTITUTION", "org")]
+    actual = [{"start_id": s, "type": t, "end_id": e, "properties": {}} for s, t, e in expected]
+    if damage == "missing":
+        actual = actual[1:]
+    elif damage == "wrong-target":
+        actual[0]["end_id"] = "r2"
+    else:
+        actual.append({"start_id": "m", "type": "EVIDENCED_BY", "end_id": "r3", "properties": {}})
+    results = {"checks": []}
+    cr._edge_check(results, expected, actual)
+    assert results["checks"][0]["ok"] is False
+    results = {"checks": []}
+    cr._edge_check(results, expected, [{"start_id": s, "type": t, "end_id": e} for s, t, e in expected])
+    assert results["checks"][0]["ok"] is True
+
+
+def test_inventory_rows_excluded_by_date_are_not_expected_and_escaped_urls_match(world):
+    rows = _rows()
+    rows[0]["artifacts"]["minutes"] = [{"url": PDF.format("minutes-2020-03-02").replace("/", "&#x2F;", 0)
+                                        .replace(".pdf", "&#46;pdf")}]
+    rows.append({"slug": "city-council-may-4-2018", "class": 1, "artifacts": {"agenda": [{"url": PDF.format("old")}]}})
+    results = _rehearse(world, inventory=_inventory(world, rows))
+    assert [c for c in results["checks"] if not c["ok"]] == []
