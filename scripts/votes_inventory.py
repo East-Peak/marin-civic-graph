@@ -190,6 +190,15 @@ def printed_date(path: Path, fmt: str) -> tuple[str | None, bool]:
     return date, bool(re.search(r"closed\s+session", head[:400], re.I))
 
 
+def shared_owner(mids: Iterable[str], meetings: dict, date: str | None, closed: bool) -> str | None:
+    """The one meeting a shared document belongs to: the meeting whose date the document prints, a same-day tie
+    going to the meeting whose closed-session-ness matches its heading. None when that leaves no single meeting."""
+    cands = sorted(m for m in mids if meetings[m]["date"] == date)
+    if len(cands) > 1:
+        cands = [m for m in cands if bool(re.search(r"closed\s+session", meetings[m]["title"], re.I)) == closed]
+    return cands[0] if len(cands) == 1 else None
+
+
 def _assign_shared(meetings: dict, docs: dict, raw: Path, fetched: Path) -> tuple[dict, list]:
     """A document (by sha256) attached to several meetings belongs to the one whose date it prints
     (a same-day tie goes to the meeting whose closed-session-ness matches its heading); the others
@@ -206,17 +215,14 @@ def _assign_shared(meetings: dict, docs: dict, raw: Path, fetched: Path) -> tupl
         doc = next(d for d in docs[mids[0]] if d["sha256"] == sha)
         root, _, rest = doc["paths"][0].partition("/")
         path = (Path(raw) if root == "raw" else Path(fetched)) / rest
-        date, closed = printed_date(path, doc["format"])
-        cands = sorted(m for m in mids if meetings[m]["date"] == date)
-        if len(cands) > 1:
-            cands = [m for m in cands if bool(re.search(r"closed\s+session", meetings[m]["title"], re.I)) == closed]
+        owner = shared_owner(mids, meetings, *printed_date(path, doc["format"]))
         for m in mids:
             docs[m] = [d for d in docs[m] if d["sha256"] != sha]
-        if len(cands) == 1:
-            docs[cands[0]].append(doc)
+        if owner:
+            docs[owner].append(doc)
             for m in mids:
-                if m != cands[0]:
-                    gaps[m] = f"document_of_other_meeting:{cands[0]}"
+                if m != owner:
+                    gaps[m] = f"document_of_other_meeting:{owner}"
         else:
             for m in mids:
                 gaps[m] = "document_meeting_ambiguous"
