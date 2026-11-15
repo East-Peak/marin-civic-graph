@@ -8,6 +8,7 @@ import {
   COVERAGE_STATES,
   MARK_END,
   MARK_START,
+  MAX_PAGE_HITS,
   loadMinutesPage,
   type BodyCoverage,
   type MeetingResult,
@@ -105,6 +106,8 @@ export default async function MinutesPage({
             (data.results.length ? (
               <p>
                 {data.results.length} meetings, {data.results.reduce((n, m) => n + m.hits.length, 0)} pages
+                {data.truncated &&
+                  ` — only the first ${MAX_PAGE_HITS} matching pages (newest first) are shown; narrow the search`}
               </p>
             ) : (
               <p>No matches in the indexed minutes. Check coverage below before reading this as “never discussed”.</p>

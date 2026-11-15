@@ -99,7 +99,8 @@ describe("searchMinutes", () => {
   it("groups page hits by meeting, newest meeting first, pages in order", () => {
     const db = openFixture();
     try {
-      const results = searchMinutes(db, "Willow Glade picnic lot");
+      const { results, truncated } = searchMinutes(db, "Willow Glade picnic lot");
+      expect(truncated).toBe(false);
       expect(results.map((r) => r.meetingId)).toEqual(["m-new", "m-parks", "m-old"]);
       expect(results[0]).toMatchObject({
         body: "Fernwood Town Council",
@@ -116,8 +117,22 @@ describe("searchMinutes", () => {
   it("returns nothing for an empty query or no match", () => {
     const db = openFixture();
     try {
-      expect(searchMinutes(db, "  ")).toEqual([]);
-      expect(searchMinutes(db, "zeppelin")).toEqual([]);
+      expect(searchMinutes(db, "  ")).toEqual({ results: [], truncated: false });
+      expect(searchMinutes(db, "zeppelin")).toEqual({ results: [], truncated: false });
+    } finally {
+      db.close();
+    }
+  });
+});
+
+describe("searchMinutes truncation", () => {
+  it("says when more pages matched than it returns, so counts never look exhaustive", () => {
+    const db = openFixture();
+    try {
+      const { results, truncated } = searchMinutes(db, "Willow", 2);
+      expect(truncated).toBe(true);
+      expect(results.flatMap((r) => r.hits)).toHaveLength(2);
+      expect(searchMinutes(db, "Willow", 3).truncated).toBe(false);
     } finally {
       db.close();
     }
@@ -174,6 +189,7 @@ describe("/minutes page", () => {
     expect(first.getByRole("link", { name: /official document/i })).toHaveAttribute(
       "href", "https://town.example/new");
     expect(screen.getByText(/3 meetings/)).toBeInTheDocument();
+    expect(screen.queryByText(/only the first/i)).not.toBeInTheDocument();
   });
 
   it("states coverage per body so no results is distinguishable from not covered", async () => {

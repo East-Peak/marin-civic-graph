@@ -14,11 +14,12 @@ push or any export, no node is created from its text, and the build never touche
 Every enumerated file gets exactly one disposition (DISPOSITIONS). The linkage rules never guess:
   - a file is a Meeting's only by its name `<meeting_id>.<ext>`, and only if the substrate holds that Meeting
     (San Anselmo's names come from its staging index.json via `import-san-anselmo`, which writes a manifest);
-  - several different documents for one meeting: the latest by saved date (a source's minutes-manifest.json
+    (or, in a source with a manifest, a later fetch whose bytes minutes-fetch-log.jsonl records);
+  - first, one document's bytes under several meeting ids are one document (`shared-indexed`), owned by the meeting
+    `votes_inventory.shared_owner` resolves from the date it prints, otherwise `quarantined-ambiguous`;
+  - then, several different documents owned by one meeting: the latest by saved date (minutes-manifest.json
     `fetch_date` or minutes-fetch-log.jsonl `fetched_at`, the votes-refresh convention) is kept and the others are
-    `superseded`; without saved dates to order them, all are `quarantined-ambiguous`;
-  - one document's bytes under several meeting ids are indexed once (`shared-indexed`) under the meeting
-    `votes_inventory.shared_owner` resolves from the date it prints, otherwise `quarantined-ambiguous`.
+    `superseded`; without saved dates that order them, all are `quarantined-ambiguous`.
 The body is the Meeting title normalized by `minutes_bodies`. The build is deterministic: same inputs, same bytes.
 
     python scripts/minutes_text_index.py import-san-anselmo     # once: staged San Anselmo files → raw store
@@ -36,10 +37,11 @@ import re
 import sqlite3
 import subprocess
 import sys
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from minutes_bodies import SOURCES, normalize_body
+from minutes_bodies import MINUTES_EXTENSIONS, SOURCES, normalize_body
 from votes_inventory import normalize_url, printed_date, shared_owner, sniff_format
 from votes_text import _FOLD, docx_lines, html_lines
 
@@ -109,9 +111,11 @@ def load_meetings(substrate: Path, sources) -> tuple[dict[str, dict], str]:
         db.close()
 
 
-def _saved_dates(source_dir: Path) -> tuple[dict[str, str], dict[str, dict] | None]:
-    """({file name: saved date}, {file name: manifest entry} or None when the source has no manifest)."""
+def _saved_dates(source_dir: Path) -> tuple[dict[str, str], dict[str, dict] | None, dict[str, set[str]]]:
+    """({file name: saved date}, {file name: manifest entry} or None when the source has no manifest,
+    {file name: sha256s the fetch log records for it})."""
     saved: dict[str, str] = {}
+    fetched: dict[str, set[str]] = {}
     log = source_dir / FETCH_LOG
     if log.is_file():
         for line in log.read_text(encoding="utf-8").splitlines():
@@ -119,12 +123,14 @@ def _saved_dates(source_dir: Path) -> tuple[dict[str, str], dict[str, dict] | No
             name = Path(row.get("path") or "").name
             if row.get("status") in ("ok", "cached") and name and row.get("fetched_at"):
                 saved[name] = max(saved.get(name, ""), row["fetched_at"])
+                if row.get("sha256"):
+                    fetched.setdefault(name, set()).add(row["sha256"])
     manifest = None
     if (source_dir / MANIFEST).is_file():
         manifest = {d["file"]: d for d in json.loads((source_dir / MANIFEST).read_text())["documents"]}
         for name, d in manifest.items():
             saved.setdefault(name, d.get("fetch_date") or "")
-    return {k: v for k, v in saved.items() if v}, manifest
+    return {k: v for k, v in saved.items() if v}, manifest, fetched
 
 
 # --- text ---------------------------------------------------------------------------------------------------------
@@ -154,7 +160,7 @@ def extract_pages(path: Path, fmt: str) -> list[str]:
 # --- dispositions -------------------------------------------------------------------------------------------------
 
 def _name_re(source: str) -> re.Pattern:
-    return re.compile(rf"^(meeting-{re.escape(source)}-\d+)\.(pdf|html|htm|docx)$")
+    return re.compile(rf"^(meeting-{re.escape(source)}-\d+)\.({'|'.join(MINUTES_EXTENSIONS)})$")
 
 
 def _classify(raw: Path, sources, meetings: dict) -> tuple[list[dict], list[dict]]:
@@ -162,7 +168,7 @@ def _classify(raw: Path, sources, meetings: dict) -> tuple[list[dict], list[dict
     files: list[dict] = []
     for source in sources:
         sdir = raw / source
-        saved, manifest = _saved_dates(sdir)
+        saved, manifest, fetched = _saved_dates(sdir)
         root = sdir / "minutes"
         pattern = _name_re(source)
         for p in sorted(x for x in root.rglob("*") if x.is_file()) if root.is_dir() else []:
@@ -170,7 +176,12 @@ def _classify(raw: Path, sources, meetings: dict) -> tuple[list[dict], list[dict
                  "sha256": None, "format": None, "saved": None, "disposition": None, "reason": None}
             files.append(f)
             m = pattern.match(p.name) if p.parent == root else None
-            data = p.read_bytes()
+            try:
+                data = p.read_bytes()
+            except OSError as exc:
+                f.update(disposition="unreadable", reason=f"could not be read: {type(exc).__name__}",
+                         meeting_id=m.group(1) if m else None)
+                continue
             f["sha256"] = _sha(data)
             if not m:
                 f.update(disposition="unmapped", reason="file name is not a meeting id")
@@ -179,8 +190,9 @@ def _classify(raw: Path, sources, meetings: dict) -> tuple[list[dict], list[dict
             entry = (manifest or {}).get(p.name)
             if f["meeting_id"] not in meetings:
                 f.update(disposition="unmapped", reason="no Meeting with this id in the substrate")
-            elif manifest is not None and entry is None:
-                f.update(disposition="unmapped", reason=f"not listed in {source}/{MANIFEST}")
+            elif manifest is not None and entry is None and f["sha256"] not in fetched.get(p.name, ()):
+                f.update(disposition="unmapped", reason=f"not listed in {source}/{MANIFEST} "
+                                                        f"or a matching {FETCH_LOG} entry")
             elif entry and entry.get("sha256") and entry["sha256"] != f["sha256"]:
                 f.update(disposition="unmapped", reason=f"bytes differ from {source}/{MANIFEST}")
             elif (fmt := sniff_format(data)) is None:
@@ -188,33 +200,40 @@ def _classify(raw: Path, sources, meetings: dict) -> tuple[list[dict], list[dict
                          if data[:8] == OLE2_MAGIC else "not a PDF, HTML or DOCX document")
             else:
                 f.update(format=fmt, saved=saved.get(p.name), url=(entry or {}).get("url"))
-    _supersede(files)
-    return files, _share(files, raw, meetings)
+    return files, _supersede(_share(files, meetings))
 
 
-def _supersede(files: list[dict]) -> None:
-    """Several different documents for one meeting: keep the latest saved, never a guess."""
+def _supersede(docs: list[dict]) -> list[dict]:
+    """Several different documents for one meeting (after shared bytes found their owner): keep the latest saved,
+    never a guess. Returns the documents still to index."""
     by_meeting: dict[str, list[dict]] = {}
-    for f in files:
-        if f["disposition"] is None:
-            by_meeting.setdefault(f["meeting_id"], []).append(f)
-    for fs in by_meeting.values():
-        if len({f["sha256"] for f in fs}) < 2:
+    for d in docs:
+        own = [f["saved"] for f in d["files"] if f["meeting_id"] == d["meeting_id"]]
+        d["saved"] = max(own) if own and all(own) else None
+        by_meeting.setdefault(d["meeting_id"], []).append(d)
+    keep = []
+    for ds in by_meeting.values():
+        if len(ds) == 1:
+            keep += ds
             continue
-        newest = max(fs, key=lambda f: f["saved"] or "")
-        dated = all(f["saved"] for f in fs)
-        if dated and sum(1 for f in fs if f["saved"] == newest["saved"] and f["sha256"] != newest["sha256"]) == 0:
-            for f in fs:
-                if f["sha256"] != newest["sha256"]:
-                    f.update(disposition="superseded", reason=f"superseded by {Path(newest['path']).name} "
-                                                              f"(saved {newest['saved']}; this {f['saved']})")
+        newest = max(ds, key=lambda d: d["saved"] or "")
+        if all(d["saved"] for d in ds) and sum(d["saved"] == newest["saved"] for d in ds) == 1:
+            name = Path(next(f["path"] for f in newest["files"] if f["meeting_id"] == newest["meeting_id"])).name
+            keep.append(newest)
+            for d in ds:
+                if d is not newest:
+                    for f in d["files"]:
+                        f.update(disposition="superseded", reason=f"superseded by {name} (saved {newest['saved']}; "
+                                                                  f"this {d['saved']})")
         else:
-            for f in fs:
-                f.update(disposition="quarantined-ambiguous",
-                         reason="several versions of this meeting's minutes and no saved dates that order them")
+            for d in ds:
+                for f in d["files"]:
+                    f.update(disposition="quarantined-ambiguous",
+                             reason="several versions of this meeting's minutes and no saved dates that order them")
+    return sorted(keep, key=lambda d: d["files"][0]["sha256"])
 
 
-def _share(files: list[dict], raw: Path, meetings: dict) -> list[dict]:
+def _share(files: list[dict], meetings: dict) -> list[dict]:
     """Group the candidates by bytes; one document per group, attached to one meeting or quarantined."""
     groups: dict[str, list[dict]] = {}
     for f in files:
@@ -308,8 +327,19 @@ def _coverage(meetings: dict, files: list[dict], covered: dict) -> list[tuple]:
 
 def _write(out: Path, rows: list[tuple], coverage: list[tuple], files: list[dict], as_of: str) -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
-    tmp = out.with_name(out.name + ".building")
-    tmp.unlink(missing_ok=True)
+    fd, name = tempfile.mkstemp(prefix=f".{out.name}.", suffix=".building", dir=out.parent)
+    os.close(fd)
+    tmp = Path(name)
+    try:
+        _fill(tmp, rows, coverage, files, as_of)
+        os.chmod(tmp, 0o600)
+        os.replace(tmp, out)
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
+
+
+def _fill(tmp: Path, rows: list[tuple], coverage: list[tuple], files: list[dict], as_of: str) -> None:
     db = sqlite3.connect(tmp)
     try:
         db.executescript(SCHEMA)
@@ -326,8 +356,6 @@ def _write(out: Path, rows: list[tuple], coverage: list[tuple], files: list[dict
         db.execute("VACUUM")
     finally:
         db.close()
-    os.chmod(tmp, 0o600)
-    os.replace(tmp, out)
 
 
 # --- report -------------------------------------------------------------------------------------------------------

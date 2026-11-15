@@ -28,12 +28,14 @@ export type MeetingResult = {
   officialUrl: string | null;
   hits: PageHit[];
 };
+export type SearchResult = { results: MeetingResult[]; truncated: boolean };
 export type BodyCoverage = { body: string; first: string; last: string; counts: Record<CoverageState, number> };
 export type MinutesPageData =
   | { status: "absent"; path: string }
-  | { status: "ok"; asOf: string; query: string; results: MeetingResult[]; coverage: BodyCoverage[] };
+  | { status: "ok"; asOf: string; query: string; results: MeetingResult[]; truncated: boolean;
+      coverage: BodyCoverage[] };
 
-const MAX_PAGE_HITS = 400;
+export const MAX_PAGE_HITS = 400;
 
 export function minutesTextDbPath(): string {
   const configured = process.env.MINUTES_TEXT_DB_PATH;
@@ -59,9 +61,10 @@ type HitRow = {
   snippet: string;
 };
 
-export function searchMinutes(db: Database.Database, q: string): MeetingResult[] {
+/** Page hits grouped by meeting, newest first; at most `limit` pages, `truncated` when more matched. */
+export function searchMinutes(db: Database.Database, q: string, limit = MAX_PAGE_HITS): SearchResult {
   const match = ftsQuery(q);
-  if (!match) return [];
+  if (!match) return { results: [], truncated: false };
   const rows = db
     .prepare(
       `SELECT p.meeting_id, p.body, p.meeting_date, p.official_url, p.page,
@@ -71,9 +74,10 @@ export function searchMinutes(db: Database.Database, q: string): MeetingResult[]
         ORDER BY p.meeting_date DESC, p.meeting_id, p.page
         LIMIT ?`,
     )
-    .all(match, MAX_PAGE_HITS) as HitRow[];
+    .all(match, limit + 1) as HitRow[];
+  const truncated = rows.length > limit;
   const byMeeting = new Map<string, MeetingResult>();
-  for (const r of rows) {
+  for (const r of rows.slice(0, limit)) {
     let m = byMeeting.get(r.meeting_id);
     if (!m) {
       m = { meetingId: r.meeting_id, body: r.body, meetingDate: r.meeting_date, officialUrl: r.official_url, hits: [] };
@@ -81,7 +85,7 @@ export function searchMinutes(db: Database.Database, q: string): MeetingResult[]
     }
     m.hits.push({ page: r.page, snippet: r.snippet.replace(/\s+/g, " ").trim() });
   }
-  return [...byMeeting.values()];
+  return { results: [...byMeeting.values()], truncated };
 }
 
 export function coverageByBody(db: Database.Database): BodyCoverage[] {
@@ -114,7 +118,7 @@ export function loadMinutesPage(query: string): MinutesPageData {
     const asOf = (db.prepare("SELECT value FROM meta WHERE key = 'substrate_as_of_date'").get() as
       | { value: string }
       | undefined)?.value ?? "";
-    return { status: "ok", asOf, query, results: searchMinutes(db, query), coverage: coverageByBody(db) };
+    return { status: "ok", asOf, query, ...searchMinutes(db, query), coverage: coverageByBody(db) };
   } finally {
     db.close();
   }

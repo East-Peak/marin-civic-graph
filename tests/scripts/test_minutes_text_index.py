@@ -326,3 +326,58 @@ def test_fts_query_neutralises_search_syntax():
     assert mti.fts_query('Memorial Park "parking lot"') == '"Memorial" AND "Park" AND "parking lot"'
     assert mti.fts_query("NEAR( a* OR b") == '"NEAR" AND "a" AND "OR" AND "b"'
     assert mti.fts_query("  ") is None
+
+
+def test_a_shared_document_is_resolved_before_versions_are_ordered(world):
+    """A holds old X and newer Y; B holds X. Superseding A's X first would make B's X look unique and attach it
+    without the printed-date check. X prints A's date here, so it is A's (superseded) and never B's."""
+    raw, a, b = world["raw"], f"meeting-{NOV}-1", f"meeting-{NOV}-2"
+    x = make_pdf(["Minutes of July 1, 2030, the old text." + LONG])
+    for p in (raw / NOV / "minutes").glob(f"{b}.*"):
+        p.unlink()
+    _put(raw, NOV, f"{a}.pdf", x)
+    _put(raw, NOV, f"{b}.pdf", x)
+    (raw / NOV / "minutes-fetch-log.jsonl").write_text("\n".join(json.dumps(e) for e in [
+        {"meeting_id": a, "path": f"{a}.pdf", "status": "ok", "fetched_at": "2030-07-02T00:00:00Z"},
+        {"meeting_id": a, "path": f"{a}.html", "status": "ok", "fetched_at": "2030-07-05T00:00:00Z"}]) + "\n")
+    d = _disp(_build(world))
+    assert d[f"{a}.html"][0] == "indexed"
+    assert d[f"{a}.pdf"][0] == d[f"{b}.pdf"][0] == "superseded"
+    assert not [r for r in _rows(world["out"]) if r[0] == b]
+
+
+def test_a_document_fetched_after_the_import_is_mapped_by_its_fetch_log(world):
+    raw, mid = world["raw"], f"meeting-{SA}-12"
+    db = sqlite3.connect(world["substrate"])
+    db.execute("INSERT INTO nodes VALUES (?, 'Meeting', '', ?)",
+               (mid, json.dumps({"meeting_date": "2030-09-09", "title": "Town Council"})))
+    db.commit()
+    db.close()
+    data = make_pdf(["Town Council September 9, 2030." + LONG])
+    _put(raw, SA, f"{mid}.pdf", data)
+    (raw / SA / "minutes-fetch-log.jsonl").write_text(json.dumps(
+        {"meeting_id": mid, "path": f"{mid}.pdf", "status": "ok", "fetched_at": "2030-09-10T00:00:00Z",
+         "sha256": mti._sha(data)}) + "\n")
+    assert _disp(_build(world))[f"{mid}.pdf"][0] == "indexed"
+    _put(raw, SA, f"{mid}.pdf", make_pdf(["Different bytes from the logged fetch." + LONG]))
+    assert _disp(_build(world))[f"{mid}.pdf"] == ("unmapped", f"not listed in {SA}/minutes-manifest.json "
+                                                             "or a matching minutes-fetch-log.jsonl entry")
+
+
+def test_a_file_that_cannot_be_read_is_unreadable_not_a_crash(world, monkeypatch):
+    target = world["raw"] / CM / "minutes" / f"meeting-{CM}-1.pdf"
+    real = Path.read_bytes
+
+    def read_bytes(self):
+        if self == target:
+            raise PermissionError("denied")
+        return real(self)
+
+    monkeypatch.setattr(Path, "read_bytes", read_bytes)
+    d = _disp(_build(world))
+    assert d[target.name] == ("unreadable", "could not be read: PermissionError")
+
+
+def test_builds_publish_through_their_own_temporary_file(world):
+    _build(world)
+    assert [p.name for p in world["out"].parent.iterdir()] == [world["out"].name]

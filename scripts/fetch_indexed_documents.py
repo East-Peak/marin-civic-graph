@@ -7,7 +7,7 @@ The 2026-10-15 Granicus-minutes decision authorizes these single-document fetche
 or change scripts/robots_gate.py, and nothing else calls it. The rules it enforces:
 
   1. One document per request; every request, each redirect hop included, starts >= 3.0 s after the previous.
-  2. A cached document (<raw>/<source>/minutes/<meeting_id>.{pdf,html,docx}) is never refetched.
+  2. A cached document (<raw>/<source>/minutes/<meeting_id>.{pdf,html,htm,docx}) is never refetched.
   3. An honest User-Agent with no personal contact details.
   4. No listing or crawl: only exact minutes URLs taken from the substrate; any other URL is refused (RefusedUrl).
   5. Redirects are not followed automatically; each hop's host must be in the source's allow-list (below) or that
@@ -35,11 +35,12 @@ from urllib.parse import urljoin, urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from minutes_bodies import SOURCES, normalize_body  # noqa: E402
+from minutes_bodies import MINUTES_EXTENSIONS, SOURCES, normalize_body  # noqa: E402
 from votes_inventory import normalize_url, sniff_format  # noqa: E402
 
 MIN_INTERVAL_S = 3.0
 MAX_HOPS = 5
+CACHE_EXTENSIONS = MINUTES_EXTENSIONS
 DEFAULT_LIMIT = 25
 USER_AGENT = "OpenMarin/1.0 (civic records research; single-document fetches)"
 DEFAULT_SUBSTRATE = Path("~/projects/marin-civic-graph/data/exports/public-substrate.sqlite").expanduser()
@@ -126,7 +127,7 @@ def _rows(substrate: Path, source: str) -> list[tuple[str, str, str, str]]:
 
 def _cache_path(raw: Path, source: str, meeting_id: str) -> Path | None:
     d = raw / source / "minutes"
-    return next((p for ext in ("pdf", "html", "docx") if (p := d / f"{meeting_id}.{ext}").exists()), None)
+    return next((p for ext in CACHE_EXTENSIONS if (p := d / f"{meeting_id}.{ext}").exists()), None)
 
 
 def candidates(substrate: Path, source: str, body: str, raw: Path | None = None) -> list[tuple[str, str]]:
@@ -137,12 +138,13 @@ def candidates(substrate: Path, source: str, body: str, raw: Path | None = None)
 
 
 def _classify(data: bytes) -> str:
-    """'pdf' | 'html' | 'challenge' | 'other' (a bot-wall page is never a document)."""
+    """'pdf' | 'html' | 'challenge' | 'other'. Any non-PDF response naming a bot wall is a challenge, whether or
+    not it sniffs as HTML (a plain-text or fragment block page still means stop)."""
     if data[:5] == b"%PDF-":
         return "pdf"
-    if sniff_format(data) == "html":
-        return "challenge" if any(m in data.lower() for m in CHALLENGE_MARKERS) else "html"
-    return "other"
+    if any(m in data[:65536].lower() for m in CHALLENGE_MARKERS):
+        return "challenge"
+    return "html" if sniff_format(data) == "html" else "other"
 
 
 def fetch_document(source: str, url: str, substrate: Path, request: Fetch | None = None) -> tuple[bytes, str, str]:

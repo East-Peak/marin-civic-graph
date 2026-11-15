@@ -94,6 +94,8 @@ def test_cache_hit_makes_no_request(substrate, tmp_path):
     d = tmp_path / "raw" / SRC / "minutes"
     d.mkdir(parents=True)
     (d / f"meeting-{SRC}-4.docx").write_bytes(b"x")
+    (d / f"meeting-{SRC}-3.htm").write_bytes(b"x")  # the index accepts .htm: so must the cache check
+    assert fid.CACHE_EXTENSIONS == ("pdf", "html", "htm", "docx")
     net = Net({_url(2): (200, PDF, None), _url(1): (200, PDF, None)})
     run(substrate, tmp_path, net)
     assert [u for _, u in net.calls] == [_url(2), _url(1)]
@@ -112,7 +114,9 @@ def test_throttle_between_requests_and_hops(substrate, tmp_path):
     assert (tmp_path / "raw" / SRC / "minutes" / f"meeting-{SRC}-4.pdf").exists()
 
 
-@pytest.mark.parametrize("stop", [(403, b"denied", None), (429, b"", None), (200, CHALLENGE, None)])
+@pytest.mark.parametrize("stop", [(403, b"denied", None), (429, b"", None), (200, CHALLENGE, None),
+                                  (200, b"Access denied: are you a robot?", None),  # a challenge that is not HTML
+                                  (200, b"<div>Checking your browser before you continue</div>", None)])
 def test_whole_run_stops_on_block(substrate, tmp_path, stop):
     net = Net({_url(4): (200, PDF, None), _url(2): stop, _url(1): (200, PDF, None)})
     result = run(substrate, tmp_path, net)

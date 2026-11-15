@@ -19,6 +19,9 @@ SOURCES = {  # source id (the meeting-id prefix) → jurisdiction
     "san-anselmo-town-council": "San Anselmo",
 }
 
+# A cached minutes document is <raw>/<source>/minutes/<meeting_id>.<one of these> (the index and the fetch helper).
+MINUTES_EXTENSIONS = ("pdf", "html", "htm", "docx")
+
 _SAN_ANSELMO_BODIES = (  # its listing titles name the body itself; order only matters for overlaps
     "Town Council", "Parks and Recreation Commission", "Bicycle and Pedestrian Advisory Committee",
     "Planning Commission", "Arts Commission", "Open Space Committee", "Climate Action Commission",

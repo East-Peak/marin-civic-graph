@@ -23,24 +23,44 @@ FORBIDDEN_TEXT = ("minutes-text", "minutes_text", "MINUTES_TEXT", "open-marin-re
 
 
 def closure(entry: Path, root: Path) -> dict[str, Path]:
-    """{module name: path} for the entry script and every local module it imports, transitively."""
+    """{module name: path} for the entry script and every local module it reaches, transitively: absolute and
+    relative imports, and scripts it launches by path (a string literal naming `<name>.py` or `<name>.sh` that
+    exists under root, as the weekly run launches the bake and the exports)."""
     seen: dict[str, Path] = {}
     todo = [entry]
     while todo:
         path = todo.pop()
-        name = path.stem if path.name != "__init__.py" else path.parent.name
+        name = path.parent.name if path.name == "__init__.py" else \
+            path.relative_to(root).with_suffix("").as_posix().replace("/", ".")
         if name in seen:
             continue
         seen[name] = path
+        if path.suffix != ".py":
+            continue  # a shell script: its text is scanned, not parsed
         for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
-            mods = [a.name for a in node.names] if isinstance(node, ast.Import) else \
-                [node.module] if isinstance(node, ast.ImportFrom) and node.module and node.level == 0 else []
-            for mod in mods:
+            if isinstance(node, ast.Import):
+                mods = [(a.name, root) for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+                mods = [(node.module, root)]
+            elif isinstance(node, ast.ImportFrom):  # relative: from the importing file's package
+                base = path.parent
+                for _ in range(node.level - 1):
+                    base = base.parent
+                mods = [(node.module, base)] if node.module else [(a.name, base) for a in node.names]
+            elif isinstance(node, ast.Constant) and isinstance(node.value, str) and \
+                    node.value.endswith((".py", ".sh")) and "/" not in node.value.removeprefix("scripts/"):
+                target = root / node.value.removeprefix("scripts/")
+                if target.is_file():
+                    todo.append(target)
+                mods = []
+            else:
+                mods = []
+            for mod, base in mods:
                 top = mod.split(".")[0]
-                for cand in (root / f"{top}.py", root / top / "__init__.py"):
+                for cand in (base / f"{top}.py", base / top / "__init__.py"):
                     if cand.is_file():
                         todo.append(cand)
-                if top in FORBIDDEN_MODULES:  # even if the file were missing, the import itself is the leak
+                if base == root and top in FORBIDDEN_MODULES:  # the import itself is the leak
                     seen.setdefault(top, root / f"{top}.py")
     return seen
 
@@ -72,10 +92,22 @@ def test_the_closure_reaches_through_imports(tmp_path):
     assert "the closure of entry.py imports minutes_text_index" in leaks(tmp_path / "entry.py", tmp_path)
 
 
-def test_the_weekly_run_reaches_the_bake():
+def test_the_closure_follows_relative_imports_and_launched_scripts(tmp_path):
+    (tmp_path / "pkg").mkdir()
+    (tmp_path / "entry.py").write_text("import pkg\nSTEP = ['python', 'scripts/launched.py']\n")
+    (tmp_path / "pkg" / "__init__.py").write_text("from .inner import x\n")
+    (tmp_path / "pkg" / "inner.py").write_text("P = 'MINUTES_TEXT_DB_PATH'\n")
+    (tmp_path / "launched.py").write_text("P = 'open-marin-research'\n")
+    assert leaks(tmp_path / "entry.py", tmp_path) == ["launched.py names 'open-marin-research'",
+                                                      "inner.py names 'MINUTES_TEXT'"]
+
+
+def test_the_weekly_run_reaches_the_bake_exports_and_adapters():
     """The closure really covers the publish path (a vacuous pass would prove nothing)."""
     names = closure(SCRIPTS / "refresh_weekly.py", SCRIPTS)
-    assert len(names) > 3, sorted(names)
+    for needed in ("bake_public_substrate", "export_live_graph", "ingest", "adapters.granicus",
+                   "refresh_reconciliation"):
+        assert needed in names, sorted(names)
 
 
 if __name__ == "__main__":
