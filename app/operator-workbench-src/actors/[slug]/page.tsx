@@ -196,7 +196,8 @@ export default async function ActorPage({ params, searchParams }: {
       <p className="text-sm">
         {nice(actor.kind)}
         {actor.registered ? (actor.reviewed ? " · registry entry, reviewed" : " · registry entry, NOT reviewed") :
-          " · not in the registry: a name listed on Form 990"}
+          actor.kind === "person" ? " · not in the registry: a name listed on Form 990"
+            : " · not in the registry: a Form 990 filer (never in connections)"}
         {actor.public_role && ` · public role: ${actor.public_role}`} · substrate as of {data.asOf}
       </p>
       {data.organization && (

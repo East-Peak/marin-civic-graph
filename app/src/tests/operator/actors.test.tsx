@@ -44,6 +44,10 @@ function buildFixture(file: string) {
   actor.run("county-of-fernwood", "County of Fernwood", "public_body", 1, 1, null, "[]", null);
   actor.run("officer-harbor-shelter-ash-wilder", "Ash Wilder", "person", 0, 0, "officer listed on Form 990", "[]",
     "harbor-shelter");
+  actor.run("filer-007770007", "Brook Library Friends", "organization", 0, 0, "Form 990 filer, not in the registry",
+    "[]", null);
+  actor.run("officer-filer-007770007-ivy-reed", "Ivy Reed", "person", 0, 0, "officer listed on Form 990", "[]",
+    "filer-007770007");
   const cols = ["fact_key", "actor_slug", "actor_name", "kind", "counterparty_name", "counterparty_slug", "metric",
     "amount", "direction", "date", "date_kind", "source_ref", "source_url", "quote", "label", "identity_basis",
     "counterparty_basis", "assertion_status", "repeat_of", "detail"];
@@ -237,6 +241,16 @@ describe("/actors/[slug]", () => {
     expect(screen.getByText(/not a confirmed identity/)).toBeInTheDocument();
     expect(within(screen.getAllByRole("region", { name: /Officers listed/ }).at(-1)!).getByText(/President/))
       .toBeInTheDocument();
+  });
+
+  it("gives a filer outside the registry a page that reaches its officers, and keeps it off the list", async () => {
+    await renderActor("filer-007770007");
+    expect(screen.getByText(/not in the registry: a Form 990 filer/)).toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: /People listed/ })).getByRole("link", { name: "Ivy Reed" }))
+      .toHaveAttribute("href", "/actors/officer-filer-007770007-ivy-reed");
+    const list = loadActorList();
+    if (list.status !== "ok") throw new Error("absent");
+    expect(list.groups.flatMap((g) => g.actors).map((x) => x.slug)).not.toContain("filer-007770007");
   });
 
   it("says an unknown slug is not in the index", async () => {

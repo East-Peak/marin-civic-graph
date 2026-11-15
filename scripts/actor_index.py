@@ -376,6 +376,7 @@ class Builder:
         self.facts: dict[str, dict] = {}
         self.coverage: dict[tuple[str, str], tuple[str, dict]] = {}
         self.people: dict[str, dict] = {}
+        self.filers: dict[str, dict] = {}  # held filers outside the registry: entries for their officers' pages
         self.overlap_people: list[dict] = []
 
     def add(self, f: dict) -> None:
@@ -596,8 +597,12 @@ def add_returns(b: Builder, dirs: Iterable[Path]) -> None:
                         identity_basis="ein", assertion_status="source_record",
                         detail={"object_id": oid, "amended": r.get("amended"), "return_ts": r.get("return_ts")}))
         officers = base.get("officers") or []
+        filer_slug = grantor
+        if officers and not grantor:  # never reviewed, never in totals' registry list or connections
+            filer_slug = f"filer-{ein}"
+            b.filers.setdefault(filer_slug, {"slug": filer_slug, "name": filer_name, "ein": ein})
         for i, o in enumerate(officers):
-            add_officer(b, ein, grantor, filer_name, year, oid, i, o)
+            add_officer(b, ein, filer_slug, filer_name, year, oid, i, o)
         for i, g in enumerate(((r.get("schedule_i") or {}).get("grants") or [])):
             add_grant(b, ein, grantor, filer_name, year, oid, i, g)
     for ein, cov in sorted(per_ein.items()):
@@ -620,8 +625,6 @@ def add_officer(b: Builder, ein, filer_slug, filer_name, year, oid, i, o) -> Non
         return
     b.overlap_people.append({"kind": "officer", "name": o["name"], "norm": norm, "org": filer_name,
                              "org_key": ein, "source": f"990 {oid} (tax year {year}), Part VII row {i + 1}"})
-    if not filer_slug:
-        return
     registered = [s for s, basis in b.reg.match(o.get("name_raw")) if basis == "pattern_reviewed"
                   and b.reg.actors[s].kind == "person"]
     if registered:
@@ -630,7 +633,8 @@ def add_officer(b: Builder, ein, filer_slug, filer_name, year, oid, i, o) -> Non
         person, basis = f"officer-{filer_slug}-{slugify(norm)}", "stated_name"
         b.people.setdefault(person, {"slug": person, "name": o["name"], "organization_slug": filer_slug})
     b.add(_fact(
-        fact_key=f"officer:{oid}:{i}", actor_slug=filer_slug, actor_name=b.name(filer_slug), kind="officer",
+        fact_key=f"officer:{oid}:{i}", actor_slug=filer_slug, actor_name=b.name(filer_slug) or filer_name,
+        kind="officer",
         counterparty_name=o["name"], counterparty_slug=person, counterparty_basis=basis, date=year,
         date_kind="tax_year", source_ref=f"990 {oid}", label=f"officer listed on the return: {o.get('role') or ''}",
         identity_basis="ein", assertion_status="source_record",
@@ -930,7 +934,8 @@ def connections(facts: list[dict], reg: Registry) -> list[tuple]:
                 out.append((cid, form, label, _j(actors), _j(hops), None))
     officers: dict[str, dict[str, list]] = defaultdict(lambda: defaultdict(list))
     for f in facts:
-        if f["kind"] == "officer" and f["identity_basis"] == "ein" and reg.actors[f["actor_slug"]].reviewed:
+        if f["kind"] == "officer" and f["identity_basis"] == "ein" and f["actor_slug"] in reg.actors \
+                and reg.actors[f["actor_slug"]].reviewed:
             officers[normalize_person(f["counterparty_name"])][f["actor_slug"]].append(f)
     for norm, by_actor in sorted(officers.items()):
         slugs = sorted(by_actor)
@@ -1001,6 +1006,9 @@ def build_index(inputs: Inputs, out: Path) -> dict:
             db.execute("INSERT INTO actors VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, NULL)",
                        (a.slug, a.name, a.kind, int(a.public_body), int(a.reviewed), a.public_role, _j(a.substrate_ids),
                         _j(a.eins), _j(a.affiliated_with), _j([{"match": p.text, "reviewed": p.reviewed} for p in a.patterns])))
+        for f in sorted(b.filers.values(), key=lambda f: f["slug"]):
+            db.execute("INSERT INTO actors VALUES (?, ?, 'organization', 0, 0, 0, 'Form 990 filer, not in the registry',"
+                       " '[]', ?, '[]', '[]', NULL)", (f["slug"], f["name"], _j([f["ein"]])))
         for p in sorted(b.people.values(), key=lambda p: p["slug"]):
             db.execute("INSERT INTO actors VALUES (?, ?, 'person', 0, 0, 0, 'officer listed on Form 990', '[]', '[]',"
                        " '[]', '[]', ?)", (p["slug"], p["name"], p["organization_slug"]))
@@ -1028,7 +1036,8 @@ def build_index(inputs: Inputs, out: Path) -> dict:
     return {
         "index": str(out), "meta": meta, "facts": len(facts),
         "facts_by_kind": dict(sorted(_count(f["kind"] for f in facts).items())),
-        "actors": len(reg.actors), "unregistered_people": len(b.people), "cases": len(cases),
+        "actors": len(reg.actors), "unregistered_people": len(b.people), "unregistered_filers": len(b.filers),
+        "cases": len(cases),
         "connections": {"found": [{"form": c[1], "label": c[2], "actors": json.loads(c[3]), "hops": json.loads(c[4])}
                                   for c in conns], "searched": searched},
         "name_overlaps": [dict(zip(("name_norm", "left_kind", "left_name", "left_org", "left_source", "right_kind",
@@ -1049,7 +1058,7 @@ def render_report(r: dict) -> str:
     lines = [f"# Actor index build report (substrate as of {r['meta']['substrate_as_of_date']}, registry reviewed "
              f"{r['meta']['registry_reviewed_on']})", "",
              f"{r['facts']} facts, {r['actors']} registry entries, {r['unregistered_people']} unregistered officer "
-             f"entries, {r['cases']} cases, {r['identity_candidates']} identity candidates.", "", "## Facts by kind", ""]
+             f"entries ({r['unregistered_filers']} filers outside the registry hold some of them), {r['cases']} cases, {r['identity_candidates']} identity candidates.", "", "## Facts by kind", ""]
     lines += [f"- {k}: {n}" for k, n in r["facts_by_kind"].items()]
     lines += ["", "## Connections", ""]
     if r["connections"]["found"]:

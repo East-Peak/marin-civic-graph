@@ -215,12 +215,11 @@ def test_every_cached_docket_is_a_case_and_no_attorney_is_stated_as_such(world_d
 
 
 def test_officers_become_person_entries_and_name_overlaps_are_unconfirmed(world_db):
-    officers = facts(world_db, kind="officer")
+    officers = [f for f in facts(world_db, kind="officer") if f["actor_slug"] in ("harbor-shelter", "lantern-fund")]
     names = {f["counterparty_name"] for f in officers}
     assert names == {"Wren Ambler", "Pell Corder", "Pell Corder Jr.", "Ash Wilder"}
-    people = {a["slug"]: a for a in rows(world_db, "SELECT * FROM actors WHERE registered = 0")}
+    people = {a["slug"]: a for a in rows(world_db, "SELECT * FROM actors WHERE registered = 0 AND kind = 'person'")}
     assert all(f["counterparty_slug"] in people for f in officers)
-    assert {a["kind"] for a in people.values()} == {"person"}
     overlaps = rows(world_db, "SELECT * FROM name_overlaps ORDER BY name_norm, right_kind")
     pairs = {(o["name_norm"], o["left_org"], o["right_kind"], o["right_org"]) for o in overlaps}
     assert ("PELL CORDER", "Harbor Shelter", "officer", "Lantern Fund") in pairs or \
@@ -236,6 +235,16 @@ def test_one_filer_under_two_legal_names_is_not_an_overlap_with_itself():
     assert ai.name_overlaps(people, []) == []
     people.append(dict(people[0], org="Other Fund", org_key="006660006", source="990 3"))
     assert [o[3] for o in ai.name_overlaps(people, [])] == ["Example School Fund"]
+
+
+def test_officers_of_a_filer_outside_the_registry_get_entries_reachable_from_the_filer(world_db):
+    (filer,) = rows(world_db, "SELECT * FROM actors WHERE slug = 'filer-007770007'")
+    assert (filer["name"], filer["registered"], filer["reviewed"]) == ("Brook Library Friends", 0, 0)
+    (ivy,) = facts(world_db, kind="officer", actor_slug="filer-007770007")
+    assert ivy["counterparty_name"] == "Ivy Reed" and ivy["identity_basis"] == "ein"
+    (person,) = rows(world_db, "SELECT * FROM actors WHERE slug = ?", ivy["counterparty_slug"])
+    assert (person["kind"], person["registered"], person["organization_slug"]) == ("person", 0, "filer-007770007")
+    assert all("filer-007770007" not in c["actors"] for c in rows(world_db, "SELECT * FROM connections"))
 
 
 def test_a_registered_person_gets_the_same_page_shape(world_db):

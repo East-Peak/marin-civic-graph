@@ -185,6 +185,10 @@ RETURNS = {
     **{f"30000000000000002{y}_public.xml": dict(
         ein="002220002", filer="LANTERN FUND", year=f"202{y}", ts=f"203{y - 4}-05-01T10:00:00-07:00",
         revenue=str(10 * y), gov="1", grants=[], officers=[]) for y in (5, 6, 7, 8)},
+    # A filer outside the registry: its officers still get entries, reachable from the filer's own entry.
+    "300000000000000004_public.xml": dict(
+        ein="007770007", filer="BROOK LIBRARY FRIENDS", year="2029", ts="2030-03-01T10:00:00-07:00",
+        revenue="900", gov="0", grants=[], officers=[officer("IVY REED", "Chair", "OfficerInd")]),
     # Harbor Shelter's own return; one officer name is shared with Lantern Fund (suffix differs).
     "300000000000000003_public.xml": dict(
         ein="001110001", filer="HARBOR SHELTER", year="2029", ts="2030-04-01T10:00:00-07:00",
