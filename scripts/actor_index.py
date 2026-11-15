@@ -68,8 +68,10 @@ CASE_ROLES = ("defendant", "plaintiff", "plaintiff_counsel")
 
 _STREET = (r"Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Way|Court|Ct|Place|Pl|Circle|Cir|"
            r"Highway|Hwy|Terrace|Parkway|Pkwy|Square|Plaza|Alley")
-ADDRESS_RE = re.compile(rf"\b\d{{1,6}}(?:-\d{{1,6}})?[A-Z]?\s+(?:[A-Z0-9][\w.'’-]*\s+){{0,4}}(?:{_STREET})\b\.?",
-                        re.IGNORECASE)
+_PREFIX = r"Camino|Calle|Via|Avenida|Paseo|Rancho|Vista|Corte|Avenue of the"
+ADDRESS_RE = re.compile(
+    rf"\b\d{{1,6}}(?:-\d{{1,6}})?[A-Z]?\s+(?:(?:[A-Z0-9][\w.'’-]*\s+){{0,4}}(?:{_STREET})\b\.?"
+    rf"|(?:{_PREFIX})\s+[A-Z][\w'’-]*(?:\s+[A-Z][\w'’-]*)?)", re.IGNORECASE)
 _SUFFIXES = {"JR", "SR", "II", "III", "IV", "MD", "PHD", "ESQ", "CPA", "DDS"}
 _MONTHS = {m: i for i, m in enumerate(("JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST",
                                        "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"), start=1)}
@@ -152,6 +154,11 @@ def _j(value: Any) -> str:
 def withhold_addresses(text: str | None) -> str | None:
     """Street addresses replaced by a marker: no address reaches the index."""
     return ADDRESS_RE.sub(ADDRESS_WITHHELD, text) if text else text
+
+
+def _scrubbed(row: tuple) -> tuple:
+    """Every persisted string passes the address filter (keys, labels, JSON details and lists alike)."""
+    return tuple(withhold_addresses(v) if isinstance(v, str) else v for v in row)
 
 
 def normalize_person(name: str) -> str:
@@ -247,8 +254,15 @@ class Registry:
 
     def mentions(self, text: str | None) -> dict[str, str]:
         """{slug: basis} for every actor a page of text mentions (minutes pages name many actors at once)."""
+        spans = self.spans(text)
+        reviewed = [(s, sp) for s, sp, rv in spans if rv]
+        for i, (a, (a0, a1)) in enumerate(reviewed):
+            for b_, (b0, b1) in reviewed[i + 1:]:
+                if a != b_ and a0 < b1 and b0 < a1:
+                    raise RegistryError(f"one occurrence {text[max(a0, b0):min(a1, b1)]!r} matches reviewed "
+                                        f"patterns of {', '.join(sorted({a, b_}))}")
         out: dict[str, str] = {}
-        for slug, _, rv in self.spans(text):
+        for slug, _, rv in spans:
             if rv:
                 out[slug] = "pattern_reviewed"
             else:
@@ -540,13 +554,18 @@ def select_returns(parsed: list[dict]) -> dict[tuple[str, str], dict]:
 
 
 def add_returns(b: Builder, dirs: Iterable[Path]) -> None:
-    files = sorted({p for d in dirs if Path(d).is_dir() for p in Path(d).rglob("*.xml")}, key=lambda p: p.name)
+    files = sorted({p for d in dirs if Path(d).is_dir() for p in Path(d).rglob("*.xml")})
     parsed, by_object = [], {}
     for p in files:
         try:
             r = schedule_i_990.parse_return(p)
         except (ValueError, OSError) as e:  # recorded, never silently dropped
             b.cover("form_990_files", p.name, "unreadable", reason=str(e))
+            continue
+        seen = by_object.get(r["object_id"])
+        if seen is not None:  # the same return under two roots is one return; different bytes cannot both be it
+            if seen.read_bytes() != p.read_bytes():
+                raise IndexBuildError(f"return {r['object_id']} has different copies: {seen} and {p}")
             continue
         parsed.append(r)
         by_object[r["object_id"]] = p
@@ -631,10 +650,11 @@ def add_grant(b: Builder, ein, grantor, filer_name, year, oid, i, g) -> None:
         recipients = b.reg.match(g.get("recipient_name"))
     if not grantor and not recipients:
         return
-    for slug, basis in recipients or [(None, None)]:
+    for n, (slug, basis) in enumerate(recipients or [(None, None)]):
         for metric, field in (("cash_grant", "cash_grant_amt"), ("noncash_assistance", "non_cash_assistance_amt")):
             if g.get(field) is None:
                 continue
+            first = f"reported_grant:{oid}:{i}:{metric}" + (f":{recipients[0][0]}" if len(recipients) > 1 else "")
             key = f"reported_grant:{oid}:{i}:{metric}" + (f":{slug}" if len(recipients) > 1 else "")
             b.add(_fact(
                 fact_key=key, actor_slug=grantor, actor_name=b.name(grantor) or filer_name, kind="reported_grant",
@@ -643,7 +663,7 @@ def add_grant(b: Builder, ein, grantor, filer_name, year, oid, i, g) -> None:
                 direction="grantor_reports", date=year, date_kind="tax_year",
                 source_ref=f"990 {oid} Schedule I row {i + 1}", quote=g.get("purpose"),
                 label=hop_label({"kind": "reported_grant"}), identity_basis="ein",
-                assertion_status="source_record",
+                assertion_status="source_record", repeat_of=first if n else None,  # one row, several candidates
                 detail={"object_id": oid, "row": i + 1, "filer_ein": ein, "filer_name": filer_name,
                         "recipient_ein": rein, "irc_section": g.get("irc_section"),
                         "non_cash_description": g.get("non_cash_description")}))
@@ -700,7 +720,8 @@ def add_cases(b: Builder, dockets_dir: Path, roles_path: Path, staged: Path | No
                 for s in sorted(set(r.get(field) or [])):
                     for slug, basis in b.reg.match(s):
                         b.add(_fact(
-                            fact_key=f"docket_appearance:{number}:{field}:{s}:{slug}", actor_slug=slug,
+                            fact_key=f"docket_appearance:{number}:{field}:{_sha(s.encode())[:12]}:{slug}",
+                            actor_slug=slug,
                             actor_name=b.name(slug), kind="docket_appearance", counterparty_name=case["caption"],
                             date=case["filed"], date_kind="filed", source_ref=f"docket {number}", source_url=url,
                             quote=s, label=f"named on the docket as a {field}; {SIDE_UNKNOWN}",
@@ -875,11 +896,13 @@ def connections(facts: list[dict], reg: Registry) -> list[tuple]:
                     for other, other_roles in sorted(roles.items()):
                         if other == docket:
                             continue
+                        # The roles file does not pair counsel with clients: only a sole plaintiff's counsel is
+                        # that plaintiff's counsel.
                         mine = [p for p in other_roles["plaintiff"] if p["actor_slug"] == y]
                         theirs = [k for k in other_roles["plaintiff_counsel"] if k["actor_slug"] == c["actor_slug"]]
-                        if mine and theirs:
+                        if mine and theirs and len(other_roles["plaintiff"]) == 1:
                             out.append(([_hop("case_role", None, y, c["actor_slug"],
-                                              f"represented by this counsel in {other}", mine + theirs),
+                                              f"plaintiff counsel for the sole plaintiff in {other}", mine + theirs),
                                          _hop("case_role", None, c["actor_slug"], docket,
                                               f"plaintiff counsel in {docket}", [c]), tail],
                                         [c["actor_slug"], d["actor_slug"]]))
@@ -982,18 +1005,19 @@ def build_index(inputs: Inputs, out: Path) -> dict:
             db.execute("INSERT INTO actors VALUES (?, ?, 'person', 0, 0, 0, 'officer listed on Form 990', '[]', '[]',"
                        " '[]', '[]', ?)", (p["slug"], p["name"], p["organization_slug"]))
         db.executemany(f"INSERT INTO facts VALUES ({', '.join('?' * len(FACT_COLUMNS))})",
-                       [tuple(f[c] for c in FACT_COLUMNS) for f in facts])
-        db.executemany("INSERT INTO totals VALUES (?, ?, ?, ?, ?, ?, ?, ?)", t_rows)
+                       [_scrubbed(tuple(f[c] for c in FACT_COLUMNS)) for f in facts])
+        db.executemany("INSERT INTO totals VALUES (?, ?, ?, ?, ?, ?, ?, ?)", t_rows)  # numbers and fixed vocabulary
         db.executemany("INSERT INTO by_year VALUES (?, ?, ?, ?, ?, ?, ?, ?)", y_rows)
         cols = ("docket", "court", "caption", "filed", "closed", "cause", "courtlistener_url", "courtlistener_id",
                 "parties", "attorneys", "firms", "attorney_note", "roles_reviewed", "outcome_kind", "outcome_date",
                 "outcome_evidence")
         db.executemany(f"INSERT INTO cases VALUES ({', '.join('?' * len(cols))})",
-                       [tuple(c[k] for k in cols) for c in sorted(cases, key=lambda c: c["docket"])])
-        db.executemany("INSERT INTO connections VALUES (?, ?, ?, ?, ?, ?)", conns)
-        db.executemany("INSERT INTO name_overlaps VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", overlaps)
+                       [_scrubbed(tuple(c[k] for k in cols)) for c in sorted(cases, key=lambda c: c["docket"])])
+        db.executemany("INSERT INTO connections VALUES (?, ?, ?, ?, ?, ?)", [_scrubbed(c) for c in conns])
+        db.executemany("INSERT INTO name_overlaps VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                       [_scrubbed(o) for o in overlaps])
         db.executemany("INSERT INTO coverage VALUES (?, ?, ?, ?)",
-                       [(i, item, st, _j(det)) for (i, item), (st, det) in sorted(b.coverage.items())])
+                       [_scrubbed((i, item, st, _j(det))) for (i, item), (st, det) in sorted(b.coverage.items())])
         db.commit()
     finally:
         db.close()

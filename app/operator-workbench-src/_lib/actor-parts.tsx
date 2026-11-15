@@ -28,7 +28,7 @@ export function Coverage({ rows }: { rows: CoverageRow[] }) {
         const d = JSON.parse(c.detail) as Record<string, unknown>;
         const extra = Object.entries(d)
           .filter(([, v]) => v !== null && v !== "" && !(Array.isArray(v) && v.length === 0))
-          .map(([k, v]) => `${k.replaceAll("_", " ")}: ${Array.isArray(v) ? v.join(", ") : String(v)}`)
+          .map(([k, v]) => `${k.replaceAll("_", " ")}: ${show(v)}`)
           .join("; ");
         return (
           <li key={`${c.input}/${c.item}`}>
@@ -41,7 +41,21 @@ export function Coverage({ rows }: { rows: CoverageRow[] }) {
   );
 }
 
+/** A coverage value as text: lists joined, objects (a gap, a per-state count) as their values. */
+function show(v: unknown): string {
+  if (Array.isArray(v)) return v.map(show).join(", ");
+  if (v && typeof v === "object") {
+    return Object.entries(v).map(([k, x]) => (typeof x === "number" ? `${k} ${x}` : String(x).replaceAll("_", " ")))
+      .join(" ");
+  }
+  return String(v);
+}
+
 export function Source({ f }: { f: Fact }) {
+  if (f.kind === "minutes_mentions") {
+    // The count is the evidence's index; the pages themselves are in the minutes search.
+    return <Link className="underline" href={`/minutes?q=${encodeURIComponent(`"${f.actor_name}"`)}`}>{f.source_ref}</Link>;
+  }
   const d = JSON.parse(f.detail) as { docket?: string };
   if (d.docket) {
     return <Link className="underline" href={caseHref(d.docket)}>{f.source_ref}</Link>;

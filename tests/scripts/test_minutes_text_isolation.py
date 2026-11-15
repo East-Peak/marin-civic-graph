@@ -46,12 +46,14 @@ def closure(entry: Path, root: Path) -> dict[str, Path]:
             if isinstance(node, ast.Import):
                 mods = [(a.name, root) for a in node.names]
             elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
-                mods = [(node.module, root)]
+                # `from pkg import worker` may name a submodule: each imported name is tried as one.
+                mods = [(node.module, root)] + [(f"{node.module}.{a.name}", root) for a in node.names]
             elif isinstance(node, ast.ImportFrom):  # relative: from the importing file's package
                 base = path.parent
                 for _ in range(node.level - 1):
                     base = base.parent
-                mods = [(node.module, base)] if node.module else [(a.name, base) for a in node.names]
+                mods = ([(node.module, base)] + [(f"{node.module}.{a.name}", base) for a in node.names]
+                        if node.module else [(a.name, base) for a in node.names])
             elif isinstance(node, ast.Constant) and isinstance(node.value, str) and \
                     node.value.endswith((".py", ".sh")) and "/" not in node.value.removeprefix("scripts/"):
                 target = root / node.value.removeprefix("scripts/")
@@ -61,12 +63,14 @@ def closure(entry: Path, root: Path) -> dict[str, Path]:
             else:
                 mods = []
             for mod, base in mods:
-                top = mod.split(".")[0]
-                for cand in (base / f"{top}.py", base / top / "__init__.py"):
-                    if cand.is_file():
-                        todo.append(cand)
-                if base == root and top in FORBIDDEN_MODULES:  # the import itself is the leak
-                    seen.setdefault(top, root / f"{top}.py")
+                parts = mod.split(".")
+                for k in range(1, len(parts) + 1):  # every package on the dotted path, and the module itself
+                    stem = base.joinpath(*parts[:k])
+                    for cand in (stem.with_suffix(".py"), stem / "__init__.py"):
+                        if cand.is_file():
+                            todo.append(cand)
+                if base == root and parts[0] in FORBIDDEN_MODULES:  # the import itself is the leak
+                    seen.setdefault(parts[0], root / f"{parts[0]}.py")
     return seen
 
 
@@ -115,6 +119,15 @@ def test_the_actor_index_and_its_private_inputs_are_named_leaks(tmp_path):
     assert "the closure of entry.py imports actor_index" in leaks(tmp_path / "entry.py", tmp_path)
     (tmp_path / "helper.py").write_text("DB = os.environ.get('ACTORS_DB_PATH')\n")
     assert leaks(tmp_path / "entry.py", tmp_path) == ["helper.py names 'ACTORS_DB_PATH'"]
+
+
+@pytest.mark.parametrize("entry_src", ["import pkg.worker\n", "from pkg.worker import run\n", "from pkg import worker\n"])
+def test_the_closure_follows_dotted_and_submodule_imports(tmp_path, entry_src):
+    (tmp_path / "pkg").mkdir()
+    (tmp_path / "entry.py").write_text(entry_src)
+    (tmp_path / "pkg" / "__init__.py").write_text("")
+    (tmp_path / "pkg" / "worker.py").write_text("import actor_index\n")
+    assert "the closure of entry.py imports actor_index" in leaks(tmp_path / "entry.py", tmp_path)
 
 
 def test_the_weekly_run_reaches_the_bake_exports_and_adapters():

@@ -80,8 +80,10 @@ export type CaseRow = { docket: string; court: string | null; caption: string | 
 export type Searched = { forms: string[]; reviewed_cases: number; commitments: number; reported_grants: number;
   officer_rows: number };
 
-export type Section = { kind: FactKind; title: string; rows: Fact[]; total: number; totals: Total[];
-  coverage: CoverageRow[] };
+export type Section = { kind: FactKind; title: string; rows: Fact[]; total: number; page: number; pageSize: number;
+  totals: Total[]; coverage: CoverageRow[] };
+/** Which section is paged (the others show their first page); "possible" pages the possible matches. */
+export type PageOptions = { section?: string; page?: number; pageSize?: number };
 export type ListEntry = { slug: string; name: string; kind: string; counts: Partial<Record<FactKind, number>>;
   possible: number };
 export type Absent = { status: "absent"; path: string };
@@ -90,7 +92,8 @@ export type ActorPageData =
   | Absent
   | { status: "not_found"; slug: string }
   | { status: "ok"; asOf: string; actor: ActorRow; organization: ActorRow | null; affiliations: ActorRow[];
-      people: ActorRow[]; byYear: YearRow[]; sections: Section[]; possible: Fact[]; caseRoles: Fact[];
+      people: ActorRow[]; byYear: YearRow[]; sections: Section[]; possible: Fact[]; possibleTotal: number;
+      possiblePage: number; pageSize: number; caseRoles: Fact[];
       connections: Connection[]; searched: Searched | null; coverage: CoverageRow[]; names: Record<string, string> };
 export type CasePageData =
   | Absent
@@ -160,7 +163,9 @@ function namesFor(db: Database.Database): Record<string, string> {
   return Object.fromEntries(rows.map((r) => [r.slug, r.name]));
 }
 
-export function loadActorPage(slug: string): ActorPageData {
+export function loadActorPage(slug: string, opts: PageOptions = {}): ActorPageData {
+  const pageSize = opts.pageSize ?? SECTION_ROW_LIMIT;
+  const pageOf = (name: string) => (opts.section === name && opts.page && opts.page > 1 ? Math.floor(opts.page) : 1);
   return withDb((db, asOf) => {
     const actor = db.prepare("SELECT * FROM actors WHERE slug = ?").get(slug) as ActorRow | undefined;
     if (!actor) return { status: "not_found" as const, slug };
@@ -169,7 +174,7 @@ export function loadActorPage(slug: string): ActorPageData {
       `SELECT * FROM facts WHERE kind = ? AND (
          (actor_slug = @slug AND identity_basis IN ${IN_CONFIRMED})
          OR (counterparty_slug = @slug AND (counterparty_basis IN ${IN_CONFIRMED} OR kind = 'officer')))
-       ORDER BY date DESC, fact_key LIMIT @limit`);
+       ORDER BY date DESC, fact_key LIMIT @limit OFFSET @offset`);
     const countKind = db.prepare(
       `SELECT COUNT(*) AS n FROM facts WHERE kind = ? AND (
          (actor_slug = @slug AND identity_basis IN ${IN_CONFIRMED})
@@ -179,19 +184,24 @@ export function loadActorPage(slug: string): ActorPageData {
     const sections: Section[] = KIND_ORDER.map((kind) => {
       const cov = KIND_COVERAGE[kind].flatMap((input) =>
         (coverage.all(input) as CoverageRow[]).filter((c) => input !== "form_990_registry" || c.item === slug));
+      const page = pageOf(kind);
       return {
-        kind, title: KIND_TITLES[kind],
-        rows: byKind.all(kind, { slug, limit: SECTION_ROW_LIMIT }) as Fact[],
+        kind, title: KIND_TITLES[kind], page, pageSize,
+        rows: byKind.all(kind, { slug, limit: pageSize, offset: (page - 1) * pageSize }) as Fact[],
         total: (countKind.get(kind, { slug }) as { n: number }).n,
         totals: totals.all(slug, kind) as Total[],
-        coverage: kind === "reported_grant" ? summarizeReturns(cov) : cov,
+        coverage: cov, // for reported grants: every filer whose returns were searched, with years and gaps
       };
     });
-    const possible = db.prepare(
-      `SELECT * FROM facts WHERE (actor_slug = @slug AND identity_basis NOT IN ${IN_CONFIRMED})
+    const possibleWhere = `(actor_slug = @slug AND identity_basis NOT IN ${IN_CONFIRMED})
          OR (counterparty_slug = @slug AND counterparty_basis NOT IN ${IN_CONFIRMED}
-             AND counterparty_basis <> 'stated_name')
-       ORDER BY kind, date DESC, fact_key LIMIT ${SECTION_ROW_LIMIT}`).all({ slug }) as Fact[];
+             AND counterparty_basis <> 'stated_name')`;
+    const possiblePage = pageOf("possible");
+    const possible = db.prepare(`SELECT * FROM facts WHERE ${possibleWhere}
+       ORDER BY kind, date DESC, fact_key LIMIT @limit OFFSET @offset`)
+      .all({ slug, limit: pageSize, offset: (possiblePage - 1) * pageSize }) as Fact[];
+    const possibleTotal = (db.prepare(`SELECT COUNT(*) AS n FROM facts WHERE ${possibleWhere}`).get({ slug }) as
+      { n: number }).n;
     const affiliated = JSON.parse(actor.affiliated_with) as string[];
     const affiliations = affiliated.length
       ? db.prepare(`SELECT * FROM actors WHERE slug IN (${affiliated.map(() => "?").join(", ")}) ORDER BY name`)
@@ -209,7 +219,7 @@ export function loadActorPage(slug: string): ActorPageData {
       status: "ok" as const, asOf, actor, organization, affiliations, people,
       byYear: db.prepare("SELECT * FROM by_year WHERE actor_slug = ? ORDER BY year DESC, kind, metric, direction")
         .all(slug) as YearRow[],
-      sections, possible,
+      sections, possible, possibleTotal, possiblePage, pageSize,
       caseRoles: sections.find((s) => s.kind === "case_role")?.rows ?? [],
       connections, searched: searchedRaw ? (JSON.parse(searchedRaw) as Searched) : null,
       coverage: db.prepare("SELECT * FROM coverage ORDER BY input, item").all() as CoverageRow[],
@@ -218,29 +228,20 @@ export function loadActorPage(slug: string): ActorPageData {
   });
 }
 
-/** The reported-grant section needs which filers' returns are held, not one row per filer detail. */
-function summarizeReturns(rows: CoverageRow[]): CoverageRow[] {
-  if (rows.length === 0) return rows;
-  const years = new Set<string>();
-  for (const r of rows) for (const y of (JSON.parse(r.detail) as { tax_years?: string[] }).tax_years ?? []) years.add(y);
-  return [{ input: "form_990", item: `${rows.length} filers`, state: "held",
-    detail: JSON.stringify({ tax_years: [...years].sort(), note: "only these filers' Schedule I rows are searched" }) }];
-}
-
 export function loadCasePage(docket: string): CasePageData {
   return withDb((db, asOf) => {
     const raw = db.prepare("SELECT * FROM cases WHERE docket = ?").get(docket) as
       | (Omit<CaseRow, "parties" | "attorneys" | "firms"> & { parties: string; attorneys: string; firms: string })
       | undefined;
     if (!raw) return { status: "not_found" as const, docket };
-    const like = `%"docket": ${JSON.stringify(docket)}%`;
-    const facts = db.prepare("SELECT * FROM facts WHERE kind = ? AND detail LIKE ? ORDER BY actor_slug, fact_key");
+    const facts = db.prepare(
+      "SELECT * FROM facts WHERE kind = ? AND json_extract(detail, '$.docket') = ? ORDER BY actor_slug, fact_key");
     return {
       status: "ok" as const, asOf,
       case: { ...raw, parties: JSON.parse(raw.parties) as string[], attorneys: JSON.parse(raw.attorneys) as string[],
         firms: JSON.parse(raw.firms) as string[] },
-      roles: facts.all("case_role", like) as Fact[],
-      appearances: facts.all("docket_appearance", like) as Fact[],
+      roles: facts.all("case_role", docket) as Fact[],
+      appearances: facts.all("docket_appearance", docket) as Fact[],
       names: namesFor(db),
     };
   });

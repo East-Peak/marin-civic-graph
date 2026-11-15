@@ -392,3 +392,80 @@ def test_a_copied_input_that_no_longer_matches_its_manifest_fails_the_build(tmp_
     inputs = ai.Inputs(**{**src.__dict__, "ledger": dest / "board-ledger.jsonl", "dockets": dest / "dockets"})
     with pytest.raises(ai.IndexBuildError, match="manifest"):
         ai.build_index(inputs, tmp_path / "x.sqlite")
+
+
+# --- Codex review round 1 ----------------------------------------------------------------------------------------
+
+ADDRESSY = re.compile(r"\b\d{1,6}\s+(?:[A-Z][a-z]+\s+){0,3}(?:Street|Avenue|Road|Lane|Alto|Camino)\b|Camino Alto",
+                      re.I)
+
+
+def test_no_address_survives_in_keys_details_or_case_fields(tmp_path):
+    dockets = copy.deepcopy(w.DOCKETS)
+    res = dockets["70000001.json"]["results"][0]
+    res["party"].append(f"Harbor Shelter, {w.address(12, w.STREET)}")
+    res["cause"] = "Civil rights; premises at 40 Camino Alto"
+    roles = copy.deepcopy(w.ROLES)
+    roles["cases"][0]["outcome"]["evidence"] = f"entry 41 (site at {w.address(9, w.ROAD)})"
+    ledger = w.LEDGER + [w.ledger_row(10, "meeting-fernwood-bos-3", "MAY 1, 2030", "9", "Harbor Shelter",
+                                      "county_pays", 5, quote="lease of 12 Camino Alto for Harbor Shelter")]
+    db, _ = build(tmp_path, dockets=dockets, roles=roles, ledger=ledger)
+    con = sqlite3.connect(db)
+    dump = "\n".join(con.iterdump())
+    con.close()
+    assert not ADDRESSY.search(dump), ADDRESSY.search(dump)
+
+
+def test_one_grant_row_with_several_possible_recipients_counts_once_for_the_grantor(tmp_path):
+    reg = w.registry_with(**{"saint-example": {"patterns": [{"match": "OF SOMEWHERE", "reviewed": False}]}})
+    db, _ = build(tmp_path, registry=reg)
+    grant = [f for f in facts(db, kind="reported_grant") if f["amount"] == 70.0]
+    assert sorted(f["counterparty_slug"] for f in grant) == ["generic-charities", "saint-example"]
+    assert sum(1 for f in grant if not f["repeat_of"]) == 1
+    (cash,) = rows(db, "SELECT * FROM totals WHERE actor_slug = 'lantern-fund' AND kind = 'reported_grant' "
+                       "AND side = 'subject' AND metric = 'cash_grant'")
+    assert cash["amount"] == 450 + 600 + 70
+
+
+def test_minutes_pages_fail_on_one_occurrence_claimed_by_two_reviewed_actors(tmp_path):
+    reg = w.registry_with(**{"saint-example": {"patterns": [{"match": "HARBOR SHELTER", "reviewed": True}]}})
+    (tmp_path / "r.yaml").write_text(yaml.safe_dump(reg))
+    registry = ai.load_registry(tmp_path / "r.yaml")
+    assert registry.mentions("Lantern Fund met; Harbor Annex too") == {"lantern-fund": "pattern_reviewed"}
+    with pytest.raises(ai.RegistryError, match="harbor-shelter.*saint-example"):
+        registry.mentions("The council thanked Harbor Shelter staff.")
+
+
+def counsel_world(extra_plaintiff=None):
+    """Union sues the county with counsel in case 1; the same counsel, without the union, sues the town in case 2."""
+    roles = copy.deepcopy(w.ROLES)
+    if extra_plaintiff:
+        roles["cases"][0]["plaintiff_orgs"].append(extra_plaintiff)
+    roles["cases"].append({"docket": "9:31-cv-00002", "court": "fdct", "courtlistener_id": 70000002,
+                           "defendant_body": w.TOWN, "plaintiff_orgs": [], "plaintiff_counsel": ["quill-law"],
+                           "outcome": {"kind": "dismissed", "date": "2032-01-01", "evidence": "entry 9"}})
+    return roles
+
+
+def test_counsel_carries_the_path_to_another_case_only_for_a_sole_plaintiff(tmp_path):
+    db, _ = build(tmp_path, roles=counsel_world(), returns=litigation_world())
+    actors = sorted(c["actors"] for c in money_and_case_paths(db))
+    assert json.dumps([w.COUNTY, "lantern-fund", "tidepool-union", "quill-law", w.TOWN]) in actors
+    (via,) = [c for c in money_and_case_paths(db) if w.TOWN in c["actors"]]
+    assert "sole plaintiff" in json.loads(via["hops"])[2]["label"]
+    db, _ = build(tmp_path, name="b.sqlite", roles=counsel_world("saint-example"), returns=litigation_world())
+    assert all(w.TOWN not in c["actors"] for c in money_and_case_paths(db))
+
+
+def test_a_return_file_present_in_two_roots_is_read_once_and_conflicting_copies_fail(tmp_path):
+    inputs = w.make_world(tmp_path)
+    other = tmp_path / "other-990"
+    other.mkdir()
+    name = "300000000000000003_public.xml"
+    (other / name).write_bytes((inputs.returns[0] / name).read_bytes())
+    both = ai.Inputs(**{**inputs.__dict__, "returns": (inputs.returns[0], other)})
+    ai.build_index(both, tmp_path / "a.sqlite")
+    assert len(facts(tmp_path / "a.sqlite", kind="own_return", actor_slug="harbor-shelter")) == 2
+    (other / name).write_text((other / name).read_text().replace("5000", "5001"))
+    with pytest.raises(ai.IndexBuildError, match="300000000000000003"):
+        ai.build_index(both, tmp_path / "b.sqlite")

@@ -86,6 +86,13 @@ function buildFixture(file: string) {
     actor_slug: "harbor-shelter", actor_name: "Harbor Shelter", counterparty_name: "Fernwood Council",
     metric: "page_count", amount: 2, assertion_status: "count_only", label: "minutes pages naming the actor",
     source_ref: "minutes text index: Fernwood Council" });
+  add({ fact_key: "reported_grant:h:1:cash_grant", kind: "reported_grant", actor_slug: "harbor-shelter",
+    actor_name: "Harbor Shelter", counterparty_name: "Tidepool Tenants Union Fund",
+    counterparty_slug: "tidepool-union", counterparty_basis: "pattern_unreviewed", metric: "cash_grant", amount: 10,
+    date: "2028", date_kind: "tax_year", identity_basis: "ein", source_ref: "990 h Schedule I row 1",
+    label: "reported grant" });
+  db.prepare("INSERT INTO cases VALUES ('9:30_cv-00001', 'c', 'Lookalike v. Nobody', NULL, NULL, NULL, NULL, '', " +
+    "'[]', '[]', '[]', 'no attorney listed in the source', 0, NULL, NULL, NULL)").run();
   const tot = db.prepare("INSERT INTO totals VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
   tot.run("harbor-shelter", "subject", "board_item", "stated_in_item", "county_pays", 1, 3000,
     "amendments restate agreement ceilings; this sum overcounts");
@@ -108,7 +115,9 @@ function buildFixture(file: string) {
   const cov = db.prepare("INSERT INTO coverage VALUES (?, ?, ?, ?)");
   cov.run("board_ledger", "rows", "covered", JSON.stringify({ rows: 9, body: "County of Fernwood" }));
   cov.run("city_contracts", "all cities", "absent", JSON.stringify({ note: "No city-level contract source" }));
-  cov.run("form_990", "001110001", "held", JSON.stringify({ tax_years: ["2029"] }));
+  cov.run("form_990", "001110001", "held", JSON.stringify({ name: "Harbor Shelter", tax_years: ["2029"], gaps: [] }));
+  cov.run("form_990", "002220002", "held", JSON.stringify({ name: "Lantern Fund", tax_years: ["2028", "2029"],
+    gaps: [{ tax_year: "2030", status: "unsupported_latest" }] }));
   cov.run("form_990_registry", "harbor-shelter", "returns held", JSON.stringify({ tax_years: ["2029"] }));
   cov.run("form_990_registry", "tidepool-union", "no EIN in the registry", "{}");
   cov.run("minutes", "Fernwood Council", "covered", JSON.stringify({ states: { indexed: 1 } }));
@@ -155,7 +164,7 @@ describe("loadActorList", () => {
     const all = data.groups.flatMap((g) => g.actors);
     expect(all.map((a) => a.slug)).not.toContain("officer-harbor-shelter-ash-wilder");
     const harbor = all.find((a) => a.slug === "harbor-shelter")!;
-    expect(harbor.counts).toEqual({ board_item: 2, reported_grant: 1, officer: 1, minutes_mentions: 1 });
+    expect(harbor.counts).toEqual({ board_item: 2, reported_grant: 2, officer: 1, minutes_mentions: 1 });
     expect(harbor.possible).toBe(1);
     // A body named as the counterparty (the ledger's own body, a defendant) counts those rows too.
     expect(all.find((a) => a.slug === "county-of-fernwood")!.counts).toEqual({ board_item: 2, case_role: 1 });
@@ -165,7 +174,7 @@ describe("loadActorList", () => {
 
 describe("/actors/[slug]", () => {
   async function renderActor(slug: string) {
-    return render(await ActorPage({ params: Promise.resolve({ slug }) }));
+    return render(await ActorPage({ params: Promise.resolve({ slug }), searchParams: Promise.resolve({}) }));
   }
 
   it("shows each kind's rows, labels, sources, totals with the overcount note, and that kind's coverage", async () => {
@@ -234,6 +243,60 @@ describe("/actors/[slug]", () => {
     expect(loadActorPage("nobody").status).toBe("not_found");
     await renderActor("nobody");
     expect(screen.getByText(/No actor “nobody”/)).toBeInTheDocument();
+  });
+});
+
+describe("review round 1", () => {
+  async function renderActor(slug: string, sp: Record<string, string> = {}) {
+    return render(await ActorPage({ params: Promise.resolve({ slug }), searchParams: Promise.resolve(sp) }));
+  }
+
+  it("never links an endpoint attached only as a possible match as if it were established", async () => {
+    await renderActor("harbor-shelter");
+    const grants = within(screen.getByRole("region", { name: /Reported grants/ }));
+    expect(grants.getByText(/possible match: Tidepool Tenants Union/)).toBeInTheDocument();
+    expect(grants.queryByRole("link", { name: "Tidepool Tenants Union Fund" })).not.toBeInTheDocument();
+  });
+
+  it("pages through a section beyond its first page and says how many rows there are", async () => {
+    const first = loadActorPage("harbor-shelter", { pageSize: 1 });
+    const second = loadActorPage("harbor-shelter", { section: "board_item", page: 2, pageSize: 1 });
+    if (first.status !== "ok" || second.status !== "ok") throw new Error("absent");
+    const rows = (d: typeof first) => d.status === "ok" ? d.sections.find((x) => x.kind === "board_item")!.rows : [];
+    expect(rows(first).map((f) => f.fact_key)).toEqual(["board_item:x:2"]);
+    expect(rows(second).map((f) => f.fact_key)).toEqual(["board_item:x:3"]);
+    const db = new Database(dbPath);
+    const ins = db.prepare("INSERT INTO facts (fact_key, actor_slug, actor_name, kind, date_kind, source_ref, label, " +
+      "identity_basis, assertion_status, detail, date) VALUES (?, 'harbor-shelter', 'Harbor Shelter', 'board_item', " +
+      "'meeting_date', 'm', 'committed (stated in a board item)', 'pattern_reviewed', 'extracted_unsampled', '{}', '2020-01-01')");
+    for (let i = 0; i < 205; i++) ins.run(`board_item:bulk:${String(i).padStart(3, "0")}`);
+    db.close();
+    await renderActor("harbor-shelter", { section: "board_item", page: "2" });
+    const board = within(screen.getByRole("region", { name: /Board of Supervisors items/ }));
+    expect(board.getByText(/Rows 201–207 of 207 rows/)).toBeInTheDocument();
+    expect(board.getByRole("link", { name: "previous" })).toHaveAttribute(
+      "href", "/actors/harbor-shelter?section=board_item&page=1");
+    expect(board.getAllByRole("row")).toHaveLength(1 + 7);
+  });
+
+  it("lists each filer searched for reported grants, with years and gaps", async () => {
+    await renderActor("harbor-shelter");
+    const grants = within(screen.getByRole("region", { name: /Reported grants/ }));
+    expect(grants.getByText(/form 990 \/ 002220002/)).toHaveTextContent(/Lantern Fund.*2028, 2029.*unsupported latest/);
+  });
+
+  it("links minutes mentions into the minutes search", async () => {
+    await renderActor("harbor-shelter");
+    const minutes = within(screen.getByRole("region", { name: /Minutes mentions/ }));
+    expect(minutes.getByRole("link", { name: /minutes text index/ })).toHaveAttribute(
+      "href", "/minutes?q=%22Harbor%20Shelter%22");
+  });
+
+  it("matches a docket exactly, never as a LIKE pattern", () => {
+    const page = loadCasePage("9:30_cv-00001");
+    if (page.status !== "ok") throw new Error(page.status);
+    expect(page.roles).toEqual([]);
+    expect(page.appearances).toEqual([]);
   });
 });
 

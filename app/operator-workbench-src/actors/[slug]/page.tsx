@@ -6,8 +6,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { operatorEnabled } from "@/lib/operator-gate";
 import {
-  SECTION_ROW_LIMIT,
   SIDE_UNKNOWN,
+  isConfirmed,
   loadActorPage,
   type Connection,
   type Fact,
@@ -29,10 +29,33 @@ function decode(raw: string): string {
   }
 }
 
+function Pager({ kind, page, pageSize, total, slug }: { kind: string; page: number; pageSize: number; total: number;
+  slug: string }) {
+  if (total <= pageSize) return null;
+  const last = Math.ceil(total / pageSize);
+  const href = (n: number) => `/actors/${slug}?section=${kind}&page=${n}`;
+  return (
+    <p className="text-sm">
+      Rows {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} of {total} rows; totals cover all.{" "}
+      {page > 1 && <Link className="underline" href={href(page - 1)}>previous</Link>}{" "}
+      {page < last && <Link className="underline" href={href(page + 1)}>next</Link>}
+    </p>
+  );
+}
+
+function OtherEnd({ slug, name, basis, names }: { slug: string | null; name: string | null; basis: string | null;
+  names: Record<string, string> }) {
+  if (!slug || !names[slug]) return <>{name}</>;
+  if (isConfirmed(basis)) return <Link className="underline" href={`/actors/${slug}`}>{name}</Link>;
+  // Attached only as a possible match: the name as the source states it, the candidate named apart, no link.
+  return <>{name} <span className="text-xs">(possible match: {names[slug]}, {basisText(basis)})</span></>;
+}
+
 function FactRow({ f, slug, names }: { f: Fact; slug: string; names: Record<string, string> }) {
   const asCounterparty = f.actor_slug !== slug;
   const other = asCounterparty ? f.actor_slug : f.counterparty_slug;
   const otherName = asCounterparty ? f.actor_name : f.counterparty_name;
+  const otherBasis = asCounterparty ? f.identity_basis : f.counterparty_basis;
   return (
     <tr className="border-t border-hairline align-top">
       <td className="pr-3 whitespace-nowrap">{f.date ?? "undated"}<div className="text-xs">{nice(f.date_kind)}</div></td>
@@ -43,7 +66,7 @@ function FactRow({ f, slug, names }: { f: Fact; slug: string; names: Record<stri
       </td>
       <td className="pr-3">
         {asCounterparty && <span className="text-xs">{f.kind === "reported_grant" ? "from " : "with "}</span>}
-        {other && names[other] ? <Link className="underline" href={`/actors/${other}`}>{otherName}</Link> : otherName}
+        <OtherEnd slug={other} name={otherName} basis={otherBasis} names={names} />
       </td>
       <td className="pr-3 text-right whitespace-nowrap">
         {f.metric && f.kind !== "minutes_mentions" ? money(f.amount) : f.amount ?? ""}
@@ -72,9 +95,7 @@ function SectionView({ s, slug, names }: { s: Section; slug: string; names: Reco
         <p>None found in the covered sources.</p>
       ) : (
         <>
-          {s.total > s.rows.length && (
-            <p className="text-sm">Showing the {SECTION_ROW_LIMIT} most recent of {s.total} rows; totals cover all.</p>
-          )}
+          <Pager kind={s.kind} page={s.page} pageSize={s.pageSize} total={s.total} slug={slug} />
           <table className="mt-2 text-sm">
             <thead>
               <tr>
@@ -150,10 +171,16 @@ function Connections({ rows, searched, names }: { rows: Connection[]; searched: 
   );
 }
 
-export default async function ActorPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ActorPage({ params, searchParams }: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   if (!operatorEnabled()) notFound(); // defense-in-depth if ever shipped/leaked
   const slug = decode((await params).slug);
-  const data = loadActorPage(slug);
+  const sp = await searchParams;
+  const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
+  const page = Number.parseInt(one(sp.page) ?? "1", 10);
+  const data = loadActorPage(slug, { section: one(sp.section), page: Number.isFinite(page) ? page : 1 });
   if (data.status === "absent") {
     return <main className="mx-[18px] mt-6 max-w-[1100px] text-body"><Absent path={data.path} /></main>;
   }
@@ -207,7 +234,9 @@ export default async function ActorPage({ params }: { params: Promise<{ slug: st
 
       <section className="mt-8" aria-label="Possible matches">
         <h2 className="font-semibold">Possible matches (not in totals or connections)</h2>
-        {data.possible.length === 0 ? <p>None.</p> : (
+        {data.possible.length === 0 ? <p>None.</p> : (<>
+          <Pager kind="possible" page={data.possiblePage} pageSize={data.pageSize} total={data.possibleTotal}
+            slug={actor.slug} />
           <ul className="text-sm">
             {data.possible.map((f) => (
               <li key={f.fact_key}>
@@ -221,7 +250,7 @@ export default async function ActorPage({ params }: { params: Promise<{ slug: st
               </li>
             ))}
           </ul>
-        )}
+        </>)}
       </section>
 
       <section className="mt-8" aria-label="Affiliations">
@@ -235,7 +264,7 @@ export default async function ActorPage({ params }: { params: Promise<{ slug: st
 
       {data.people.length > 0 && (
         <section className="mt-8" aria-label="People listed on returns">
-          <h2 className="font-semibold">People listed on this organization's returns</h2>
+          <h2 className="font-semibold">People listed on this organization&rsquo;s returns</h2>
           <ul className="text-sm">{data.people.map((p) => (
             <li key={p.slug}><Link className="underline" href={`/actors/${p.slug}`}>{p.name}</Link></li>
           ))}</ul>
@@ -246,8 +275,7 @@ export default async function ActorPage({ params }: { params: Promise<{ slug: st
 
       <section className="mt-8" aria-label="Coverage">
         <h2 className="font-semibold">Coverage of every input</h2>
-        <Coverage rows={data.coverage.filter((c) => c.input !== "form_990" && c.input !== "dockets"
-          && (c.input !== "form_990_registry" || c.item === actor.slug))} />
+        <Coverage rows={data.coverage.filter((c) => c.input !== "form_990_registry" || c.item === actor.slug)} />
       </section>
     </main>
   );
