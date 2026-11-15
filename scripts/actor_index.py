@@ -956,6 +956,11 @@ def build_index(inputs: Inputs, out: Path) -> dict:
     conns = connections(facts, reg)
     overlaps = name_overlaps(b.overlap_people, sub["officials"])
     candidates, missing_ids = identity_candidates(reg, sub)
+    searched = {"forms": list(FORMS), "reviewed_cases": sum(1 for c in cases if c["roles_reviewed"]),
+                "commitments": sum(1 for f in facts if f["kind"] in ("board_item", "delegated_contract")
+                                   and f["direction"] in ("county_pays", "body_pays") and _confirmed_hop(f, reg)),
+                "reported_grants": sum(1 for f in facts if f["kind"] == "reported_grant" and _confirmed_hop(f, reg)),
+                "officer_rows": sum(1 for f in facts if f["kind"] == "officer")}
 
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -967,7 +972,7 @@ def build_index(inputs: Inputs, out: Path) -> dict:
         meta = {"schema": "actor-index-v1", "registry_reviewed_on": reg.reviewed_on, "substrate_as_of_date": sub["as_of"],
                 "ledger_sha256": _sha(Path(inputs.ledger).read_bytes()),
                 "registry_sha256": _sha(Path(inputs.registry).read_bytes()),
-                "roles_sha256": _sha(Path(inputs.roles).read_bytes())}
+                "roles_sha256": _sha(Path(inputs.roles).read_bytes()), "connections_searched": _j(searched)}
         db.executemany("INSERT INTO meta VALUES (?, ?)", sorted(meta.items()))
         for a in sorted(reg.actors.values(), key=lambda a: a.slug):
             db.execute("INSERT INTO actors VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, NULL)",
@@ -996,18 +1001,12 @@ def build_index(inputs: Inputs, out: Path) -> dict:
     os.replace(tmp, out)
     identity_ledger.write_assertions(candidates, out.parent / "identity-candidates.jsonl")
 
-    reviewed_cases = sum(1 for c in cases if c["roles_reviewed"])
     return {
         "index": str(out), "meta": meta, "facts": len(facts),
         "facts_by_kind": dict(sorted(_count(f["kind"] for f in facts).items())),
         "actors": len(reg.actors), "unregistered_people": len(b.people), "cases": len(cases),
         "connections": {"found": [{"form": c[1], "label": c[2], "actors": json.loads(c[3]), "hops": json.loads(c[4])}
-                                  for c in conns],
-                        "searched": {"forms": list(FORMS), "reviewed_cases": reviewed_cases,
-                                     "commitments": sum(1 for f in facts if f["kind"] in ("board_item", "delegated_contract")
-                                                        and _confirmed_hop(f, reg)),
-                                     "reported_grants": sum(1 for f in facts if f["kind"] == "reported_grant"
-                                                            and _confirmed_hop(f, reg))}},
+                                  for c in conns], "searched": searched},
         "name_overlaps": [dict(zip(("name_norm", "left_kind", "left_name", "left_org", "left_source", "right_kind",
                                     "right_name", "right_org", "right_source", "note"), o)) for o in overlaps],
         "identity_candidates": len(candidates), "registry_ids_not_in_substrate": missing_ids,

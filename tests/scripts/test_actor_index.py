@@ -324,6 +324,8 @@ def test_no_path_records_what_was_searched(tmp_path):
     searched = report["connections"]["searched"]
     assert set(searched["forms"]) == {"commitment_grant", "commitment_grant_litigation", "shared_officer"}
     assert searched["reviewed_cases"] == 0
+    (meta,) = rows(db, "SELECT value FROM meta WHERE key = 'connections_searched'")
+    assert json.loads(meta["value"]) == searched  # the pages state what was searched when nothing was found
 
 
 # --- privacy and coverage ----------------------------------------------------------------------------------------

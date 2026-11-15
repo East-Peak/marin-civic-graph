@@ -1,7 +1,10 @@
-"""Minutes text is operator-local: the bake, the snapshot push and every export never reach the index.
+"""The operator-local research indexes stay off every publication path: the bake, the snapshot push and every export
+never reach the minutes text index or the actor index.
 
 Each entry point's closure — the script plus every scripts/ module it imports, transitively — must neither import
-the minutes-text modules nor name the index (its path, env var or file name)."""
+the research modules nor name their files: the minutes text index; the actor index, the actor registry, the reviewed
+case roles and the copied private inputs under ~/open-marin-research/inputs/. Shared upstream inputs (the public
+substrate, the raw returns) are permitted."""
 import ast
 import sys
 from pathlib import Path
@@ -18,8 +21,10 @@ ENTRY_POINTS = (
     "export_existing_orgs.py",
     "publish_constellation.py",
 )
-FORBIDDEN_MODULES = {"minutes_text_index", "fetch_indexed_documents"}
-FORBIDDEN_TEXT = ("minutes-text", "minutes_text", "MINUTES_TEXT", "open-marin-research")
+FORBIDDEN_MODULES = {"minutes_text_index", "fetch_indexed_documents", "actor_index"}
+FORBIDDEN_TEXT = ("minutes-text", "minutes_text", "MINUTES_TEXT", "open-marin-research",
+                  "actor_index", "actors.sqlite", "ACTORS_DB_PATH", "actors.yaml", "case-roles",
+                  "board-ledger.jsonl", "inputs-manifest.json", "identity-candidates")
 
 
 def closure(entry: Path, root: Path) -> dict[str, Path]:
@@ -77,7 +82,7 @@ def leaks(entry: Path, root: Path) -> list[str]:
 
 
 @pytest.mark.parametrize("entry", ENTRY_POINTS)
-def test_bake_snapshot_and_export_paths_never_reference_the_minutes_index(entry):
+def test_bake_snapshot_and_export_paths_never_reference_the_research_indexes(entry):
     assert (SCRIPTS / entry).is_file(), f"entry point moved: {entry}"
     assert leaks(SCRIPTS / entry, SCRIPTS) == []
 
@@ -100,6 +105,16 @@ def test_the_closure_follows_relative_imports_and_launched_scripts(tmp_path):
     (tmp_path / "launched.py").write_text("P = 'open-marin-research'\n")
     assert leaks(tmp_path / "entry.py", tmp_path) == ["launched.py names 'open-marin-research'",
                                                       "inner.py names 'MINUTES_TEXT'"]
+
+
+def test_the_actor_index_and_its_private_inputs_are_named_leaks(tmp_path):
+    (tmp_path / "entry.py").write_text("import helper\n")
+    (tmp_path / "helper.py").write_text("REG = 'actors.yaml'\nROLES = 'case-roles.yaml'\n")
+    assert leaks(tmp_path / "entry.py", tmp_path) == ["helper.py names 'actors.yaml'", "helper.py names 'case-roles'"]
+    (tmp_path / "helper.py").write_text("import actor_index\n")
+    assert "the closure of entry.py imports actor_index" in leaks(tmp_path / "entry.py", tmp_path)
+    (tmp_path / "helper.py").write_text("DB = os.environ.get('ACTORS_DB_PATH')\n")
+    assert leaks(tmp_path / "entry.py", tmp_path) == ["helper.py names 'ACTORS_DB_PATH'"]
 
 
 def test_the_weekly_run_reaches_the_bake_exports_and_adapters():

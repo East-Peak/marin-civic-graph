@@ -14,10 +14,13 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const APP = path.resolve(__dirname, "..");
 const MANIFEST = path.join(APP, ".next", "server", "app-paths-manifest.json");
-const OPERATOR_MARKERS = ["/reconcile", "/api/reconcile", "/minutes"];
-// The minutes text reader (operator-workbench-src/_lib/minutes-text.ts) names the index's env var; a public
-// build that contains it could serve minutes text, which names private people.
-const MINUTES_READER_MARKERS = ["MINUTES_TEXT_DB_PATH", "minutes-text.sqlite"];
+const OPERATOR_MARKERS = ["/reconcile", "/api/reconcile", "/minutes", "/actors", "/cases"];
+// The operator index readers name their index's env var and file. A public build containing one could serve the
+// minutes text (private people) or the actor index (research on named people and organizations).
+const READERS = {
+  "minutes text": ["MINUTES_TEXT_DB_PATH", "minutes-text.sqlite"], // operator-workbench-src/_lib/minutes-text.ts
+  actor: ["ACTORS_DB_PATH", "actors.sqlite"], // operator-workbench-src/_lib/actors.ts
+};
 
 // Guard: the generated route group must NEVER be a tracked file (gitignore is not enough
 // — `git add -f` or a stray commit could ship it). Run before anything else.
@@ -27,19 +30,19 @@ if (tracked) {
 }
 console.log("[0] ✓ no operator route-group files are tracked in git");
 
-// No text-bearing response either: the minutes reader must be absent from the public build's output (and present
-// in the operator build's, so this check can fail).
+// No text-bearing response either: each reader must be absent from the public build's output (and present in the
+// operator build's, so this check can fail).
 function filesUnder(dir) {
   // Symlinks inside .next point at node_modules (never generated output): not followed.
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? filesUnder(path.join(dir, e.name)) : e.isFile() ? [path.join(dir, e.name)] : [],
   );
 }
-function minutesReaderFiles() {
+function readerFiles(markers) {
   return filesUnder(path.join(APP, ".next")).filter((f) => {
     if (f.includes(`${path.sep}cache${path.sep}`)) return false; // build cache, never served
     const text = readFileSync(f).toString("latin1");
-    return MINUTES_READER_MARKERS.some((m) => text.includes(m));
+    return markers.some((m) => text.includes(m));
   });
 }
 
@@ -66,16 +69,21 @@ const hasPage = present.some((t) => t.includes("/reconcile") && !t.includes("/ap
 const hasDecideApi = present.some((t) => t.includes("/api/reconcile/decide"));
 const hasCasesApi = present.some((t) => t.includes("/api/reconcile/cases"));
 const hasMinutes = present.some((t) => t.includes("/minutes"));
-if (!hasPage || !hasDecideApi || !hasCasesApi || !hasMinutes) {
+const hasActors = present.some((t) => t.includes("/actors/page"));
+const hasActor = present.some((t) => t.includes("/actors/[slug]"));
+const hasCase = present.some((t) => t.includes("/cases/[docket]"));
+if (!hasPage || !hasDecideApi || !hasCasesApi || !hasMinutes || !hasActors || !hasActor || !hasCase) {
   throw new Error(
-    `operator build missing routes (page=${hasPage}, decide=${hasDecideApi}, cases=${hasCasesApi}, minutes=${hasMinutes}); saw: ${present.join(", ") || "none"}`,
+    `operator build missing routes (page=${hasPage}, decide=${hasDecideApi}, cases=${hasCasesApi}, minutes=${hasMinutes}, actors=${hasActors}, actor=${hasActor}, case=${hasCase}); saw: ${present.join(", ") || "none"}`,
   );
 }
 console.log(`  ✓ present: ${present.join(", ")}`);
-if (minutesReaderFiles().length === 0) {
-  throw new Error("operator build has no minutes text reader: the public-build reader check would prove nothing");
+for (const [name, markers] of Object.entries(READERS)) {
+  if (readerFiles(markers).length === 0) {
+    throw new Error(`operator build has no ${name} reader: the public-build reader check would prove nothing`);
+  }
+  console.log(`  ✓ operator build contains the ${name} reader`);
 }
-console.log("  ✓ operator build contains the minutes text reader");
 
 console.log("[B] public build (after operator copy) — routes must be ABSENT");
 const leaked = operatorRoutesIn(build(false));
@@ -84,10 +92,12 @@ if (leaked.length > 0) {
 }
 console.log("  ✓ none present (stale operator copy was cleaned by the public prebuild)");
 
-const readerIn = minutesReaderFiles();
-if (readerIn.length > 0) {
-  throw new Error(`LEAK: public build contains the minutes text reader:\n${readerIn.join("\n")}`);
+for (const [name, markers] of Object.entries(READERS)) {
+  const readerIn = readerFiles(markers);
+  if (readerIn.length > 0) {
+    throw new Error(`LEAK: public build contains the ${name} reader:\n${readerIn.join("\n")}`);
+  }
+  console.log(`  ✓ public build output contains no ${name} reader`);
 }
-console.log("  ✓ public build output contains no minutes text reader");
 
 console.log("PASS: operator route group is non-deployable.");
