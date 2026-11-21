@@ -328,15 +328,25 @@ def _group_sidecar(fs: list[dict]) -> tuple[tuple[str, list[str]] | str | None, 
     return next(iter(found.values()), None), (None if found else problem)
 
 
-def _printed(fs: list[dict], sidecar: tuple[str, list[str]] | None) -> tuple[str | None, bool]:
-    """The date a shared document prints: from its own text, else from the group's sidecar."""
+def _effective_pages(f: dict, sidecar: tuple[str, list[str]] | None) -> list[tuple[str, str]]:
+    """The pages the index stores for this document, as (text, text_source): its converted text; its own text; or,
+    for a PDF whose own text is under MIN_TEXT_CHARS, the group's OCR. Ownership and extraction both read this, so
+    a shared document is attached by the very text it is indexed with."""
     if sidecar and sidecar[0] == "converted":
-        return printed_date_in("\n".join(sidecar[1]))
+        return [(_clean(t), "converted") for t in sidecar[1]]
+    pages = extract_pages(f["abs"], f["format"])
+    if f["format"] == "pdf" and _chars(pages) < MIN_TEXT_CHARS and sidecar and sidecar[0] == "ocr":
+        return [(_clean(t), "ocr") for t in sidecar[1]]
+    return [(t, "text") for t in pages]
+
+
+def _printed(fs: list[dict], sidecar: tuple[str, list[str]] | None) -> tuple[str | None, bool]:
+    """The date a shared document prints, read from the text the index will store for it."""
     f = fs[0]
-    date, closed = printed_date(f["abs"], f["format"])
-    if date is None and f["format"] == "pdf" and sidecar:
-        return printed_date_in("\n".join(_clean(p) for p in sidecar[1]))
-    return date, closed
+    pages = _effective_pages(f, sidecar)
+    if pages and pages[0][1] != "text":
+        return printed_date_in("\n".join(t for t, _ in pages))
+    return printed_date(f["abs"], f["format"])
 
 
 def _chars(pages: list[str]) -> int:
@@ -347,16 +357,11 @@ def _extract(doc: dict) -> dict:
     """The document's pages as (text, text_source); a scan with no text layer takes its valid OCR sidecar."""
     f = next((x for x in doc["files"] if x["meeting_id"] == doc["meeting_id"]), doc["files"][0])
     out = {**doc, "error": None, "url_hint": f.get("url"), "sidecar_problem": None}
-    sidecar = doc.get("sidecar")
     try:
-        if sidecar and sidecar[0] == "converted":
-            return out | {"pages": [(_clean(t), "converted") for t in sidecar[1]]}
-        pages = extract_pages(f["abs"], f["format"])
-        if f["format"] == "pdf" and _chars(pages) < MIN_TEXT_CHARS:
-            if sidecar and sidecar[0] == "ocr":
-                return out | {"pages": [(_clean(t), "ocr") for t in sidecar[1]]}
+        pages = _effective_pages(f, doc.get("sidecar"))
+        if f["format"] == "pdf" and _chars([t for t, _ in pages]) < MIN_TEXT_CHARS:
             out["sidecar_problem"] = doc.get("sidecar_problem")
-        return out | {"pages": [(t, "text") for t in pages]}
+        return out | {"pages": pages}
     except Exception as exc:
         return out | {"pages": None, "error": f"text extraction failed: {type(exc).__name__}: {exc}"}
 

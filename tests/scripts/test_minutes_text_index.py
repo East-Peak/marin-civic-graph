@@ -625,3 +625,14 @@ def test_a_sidecar_whose_page_text_is_not_a_string_is_rejected_and_the_build_com
     disp, reason = _disp(report)[f"{mid}.html"]
     assert disp == "unreadable" and "not a string" in reason
     assert _disp(report)[f"meeting-{NOV}-1.html"][0] == "indexed"
+
+
+def test_ownership_reads_the_same_text_the_index_stores_when_a_short_stamp_sits_on_a_scan(world):
+    # a native layer of only a stamp (under MIN_TEXT_CHARS) naming April 2; the OCR heading names April 1
+    cm3, cm4 = _share_cm3_cm4(world, make_pdf(["Approved April 2, 2030", "", ""]), "pdf")
+    page1 = "Planning Commission minutes, April 1, 2030, scanned." + LONG
+    _write_sidecar(world["raw"], CM, f"meeting-{CM}-4", cm4, [page1, "", PAGE3])
+    d = _disp(_build(world))
+    assert d[cm3.name][0] == d[cm4.name][0] == "shared-indexed"
+    assert _rows(world["out"], "SELECT DISTINCT meeting_id, text_source FROM pages WHERE text LIKE '%April 1, 2030, "
+                               "scanned%'") == [(f"meeting-{CM}-3", "ocr")]
