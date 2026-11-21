@@ -641,3 +641,26 @@ def test_a_connection_close_response_is_still_cut_off_by_the_watchdog():
         mt.http_get(f"http://127.0.0.1:{port}/a.pdf", {"User-Agent": mt.USER_AGENT}, lambda s, h: None,
                     deadline=t0 + 1.0)
     assert real_time.time() - t0 < 5
+
+
+def test_block_headers_are_seen_even_when_no_socket_can_bound_the_body(monkeypatch):
+    import requests
+
+    class Raw:
+        connection = None
+        _fp = None
+
+    class Resp:
+        status_code, headers, raw = 429, {"Retry-After": "60"}, Raw()
+
+        def iter_content(self, n):
+            yield b""
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    seen = []
+    with pytest.raises(mt.NetworkError):
+        mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda st, h: seen.append((st, h)), deadline=1e12)
+    assert seen == [(429, {"retry-after": "60"})]

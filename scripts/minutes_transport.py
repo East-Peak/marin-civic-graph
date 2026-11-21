@@ -137,6 +137,13 @@ def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = 
     # Socket timeouts measure silence, not duration: a server trickling bytes never trips one. A wall-clock watchdog
     # shuts the socket down at the deadline, which ends a blocked read; the transfer is bounded however it behaves.
     watchdog = None
+    hdrs = {k.lower(): v for k, v in resp.headers.items()}
+    try:
+        on_head(resp.status_code, hdrs)  # first: a block or challenge header is acted on whatever follows
+    except BaseException:
+        resp.close()
+        session.close()
+        raise
     if deadline is not None:
         sock = _body_socket(resp)
         if sock is None:  # fail closed: a body we could not cut off at the deadline is never read
@@ -154,8 +161,6 @@ def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = 
         watchdog.daemon = True
         watchdog.start()
     try:
-        hdrs = {k.lower(): v for k, v in resp.headers.items()}
-        on_head(resp.status_code, hdrs)
         body = bytearray()
         try:
             for chunk in resp.iter_content(CHUNK):
