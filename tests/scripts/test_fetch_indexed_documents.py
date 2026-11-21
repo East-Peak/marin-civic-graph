@@ -615,6 +615,13 @@ def make_ole2(stream_name="WordDocument", sector_shift=9, truncate=None, stream_
 OLE2 = make_ole2()
 
 
+def _overlapping_directory():
+    import struct
+    data = bytearray(make_ole2())
+    struct.pack_into("<I", data, 512 + 4, 2)  # FAT[1] (the directory) now continues into sector 2, the stream
+    return bytes(data)
+
+
 def _one(tmp_path, mid, url, date="2030-01-05", title="Town Council Regular Meeting"):
     sub = make_substrate(tmp_path / "s.sqlite", meetings=[(mid, date, title, url)])
     raw = tmp_path / "raw"
@@ -716,8 +723,9 @@ def test_an_attempt_excluded_before_any_document_request_uses_no_probe_slot(worl
     make_ole2(chain=[3, 4, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE]),  # too short
     make_ole2(zero_root=True),                          # no root entry
     make_ole2(root_child=0xFFFFFFFF),                   # the stream is not reachable from the root
+    _overlapping_directory(),                            # the directory chain claims the stream's sectors
 ], ids=["signature-only", "truncated", "excel", "powerpoint", "stream-too-long", "no-fib", "fib-only",
-        "chain-loop", "chain-short", "no-root", "unreachable"])
+        "chain-loop", "chain-short", "no-root", "unreachable", "overlap"])
 def test_only_a_structurally_valid_word_file_is_a_doc(data):
     assert fid._document_kind(data) is None
 

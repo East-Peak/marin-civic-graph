@@ -152,7 +152,10 @@ def is_word_doc(body: bytes) -> bool:
     if length < 4096:  # a real Word stream is never a mini stream
         return False
     sectors = chain(start, n_sectors)
-    return bool(sectors) and len(sectors) * size >= length and sector(sectors[0])[:2] in (b"\xec\xa5", b"\xdc\xa5")
+    if not sectors or len(sectors) * size < length or sector(sectors[0])[:2] not in (b"\xec\xa5", b"\xdc\xa5"):
+        return False
+    claimed = [*fat_sectors[:n_fat], *seen_difat, *directory, *sectors]
+    return len(claimed) == len(set(claimed))  # no sector is two things at once
 
 
 def _resolve_redirect(src, target: str) -> tuple[str, dict]:
