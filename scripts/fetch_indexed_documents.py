@@ -122,23 +122,37 @@ def is_word_doc(body: bytes) -> bool:
     directory = chain(struct.unpack_from("<I", body, 48)[0], n_sectors)
     if not directory:
         return False
-    for d in directory:
-        block = sector(d)
-        for off in range(0, size, 128):
-            name_len, kind = struct.unpack_from("<HB", block, off + 64)
-            if kind != 2 or not 2 <= name_len <= 64:
-                continue
-            if block[off:off + name_len - 2].decode("utf-16-le", "replace") != "WordDocument":
-                continue
-            start, length = struct.unpack_from("<II", block, off + 116)  # v3 keeps a 32-bit size
-            if major == 4:
-                length = struct.unpack_from("<Q", block, off + 120)[0]
-            if length < 4096:  # a real Word stream is never a mini stream
-                return False
-            sectors = chain(start, n_sectors)
-            return bool(sectors) and len(sectors) * size >= length and sector(sectors[0])[:2] in (b"\xec\xa5",
-                                                                                              b"\xdc\xa5")
-    return False
+    entries = [sector(d)[off:off + 128] for d in directory for off in range(0, size, 128)]
+
+    def name(e: bytes) -> str:
+        n = struct.unpack_from("<H", e, 64)[0]
+        return e[:n - 2].decode("utf-16-le", "replace") if 2 <= n <= 64 and n % 2 == 0 else ""
+
+    if not entries or entries[0][66] != 5 or name(entries[0]) != "Root Entry":
+        return False
+    # the WordDocument stream must be reachable from the root: its child, then the siblings' red-black tree
+    todo, seen, found = [struct.unpack_from("<I", entries[0], 76)[0]], set(), None
+    while todo:
+        i = todo.pop()
+        if i == free:
+            continue
+        if i >= len(entries) or i in seen:
+            return False
+        seen.add(i)
+        e = entries[i]
+        left, right = struct.unpack_from("<II", e, 68)
+        todo += [left, right]
+        if e[66] == 2 and name(e) == "WordDocument":
+            found = e
+    if found is None:
+        return False
+    start, length = struct.unpack_from("<II", found, 116)  # v3 keeps a 32-bit size
+    if major == 4:
+        length = struct.unpack_from("<Q", found, 120)[0]
+    if length < 4096:  # a real Word stream is never a mini stream
+        return False
+    sectors = chain(start, n_sectors)
+    return bool(sectors) and len(sectors) * size >= length and sector(sectors[0])[:2] in (b"\xec\xa5", b"\xdc\xa5")
 
 
 def _resolve_redirect(src, target: str) -> tuple[str, dict]:

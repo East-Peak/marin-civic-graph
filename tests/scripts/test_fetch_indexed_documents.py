@@ -574,7 +574,7 @@ def test_a_window_interruption_keeps_the_requested_hops_and_is_no_completed_prob
 
 TB, MV, SZ = "tiburon-town-council-granicus", "mill-valley-committees", "sausalito-city-council"
 def make_ole2(stream_name="WordDocument", sector_shift=9, truncate=None, stream_size=4096, fib=b"\xec\xa5",
-              chain=None, stream_bytes=None):
+              chain=None, stream_bytes=None, root_child=1, zero_root=False):
     """A minimal valid compound file: header; sector 0 the FAT, sector 1 the directory (a root entry and one
     stream entry), sectors 2.. the stream. `chain` overrides the stream's FAT entries; `stream_bytes` the bytes
     actually present."""
@@ -599,8 +599,13 @@ def make_ole2(stream_name="WordDocument", sector_shift=9, truncate=None, stream_
         raw = name.encode("utf-16-le") + b"\0\0"
         directory[i * 128:i * 128 + len(raw)] = raw
         struct.pack_into("<HB", directory, i * 128 + 64, len(raw), kind)
+        struct.pack_into("<III", directory, i * 128 + 68, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)  # no siblings/child
+        if kind == 5:
+            struct.pack_into("<I", directory, i * 128 + 76, root_child)
         if kind == 2:
             struct.pack_into("<IQ", directory, i * 128 + 116, 2, stream_size)
+    if zero_root:
+        directory[0:128] = bytes(128)
     stream = stream_bytes if stream_bytes is not None else fib + b"\0" * (n * size - len(fib))
     pad = b"\0" * (size - 512) if size > 512 else b""
     data = bytes(header) + pad + bytes(fat_sector) + bytes(directory) + stream
@@ -709,8 +714,10 @@ def test_an_attempt_excluded_before_any_document_request_uses_no_probe_slot(worl
     make_ole2(sector_shift=12, stream_bytes=b"\xec\xa5"),  # declares 4096 bytes, holds two
     make_ole2(chain=[2]),                               # the chain loops on itself
     make_ole2(chain=[3, 4, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE]),  # too short
+    make_ole2(zero_root=True),                          # no root entry
+    make_ole2(root_child=0xFFFFFFFF),                   # the stream is not reachable from the root
 ], ids=["signature-only", "truncated", "excel", "powerpoint", "stream-too-long", "no-fib", "fib-only",
-        "chain-loop", "chain-short"])
+        "chain-loop", "chain-short", "no-root", "unreachable"])
 def test_only_a_structurally_valid_word_file_is_a_doc(data):
     assert fid._document_kind(data) is None
 
