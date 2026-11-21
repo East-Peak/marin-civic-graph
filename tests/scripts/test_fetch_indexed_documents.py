@@ -203,7 +203,7 @@ def test_a_failed_url_is_never_retried(world):
     reasons = {r["meeting_id"]: (r["state"], r["reason"]) for r in ledger(world, NOV)}
     assert reasons[f"meeting-{NOV}-5"] == ("failed", "HTTP 404")
     assert reasons[f"meeting-{NOV}-4"][0] == "failed" and "reset" in reasons[f"meeting-{NOV}-4"][1]
-    assert reasons[f"meeting-{NOV}-3"] == ("failed", "response is not a PDF, HTML or DOCX document")
+    assert reasons[f"meeting-{NOV}-3"] == ("failed", "response is not a PDF, HTML, DOCX or Word .doc document")
     again = Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4, 5)})
     assert run(world, again, NOV).attempted == 0 and again.calls == []
 
@@ -568,3 +568,98 @@ def test_a_window_interruption_keeps_the_requested_hops_and_is_no_completed_prob
     assert last["state"] == "failed" and last["interrupted_urls"] == [nov_url(5)]
     with pytest.raises(fid.FetchError, match="probe"):
         run(world, Net({}), NOV, require_probe=True)
+
+
+# --- probe-driven changes (Phase C, 2026-11-21) ------------------------------------------------------------------
+
+TB, MV, SZ = "tiburon-town-council-granicus", "mill-valley-committees", "sausalito-city-council"
+OLE2 = bytes.fromhex("d0cf11e0a1b11ae1") + b"\0" * 512
+
+
+def _one(tmp_path, mid, url, date="2030-01-05", title="Town Council Regular Meeting"):
+    sub = make_substrate(tmp_path / "s.sqlite", meetings=[(mid, date, title, url)])
+    raw = tmp_path / "raw"
+    w = {"raw": raw, "inv": fid.freeze_inventory(sub, raw, tmp_path / "st")}
+    fid.freeze_baseline(w["inv"], raw)
+    return w
+
+
+def test_a_legacy_word_doc_is_filed_as_doc(tmp_path):
+    url = "https://sausalito.granicus.com/MinutesViewer.php?view_id=6&clip_id=1"
+    w = _one(tmp_path, f"meeting-{SZ}-1", url, title="City Council")
+    run(w, Net({url: (200, OLE2, {})}), SZ)
+    assert (w["raw"] / SZ / "minutes" / f"meeting-{SZ}-1.doc").read_bytes() == OLE2
+    assert ledger(w, SZ)[0]["state"] == "fetched"
+
+
+def test_a_google_viewer_wrapper_is_unwrapped_to_the_sources_own_document_and_never_requested(tmp_path):
+    url = "https://townoftiburon.granicus.com/MinutesViewer.php?view_id=5&clip_id=1439&doc_id=x"
+    inner = "https://townoftiburon.granicus.com/DocumentViewer.php?file=townoftiburon_cb52.pdf&view=1"
+    gview = ("https://docs.google.com/gview?url=https%3A%2F%2Ftownoftiburon.granicus.com%2FDocumentViewer.php"
+             "%3Ffile%3Dtownoftiburon_cb52.pdf%26view%3D1&embedded=true")
+    w = _one(tmp_path, f"meeting-{TB}-1439", url)
+    net = Net({url: (302, b"", {"location": gview}), inner: (200, PDF, {})})
+    run(w, net, TB)
+    assert net.urls() == [url, inner] and not any("google" in u for u in net.urls())
+    row = ledger(w, TB)[0]
+    assert row["state"] == "fetched" and row["chain"][0]["unwrapped"] == inner
+
+
+@pytest.mark.parametrize("inner", [
+    "https://evil.example/x.pdf",                                        # not the source's host
+    "https://townoftiburon.granicus.com/../x.pdf",                         # not canonical
+    "https://www.novato.gov/x.pdf",                                        # off-limits
+])
+def test_a_viewer_wrapping_anything_else_is_logged_and_not_requested(tmp_path, inner):
+    from urllib.parse import quote
+    url = "https://townoftiburon.granicus.com/MinutesViewer.php?view_id=5&clip_id=1"
+    gview = f"https://docs.google.com/gview?url={quote(inner, safe='')}&embedded=true"
+    w = _one(tmp_path, f"meeting-{TB}-1", url)
+    net = Net({url: (302, b"", {"location": gview}), inner: (200, PDF, {})})
+    run(w, net, TB)
+    assert net.urls() == [url] and ledger(w, TB)[0]["state"] == "failed"
+
+
+def test_a_viewer_on_a_source_without_the_unwrap_rule_is_not_unwrapped(tmp_path):
+    from urllib.parse import quote
+    url = "https://novato.granicus.com/MinutesViewer.php?clip_id=3"
+    inner = "https://novato.granicus.com/DocumentViewer.php?file=n.pdf&view=1"
+    gview = f"https://docs.google.com/gview?url={quote(inner, safe='')}&embedded=true"
+    w = _one(tmp_path, f"meeting-{NOV}-3", url, title="City Council")
+    net = Net({url: (302, b"", {"location": gview}), inner: (200, PDF, {})})
+    run(w, net, NOV)
+    assert net.urls() == [url]
+
+
+def test_mill_valley_org_documents_reach_the_gov_host_with_https_upgrade_only_when_admitted(tmp_path):
+    url = "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_04082021-10"
+    gov = "https://www.cityofmillvalley.gov/AgendaCenter/ViewFile/Minutes/_04082021-10"
+    w = _one(tmp_path, f"meeting-{MV}-10", url, title="Arts Commission Regular Meeting Agenda (PDF)")
+    net = Net({"https://cityofmillvalley.org/robots.txt":
+               (301, b"", {"location": "http://www.cityofmillvalley.gov/robots.txt"}),
+               "https://www.cityofmillvalley.gov/robots.txt": ALLOW_ALL,
+               url: (301, b"", {"location": "http://www.cityofmillvalley.gov/AgendaCenter/ViewFile/Minutes/_04082021-10"}),
+               gov: (200, PDF, {})})
+    run(w, net, MV)
+    assert net.urls() == ["https://cityofmillvalley.org/robots.txt", "https://www.cityofmillvalley.gov/robots.txt",
+                          url, gov]
+    assert ledger(w, MV)[0]["state"] == "fetched"
+    assert not any(u.startswith("http://") for u in net.urls())
+
+
+def test_an_http_redirect_is_upgraded_only_to_an_admitted_https_url(tmp_path):
+    url = "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_1-11"
+    w = _one(tmp_path, f"meeting-{MV}-11", url, title="Arts Commission Regular Meeting Agenda (PDF)")
+    net = Net({"https://cityofmillvalley.org/robots.txt": ALLOW_ALL,
+               url: (301, b"", {"location": "http://www.cityofmillvalley.gov/Archive/elsewhere.pdf"})})
+    run(w, net, MV)
+    assert len(net.urls()) == 2 and ledger(w, MV)[0]["state"] == "failed"
+
+
+def test_an_attempt_excluded_before_any_document_request_uses_no_probe_slot(world):
+    net = Net({"https://www.townofrossca.gov/robots.txt": OSError("dropped")})
+    run(world, net, ROSS, mode="probe")
+    assert ledger(world, ROSS)[0]["state"] == "excluded-by-authorization"
+    rows = fid.read_ledger(world["raw"], ROSS)
+    assert not fid.probe_completed(rows)  # no document was requested: bulk would still refuse
+    assert fid.probe_slots_used(rows) == 0  # and a later probe keeps its slots (this candidate is terminal)

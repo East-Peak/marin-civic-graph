@@ -18,7 +18,7 @@ import re
 from dataclasses import dataclass, field
 from urllib.parse import unquote, urlsplit
 
-MINUTES_EXTENSIONS = ("pdf", "html", "htm", "docx")
+MINUTES_EXTENSIONS = ("pdf", "html", "htm", "docx", "doc")
 
 SHAPES = {
     "numeric": r"\d+",
@@ -127,6 +127,9 @@ class Source:
     doc_hosts: tuple[HostRule, ...]
     redirect_hosts: tuple[HostRule, ...] = ()
     extra_id_patterns: tuple[str, ...] = ()
+    # a viewer that wraps the document's own URL in `?url=`: (wrapper URL prefix, evidence). The wrapper is never
+    # requested; the wrapped URL is, only if this source admits it.
+    viewer_wrappers: tuple[tuple[str, str], ...] = ()
     _rx: re.Pattern = field(init=False, repr=False, compare=False)
 
     def __post_init__(self):
@@ -206,12 +209,20 @@ _SOURCES = (
     Source("corte-madera-town-council", "Corte Madera", "corte-madera-town-council", ("numeric",),
            (HostRule("cortemadera.gov", None, SUBSTRATE_URL), HostRule("www.cortemadera.gov", None, SUBSTRATE_URL))),
     Source("tiburon-town-council-granicus", "Tiburon", "tiburon-town-council-granicus", ("numeric",),
-           (_granicus("townoftiburon"),)),
+           (_granicus("townoftiburon"),),
+           viewer_wrappers=(("https://docs.google.com/gview?",
+                             "probe 2026-11-21: MinutesViewer.php 302s to docs.google.com/gview?url=<its own "
+                             "townoftiburon.granicus.com/DocumentViewer.php URL>&embedded=true (clip_ids 1439, "
+                             "1435, 1422)"),)),
     Source("novato-city-council", "Novato", "novato-city-council", ("numeric",), (_granicus("novato"),)),
     Source("marin-county-bos", "Marin County", "marin-county-bos", ("numeric",), (_granicus("marin"),)),
     Source("sausalito-city-council", "Sausalito", "sausalito-city-council", ("numeric",), (_granicus("sausalito"),)),
     Source("mill-valley-committees", "Mill Valley", "mill-valley-committees", ("numeric",),
-           (HostRule("cityofmillvalley.org", "/AgendaCenter/ViewFile/Minutes/", SUBSTRATE_URL),)),
+           (HostRule("cityofmillvalley.org", "/AgendaCenter/ViewFile/Minutes/", SUBSTRATE_URL),),
+           redirect_hosts=(HostRule("www.cityofmillvalley.gov", "/AgendaCenter/ViewFile/Minutes/",
+                                    "the city's own domain: registry/civicplus-sources.yaml lists "
+                                    "https://www.cityofmillvalley.gov/AgendaCenter as the city's agenda center, and "
+                                    "probe 2026-11-21 saw cityofmillvalley.org/robots.txt 301 to it"),)),
     Source("fairfax-town-council", "Fairfax", "fairfax-town-council", ("slug",),
            (HostRule("storage.googleapis.com", "/proudcity/fairfaxca/",
                      SUBSTRATE_URL + "; the ProudCity bucket's fairfaxca folder (the town's CMS vendor)"),)),

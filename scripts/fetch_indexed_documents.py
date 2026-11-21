@@ -42,13 +42,14 @@ import sys
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from minutes_bodies import normalize_body  # noqa: E402
 from minutes_sources import MINUTES_EXTENSIONS, SOURCE_MAP, host_family, off_limits, source_of  # noqa: E402
-from minutes_transport import NetworkError, Refused, StopNow, Transport  # noqa: E402
+from minutes_sources import UnsafeUrl, canonical_url  # noqa: E402
+from minutes_transport import NetworkError, Refused, StopNow, Transport, https_upgrade  # noqa: E402
 from votes_inventory import normalize_url, sniff_format  # noqa: E402
 
 HOME = Path.home()
@@ -63,6 +64,50 @@ PROBE_MAX = 3
 MAX_HOPS = 5
 STATES = ("already-cached", "fetched", "failed", "excluded-by-authorization", "no-url", "unattempted-after-stop")
 TERMINAL = ("fetched", "failed", "excluded-by-authorization")
+OLE2_MAGIC = bytes.fromhex("d0cf11e0a1b11ae1")
+
+
+def _document_kind(body: bytes) -> str | None:
+    """pdf | html | docx | doc (a legacy Word OLE2 file, converted later by textutil) | None."""
+    return sniff_format(body) or ("doc" if body[:8] == OLE2_MAGIC else None)
+
+
+def _resolve_redirect(src, target: str) -> tuple[str, dict]:
+    """The URL a redirect leads to for this source: an http:// target upgraded to https only if the upgrade is
+    admitted; a listed viewer wrapper replaced by the document it wraps, only if that is admitted. Never a request."""
+    note: dict = {}
+    upgraded = https_upgrade(target)
+    if upgraded != target and src.admits(upgraded):
+        note["upgraded"] = upgraded
+        target = upgraded
+    for prefix, _evidence in src.viewer_wrappers:
+        if target.startswith(prefix):
+            inner = parse_qs(urlsplit(target).query).get("url", [])
+            if len(inner) == 1:
+                try:
+                    canonical_url(inner[0])
+                except UnsafeUrl:
+                    break
+                if src.admits(inner[0]) and not off_limits(urlsplit(inner[0]).hostname or ""):
+                    note["unwrapped"] = inner[0]
+                    target = inner[0]
+            break
+    return target, note
+
+
+def probe_completed(ledger: list[dict]) -> bool:
+    """A probe that requested a document and reached an outcome (not one interrupted mid-way)."""
+    return any(e.get("mode") == "probe" and e.get("state") in TERMINAL and e.get("chain")
+               and not e.get("interrupted_urls") for e in ledger)
+
+
+def probe_slots_used(ledger: list[dict]) -> int:
+    """Probe attempts that used a slot: every probe attempt (its `attempting` line is written before any request)
+    except one that ended excluded by authorization before any document request (an empty chain)."""
+    attempted = {e["meeting_id"] for e in ledger if e.get("mode") == "probe" and e.get("state") == "attempting"}
+    no_document = {e["meeting_id"] for e in ledger if e.get("mode") == "probe"
+                   and e.get("state") == "excluded-by-authorization" and not e.get("chain")}
+    return len(attempted - no_document)
 
 
 class FetchError(Exception):
@@ -307,9 +352,11 @@ def _fetch_one(transport: Transport, source: str, url: str, failed: dict[str, st
             return "excluded-by-authorization", str(exc), details
         except NetworkError as exc:
             return "failed", f"request failed: {exc}", details
-        chain.append({"url": url, "status": resp.status, "location": resp.location})
+        hop = {"url": url, "status": resp.status, "location": resp.location}
+        chain.append(hop)
         if resp.location:
-            target = resp.location
+            target, note = _resolve_redirect(src, resp.location)
+            hop.update(note)
             if off_limits(urlsplit(target).hostname or "") or not src.admits(target):
                 return "failed", f"redirect to {target} is not on {source}'s allow-list (logged, not requested)", \
                     details
@@ -319,9 +366,9 @@ def _fetch_one(transport: Transport, source: str, url: str, failed: dict[str, st
             continue
         if resp.status != 200:
             return "failed", f"HTTP {resp.status}", details
-        kind = sniff_format(resp.body)
+        kind = _document_kind(resp.body)
         if kind is None:
-            return "failed", "response is not a PDF, HTML or DOCX document", details
+            return "failed", "response is not a PDF, HTML, DOCX or Word .doc document", details
         details |= {"data": resp.body, "kind": kind}
         return "fetched", "", details
     return "failed", f"more than {MAX_HOPS} redirects", details
@@ -395,13 +442,11 @@ def _fetch_locked(inv: dict, source: str, raw: Path, mode: str, limit: int | Non
     todo = sorted((c for c in inv["candidates"] if c["source"] == source and c["url"] and not c["cached"]
                    and c["meeting_id"] not in done), key=lambda c: (c["meeting_date"], c["meeting_id"]), reverse=True)
     # a probe slot is taken by its `attempting` line, written before the first request, so a crash still counts
-    probes_used = len({e["meeting_id"] for e in ledger if e.get("mode") == "probe" and e.get("state") == "attempting"})
+    probes_used = probe_slots_used(ledger)
     if mode == "probe":
         cap = max(0, min(limit or PROBE_MAX, PROBE_MAX - probes_used))
     else:
-        completed = any(e.get("mode") == "probe" and e.get("state") in TERMINAL and e.get("requests", 0) > 0
-                        and not e.get("interrupted_urls") for e in ledger)
-        if require_probe and todo and not completed:
+        if require_probe and todo and not probe_completed(ledger):
             raise FetchError(f"{source}: no completed probe recorded; run `probe` and read its chains before `bulk`")
         cap = limit
 

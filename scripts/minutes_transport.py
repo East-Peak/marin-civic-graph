@@ -196,6 +196,12 @@ def _body_socket(resp) -> socket.socket | None:
     return sock if isinstance(sock, socket.socket) else None
 
 
+def https_upgrade(url: str | None) -> str | None:
+    """An `http://` redirect target as its `https://` form (the same host and path, a stricter channel); callers
+    still require the upgraded URL to pass every gate. Anything else unchanged."""
+    return "https://" + url[len("http://"):] if url and url.startswith("http://") else url
+
+
 def _looks_html(body: bytes) -> bool:
     head = body[:4096].lstrip().lower()
     return any(s in head for s in HTML_SIGNS)
@@ -480,7 +486,7 @@ class Transport:
             except NetworkError as exc:
                 return self._unreadable(host, str(exc), source)
             if 300 <= resp.status < 400:
-                target = resp.location
+                target = https_upgrade(resp.location)
                 ok = False
                 if target:
                     try:
@@ -504,6 +510,9 @@ class Transport:
             if text is None:
                 return self._unreadable(host, "HTTP 200 but not plainly a robots.txt file", source)
             rules = parse_robots(text, PRODUCT_TOKEN)
+            final_host = urlsplit(url).hostname
+            if final_host != host:  # another admitted host's own robots.txt: it is that host's policy too
+                self._robots.setdefault(final_host, rules)
             if rules.crawl_delay:
                 self._set_delay(host_family(host), rules.crawl_delay)
             self._decide(host, "read", f"{len(rules.rules)} rules for {PRODUCT_TOKEN}"
