@@ -740,3 +740,13 @@ def test_the_five_real_san_anselmo_word_files_are_docs():
     if not all(f.is_file() for f in files):
         pytest.skip("the canonical raw store is not on this machine")
     assert [fid._document_kind(f.read_bytes()) for f in files] == ["doc"] * 5
+
+
+def test_exclude_gives_the_remaining_candidates_a_terminal_state_without_a_request(world):
+    net = Net({})
+    t = mt.Transport(world["raw"], http=net.http, sleep=net.sleep, now=net.now)
+    res = fid.exclude_remaining(world["inv"], NOV, world["raw"], "robots.txt unreadable twice", transport=t)
+    assert net.calls == [] and len(res) == 4
+    assert {r["state"] for r in ledger(world, NOV)} == {"excluded-by-authorization"}
+    assert fid.candidate_states(world["inv"], world["raw"])["counts"][NOV] == {
+        "already-cached": 1, "excluded-by-authorization": 4}

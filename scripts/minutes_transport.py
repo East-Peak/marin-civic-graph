@@ -514,7 +514,8 @@ class Transport:
             if final_host != host:  # another admitted host's own robots.txt: it is that host's policy too
                 self._robots.setdefault(final_host, rules)
             if rules.crawl_delay:
-                self._set_delay(host_family(host), rules.crawl_delay)
+                for fam in {host_family(host), host_family(final_host)}:
+                    self._set_delay(fam, rules.crawl_delay)
             self._decide(host, "read", f"{len(rules.rules)} rules for {PRODUCT_TOKEN}"
                          + (f"; Crawl-delay {rules.crawl_delay}" if rules.crawl_delay else ""), source)
             return rules

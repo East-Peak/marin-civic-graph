@@ -633,6 +633,31 @@ def _fetch_locked(inv: dict, source: str, raw: Path, mode: str, limit: int | Non
     return result
 
 
+def exclude_remaining(inventory: Path, source: str, raw: Path, reason: str,
+                      transport: Transport | None = None) -> list[dict]:
+    """Record `excluded-by-authorization` for every candidate of `source` without a terminal state, making no
+    request — for a source whose authorization failed closed (robots unreadable or disallowing) and that will not be
+    asked again in this goal."""
+    raw = Path(raw)
+    with run_lock(raw):
+        inv = load_inventory(inventory)
+        if Path(inv["raw"]).resolve() != raw.resolve():
+            raise FetchError(f"the inventory was frozen against raw store {inv['raw']}, not {raw}")
+        last = _last_by_meeting(read_ledger(raw, source))
+        out = []
+        for c in inv["candidates"]:
+            mid = c["meeting_id"]
+            if c["source"] != source or not c["url"] or c["cached"] or last.get(mid, {}).get("state") in \
+                    TERMINAL + ("already-cached", "attempting"):
+                continue
+            entry = {"meeting_id": mid, "url": c["url"], "mode": "exclude", "fetched_at": _now_iso(),
+                     "state": "excluded-by-authorization", "status": "excluded", "chain": [], "requests": 0,
+                     "final_url": c["url"], "http_attempted": False, "reason": f"{reason} (no request made)"}
+            _append(raw, source, entry)
+            out.append(entry)
+        return out
+
+
 # --- states ---------------------------------------------------------------------------------------------------------
 
 def candidate_states(inventory: Path, raw: Path, transport: Transport | None = None) -> dict:
@@ -698,6 +723,9 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--limit", type=int)
     sub.add_parser("states")
     sub.add_parser("baseline")
+    x = sub.add_parser("exclude")
+    x.add_argument("--source", required=True, choices=sorted(SOURCE_MAP))
+    x.add_argument("--reason", required=True)
     for p in sub.choices.values():
         p.add_argument("--raw", type=Path, default=DEFAULT_RAW)
         p.add_argument("--inventory", type=Path, default=STAGING / INVENTORY)
@@ -708,6 +736,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"wrote {path} (sha256 {sha256_file(path)})")
             for s, c in json.loads(path.read_text())["counts"].items():
                 print(f"  {s}: {c}")
+            return 0
+        if args.cmd == "exclude":
+            rows = exclude_remaining(args.inventory, args.source, args.raw, args.reason)
+            print(f"excluded {len(rows)} candidates of {args.source} without a request")
             return 0
         if args.cmd == "baseline":
             print(f"wrote {freeze_baseline(args.inventory, args.raw)}")

@@ -695,3 +695,17 @@ def test_a_redirect_body_is_never_read_before_on_head(monkeypatch):
     with pytest.raises(RuntimeError):
         mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, on_head, deadline=1e12)
     assert order == ["head"]
+
+
+def test_a_redirected_robots_crawl_delay_also_paces_the_host_it_belongs_to(tmp_path):
+    src = ms.Source("t", "T", "t", ("numeric",), (
+        ms.HostRule("old.example.org", None, "fixture"), ms.HostRule("www.example.net", None, "fixture")))
+    a, b = "https://www.example.net/a.pdf", "https://www.example.net/b.pdf"
+    net = Net({"https://old.example.org/robots.txt": (301, b"", {"location": "https://www.example.net/robots.txt"}),
+               "https://www.example.net/robots.txt": robots("User-agent: *\nCrawl-delay: 10\nDisallow:\n"),
+               "https://old.example.org/x.pdf": (200, PDF, {}), a: (200, PDF, {}), b: (200, PDF, {})})
+    t = transport(tmp_path, net)
+    t.get("https://old.example.org/x.pdf", src)
+    t.get(a, src)
+    t.get(b, src)
+    assert all(g >= 10 for g in _gaps(net, "example.net"))
