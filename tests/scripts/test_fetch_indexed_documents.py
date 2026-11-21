@@ -77,7 +77,8 @@ class Net:
     def sleep(self, s):
         self.t += s
 
-    def http(self, url, headers, on_head):
+    def http(self, url, headers, on_head, deadline=None):
+        self.deadlines = getattr(self, "deadlines", []) + [deadline]
         self.calls.append((self.t, url))
         self.t += 0.1
         r = self.responses.get(url, (404, b"gone", {}))
@@ -97,6 +98,7 @@ def world(tmp_path):
     (raw / NOV / "minutes").mkdir(parents=True)
     (raw / NOV / "minutes" / f"meeting-{NOV}-1.pdf").write_bytes(PDF)  # cached before the goal
     inv = fid.freeze_inventory(sub, raw, staging)
+    fid.freeze_baseline(inv, raw)
     return {"raw": raw, "staging": staging, "sub": sub, "inv": inv}
 
 
@@ -338,7 +340,7 @@ def test_an_attempt_interrupted_by_a_crash_is_failed_and_never_retried(world):
     class Crash(BaseException):
         pass
 
-    def explode(url, headers, on_head):
+    def explode(url, headers, on_head, deadline=None):
         raise Crash()
 
     transport = mt.Transport(world["raw"], http=explode)
@@ -425,3 +427,127 @@ def test_fetched_slug_and_date_row_documents_are_indexed_end_to_end(world, tmp_p
     d = {Path(f["path"]).name: f["disposition"] for f in report["files"]}
     assert d == {f"meeting-{ROSS}-2030-01-10-row-3.pdf": "indexed",
                  f"meeting-{FX}-town-council-meeting-january-3-2030.pdf": "indexed"}
+
+
+def test_an_interrupted_redirect_hop_is_never_requested_again(tmp_path):
+    hop = "https://novato.granicus.com/DocumentViewer.php?file=shared.pdf"
+    sub = make_substrate(tmp_path / "s.sqlite", meetings=[
+        (f"meeting-{NOV}-8", "2030-01-02", "City Council", nov_url(8)),
+        (f"meeting-{NOV}-9", "2030-01-01", "City Council", nov_url(9))])
+    raw = tmp_path / "raw"
+    w = {"raw": raw, "inv": fid.freeze_inventory(sub, raw, tmp_path / "st")}
+    fid.freeze_baseline(w["inv"], raw)
+
+    class Crash(BaseException):
+        pass
+
+    net = Net({nov_url(8): (302, b"", {"location": hop}), nov_url(9): (302, b"", {"location": hop}),
+               hop: (200, PDF, {})})
+
+    def crash_on_hop(url, headers, on_head, deadline=None):
+        if url == hop:
+            raise Crash()
+        return net.http(url, headers, on_head)
+
+    t = mt.Transport(raw, http=crash_on_hop, sleep=net.sleep, now=net.now)
+    with pytest.raises(Crash):
+        fid.fetch_source(w["inv"], NOV, raw, transport=t, clock=lambda: SATURDAY, require_probe=False)
+    later = Net({nov_url(9): (302, b"", {"location": hop}), hop: (200, PDF, {})}, )
+    later.t = net.t + 1000
+    run(w, later, NOV)
+    assert hop not in later.urls()
+    last = {r["meeting_id"]: r for r in ledger(w, NOV)}
+    assert last[f"meeting-{NOV}-8"]["state"] == "failed" and hop in last[f"meeting-{NOV}-8"]["interrupted_urls"]
+    assert last[f"meeting-{NOV}-9"]["state"] == "failed" and "not retried" in last[f"meeting-{NOV}-9"]["reason"]
+
+
+def test_probe_slots_are_reserved_before_the_request_and_bulk_needs_a_completed_probe(world):
+    class Crash(BaseException):
+        pass
+
+    def explode(url, headers, on_head, deadline=None):
+        raise Crash()
+
+    t = mt.Transport(world["raw"], http=explode)
+    with pytest.raises(Crash):
+        fid.fetch_source(world["inv"], NOV, world["raw"], mode="probe", transport=t, clock=lambda: SATURDAY)
+    net = Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4, 5)})
+    with pytest.raises(fid.FetchError, match="probe"):  # an interrupted probe is no completed probe
+        run(world, net, NOV, require_probe=True)
+    assert run(world, net, NOV, mode="probe").attempted == 2  # 1 slot used by the crashed attempt
+    assert run(world, net, NOV, require_probe=True).attempted == 1
+
+
+def test_the_guard_gives_each_request_a_deadline_at_the_window_and_refuses_near_it(world):
+    net = Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4, 5)})
+    sunday_late = dt.datetime(2030, 1, 6, 23, 0)  # six hours before Monday 05:00
+    transport = mt.Transport(world["raw"], http=net.http, sleep=net.sleep, now=net.now)
+    fid.fetch_source(world["inv"], NOV, world["raw"], transport=transport, require_probe=False, limit=1,
+                     clock=lambda: sunday_late)
+    assert net.deadlines[0] == pytest.approx(net.calls[0][0] + 6 * 3600)
+    almost = dt.datetime(2030, 1, 7, 4, 58)
+    res = fid.fetch_source(world["inv"], NOV, world["raw"], transport=transport, require_probe=False,
+                           clock=lambda: almost)
+    assert "window" in res.skipped and len(net.calls) == 1
+
+
+def test_a_frozen_cached_file_that_disappears_or_changes_is_an_anomaly(world):
+    (world["raw"] / NOV / "minutes" / f"meeting-{NOV}-1.pdf").write_bytes(b"%PDF-1.4 edited later")
+    states = fid.candidate_states(world["inv"], world["raw"])
+    assert [a["meeting_id"] for a in states["anomalies"]] == [f"meeting-{NOV}-1"]
+    with pytest.raises(fid.FetchError, match="frozen"):
+        fid.freeze_baseline(world["inv"], world["raw"])
+
+
+def test_states_refuse_without_a_baseline(tmp_path):
+    sub = make_substrate(tmp_path / "s.sqlite")
+    inv = fid.freeze_inventory(sub, tmp_path / "raw", tmp_path / "st")
+    with pytest.raises(fid.FetchError, match="baseline"):
+        fid.candidate_states(inv, tmp_path / "raw")
+
+
+def test_a_hand_saved_file_is_recorded_so_the_index_can_date_it(world):
+    import minutes_text_index as mti
+    (world["raw"] / NOV / "minutes" / f"meeting-{NOV}-5.html").write_bytes(HTML)
+    run(world, Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4)}), NOV)
+    saved, _, fetched = mti._saved_dates(world["raw"] / NOV)
+    assert f"meeting-{NOV}-5.html" in saved and fetched[f"meeting-{NOV}-5.html"] == {fid.sha256_bytes(HTML)}
+
+
+def test_a_limit_truncated_run_reports_its_remainder(world):
+    res = run(world, Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4, 5)}), NOV, limit=1)
+    assert res.attempted == 1 and res.remaining == 3
+
+
+def test_the_inventory_is_published_whole_or_not_at_all(tmp_path, monkeypatch):
+    sub = make_substrate(tmp_path / "s.sqlite")
+    real = fid.os.link
+    calls = []
+
+    def flaky(src, dst):
+        calls.append(dst)
+        if str(dst).endswith(".sha256"):
+            raise OSError("crash between the two files")
+        return real(src, dst)
+
+    monkeypatch.setattr(fid.os, "link", flaky)
+    with pytest.raises(OSError):
+        fid.freeze_inventory(sub, tmp_path / "raw", tmp_path / "st")
+    with pytest.raises(fid.FetchError, match="sha256"):
+        fid.load_inventory(tmp_path / "st" / fid.INVENTORY)  # an incomplete freeze is detected, never trusted
+
+
+def test_two_competing_processes_never_both_hold_the_lock(world):
+    import subprocess
+    code = ("import sys, time; sys.path.insert(0, %r); import fetch_indexed_documents as f\n"
+            "with f.run_lock(%r):\n    print('held', flush=True); time.sleep(3)\n")
+    scripts = str(Path(fid.__file__).parent)
+    p = subprocess.Popen([sys.executable, "-c", code % (scripts, str(world["raw"]))], stdout=subprocess.PIPE,
+                         text=True)
+    assert p.stdout.readline().strip() == "held"
+    try:
+        with pytest.raises(fid.FetchError, match="another fetch"):
+            with fid.run_lock(world["raw"]):
+                pass
+    finally:
+        p.wait()

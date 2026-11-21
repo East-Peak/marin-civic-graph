@@ -39,6 +39,7 @@ import json
 import os
 import sqlite3
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -55,6 +56,7 @@ DEFAULT_SUBSTRATE = HOME / "projects/marin-civic-graph/data/exports/public-subst
 DEFAULT_RAW = HOME / "projects/marin-civic-graph/data/raw"
 STAGING = HOME / "open-marin-staging/minutes-coverage"
 INVENTORY = "inventory.json"
+BASELINE = "cached-baseline.json"
 FETCH_LOG = "minutes-fetch-log.jsonl"
 LOCK = "minutes-fetch.lock"
 PROBE_MAX = 3
@@ -124,21 +126,59 @@ def freeze_inventory(substrate: Path, raw: Path, out_dir: Path) -> Path:
     out_dir.mkdir(parents=True, exist_ok=True)
     path, sha_path = out_dir / INVENTORY, out_dir / f"{INVENTORY}.sha256"
     data = (json.dumps(doc, indent=1, sort_keys=True) + "\n").encode("utf-8")
-    try:  # exclusive: a frozen inventory and its checksum are never replaced
-        with sha_path.open("x") as sh, path.open("xb") as fh:
-            fh.write(data)
-            sh.write(f"{sha256_bytes(data)}  {INVENTORY}\n")
-    except FileExistsError:
-        raise FetchError(f"{path} (or its .sha256) exists: the inventory is frozen and is never replaced") from None
+    _publish_frozen(path, data)
     return path
 
 
-def load_inventory(path: Path) -> dict:
+def _publish_frozen(path: Path, data: bytes) -> None:
+    """Write `path` and `path.sha256` exclusively, each fsynced in full before it gets its name (os.link refuses an
+    existing name). The data file is named first: a crash between the two leaves a file with no checksum, which
+    load_frozen refuses — never a checksum vouching for a partial file."""
+    sha_path = path.with_name(path.name + ".sha256")
+    if path.exists() or sha_path.exists():
+        raise FetchError(f"{path} (or its .sha256) exists: it is frozen and is never replaced")
+    for target, content in ((path, data), (sha_path, f"{sha256_bytes(data)}  {path.name}\n".encode())):
+        fd, tmp = tempfile.mkstemp(prefix=f".{target.name}.", dir=target.parent)
+        try:
+            with os.fdopen(fd, "wb") as fh:
+                fh.write(content)
+                fh.flush()
+                os.fsync(fh.fileno())
+            try:
+                os.link(tmp, target)
+            except FileExistsError:
+                raise FetchError(f"{target} exists: it is frozen and is never replaced") from None
+        finally:
+            os.unlink(tmp)
+
+
+def load_frozen(path: Path) -> dict:
     path = Path(path)
-    want = (path.parent / f"{path.name}.sha256").read_text().split()[0]
+    sha_path = path.parent / f"{path.name}.sha256"
+    if not sha_path.is_file():
+        raise FetchError(f"{path} has no .sha256: an incomplete freeze, never trusted")
+    want = (sha_path.read_text().split() or [""])[0]
     if sha256_file(path) != want:
-        raise FetchError(f"{path} no longer matches its sha256 ({want}); the inventory is frozen")
+        raise FetchError(f"{path} no longer matches its sha256 ({want}); it is frozen")
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+load_inventory = load_frozen
+
+
+def freeze_baseline(inventory: Path, raw: Path) -> Path:
+    """The sha256 of every file the inventory recorded as cached, frozen beside it (before any live request), so
+    `candidate_states` can prove the baseline files are still the bytes they were."""
+    inv = load_inventory(inventory)
+    files = {}
+    for c in inv["candidates"]:
+        if c["cached"]:
+            f = Path(raw) / SOURCE_MAP[c["source"]].raw_dir / "minutes" / c["cached"]
+            files[c["meeting_id"]] = {"path": c["cached"], "sha256": sha256_file(f)}
+    path = Path(inventory).with_name(BASELINE)
+    doc = {"inventory_sha256": sha256_file(inventory), "files": dict(sorted(files.items()))}
+    _publish_frozen(path, (json.dumps(doc, indent=1, sort_keys=True) + "\n").encode("utf-8"))
+    return path
 
 
 # --- the ledger -----------------------------------------------------------------------------------------------------
@@ -201,6 +241,7 @@ class Result:
     fetched: int = 0
     stop: dict | None = None
     skipped: str | None = None
+    remaining: int = 0  # eligible candidates left untouched because a --limit was reached
     entries: list[dict] = field(default_factory=list)
 
 
@@ -223,6 +264,14 @@ def in_weekly_window(t: dt.datetime) -> bool:
     return t.weekday() == 0 and 5 <= t.hour < 7
 
 
+def seconds_until_window(t: dt.datetime) -> float:
+    """Seconds from `t` (local, naive) to the next Monday 05:00."""
+    start = (t - dt.timedelta(days=t.weekday())).replace(hour=5, minute=0, second=0, microsecond=0)
+    if start <= t:
+        start += dt.timedelta(days=7)
+    return (start - t).total_seconds()
+
+
 def _write_new(path: Path, data: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(f".{path.name}.part")
@@ -237,7 +286,8 @@ def _now_iso() -> str:
     return dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
 
 
-def _fetch_one(transport: Transport, source: str, url: str, failed: dict[str, str]) -> tuple[str, str, dict]:
+def _fetch_one(transport: Transport, source: str, url: str, failed: dict[str, str],
+               journal=lambda hop: None) -> tuple[str, str, dict]:
     """(state, reason, details) for one URL. Raises StopNow, or Refused('stopped' | 'window'), to end the run."""
     src = SOURCE_MAP[source]
     chain: list[dict] = []
@@ -264,6 +314,8 @@ def _fetch_one(transport: Transport, source: str, url: str, failed: dict[str, st
                 return "failed", f"redirect to {target} is not on {source}'s allow-list (logged, not requested)", \
                     details
             url, purpose = target, "redirect"
+            if url not in failed:
+                journal(url)  # durably, before the hop's request: a crash never forgets it
             continue
         if resp.status != 200:
             return "failed", f"HTTP {resp.status}", details
@@ -292,9 +344,11 @@ def fetch_source(inventory: Path, source: str, raw: Path, *, mode: str = "bulk",
             raise FetchError("refusing to run inside the weekly job window (Mondays 05:00–07:00 local)")
         transport = transport or Transport(raw)
 
-        def guard() -> None:
-            if in_weekly_window(clock()):
+        def guard() -> float:
+            now = clock()
+            if in_weekly_window(now):
                 raise Refused("window", "the weekly job window (Mondays 05:00–07:00 local) has begun")
+            return seconds_until_window(now)
 
         transport.guard = guard
         return _fetch_locked(inv, source, raw, mode, limit, transport, clock, require_probe)
@@ -305,15 +359,23 @@ def _fetch_locked(inv: dict, source: str, raw: Path, mode: str, limit: int | Non
     result = Result()
     minutes_dir = raw / SOURCE_MAP[source].raw_dir / "minutes"
     ledger = read_ledger(raw, source)
-    # an attempt that never reached a terminal line (the process died mid-request) is failed, never retried
-    for mid, e in sorted(_last_by_meeting(ledger).items()):
+    # an attempt that never reached a terminal line (the process died mid-request) is failed, never retried, and
+    # every URL it had started (the initial one and each journaled hop) is never requested again
+    open_attempts: dict[str, list[dict]] = {}
+    for e in ledger:
         if e.get("state") == "attempting":
-            entry = {"meeting_id": mid, "url": e["url"], "mode": e.get("mode"), "fetched_at": _now_iso(),
-                     "state": "failed", "status": "failed", "chain": [], "final_url": e["url"],
-                     "reason": f"interrupted attempt (started {e['fetched_at']}; the process ended mid-request); "
-                               "not retried"}
-            _append(raw, source, entry)
-            ledger.append(entry)
+            open_attempts.setdefault(e["meeting_id"], []).append(e)
+        else:
+            open_attempts.pop(e["meeting_id"], None)
+    for mid, lines in sorted(open_attempts.items()):
+        urls = [lines[0]["url"]] + [x["hop"] for x in lines if x.get("hop")]
+        entry = {"meeting_id": mid, "url": lines[0]["url"], "mode": lines[0].get("mode"), "fetched_at": _now_iso(),
+                 "state": "failed", "status": "failed", "chain": [], "final_url": urls[-1], "interrupted_urls": urls,
+                 "requests": len(urls),
+                 "reason": f"interrupted attempt (started {lines[0]['fetched_at']}; the process ended mid-request); "
+                           "not retried"}
+        _append(raw, source, entry)
+        ledger.append(entry)
     if stops := _family_stops(transport, source):
         result.skipped = f"a stop record covers {', '.join(s['host_family'] for s in stops)}; no request made"
         return result
@@ -327,27 +389,35 @@ def _fetch_locked(inv: dict, source: str, raw: Path, mode: str, limit: int | Non
             excluded.setdefault(e["url"], e["reason"])
         elif e.get("state") == "failed" and e.get("http_attempted", True):
             failed.setdefault(e["url"], e["reason"])
-            if e.get("final_url"):
-                failed.setdefault(e["final_url"], e["reason"])
+            for u in [e.get("final_url")] + list(e.get("interrupted_urls") or []):
+                if u:
+                    failed.setdefault(u, e["reason"])
     todo = sorted((c for c in inv["candidates"] if c["source"] == source and c["url"] and not c["cached"]
                    and c["meeting_id"] not in done), key=lambda c: (c["meeting_date"], c["meeting_id"]), reverse=True)
-    probes_used = len({e["meeting_id"] for e in ledger if e.get("mode") == "probe" and e.get("requests", 0) > 0})
+    # a probe slot is taken by its `attempting` line, written before the first request, so a crash still counts
+    probes_used = len({e["meeting_id"] for e in ledger if e.get("mode") == "probe" and e.get("state") == "attempting"})
     if mode == "probe":
         cap = max(0, min(limit or PROBE_MAX, PROBE_MAX - probes_used))
     else:
-        if require_probe and todo and not any(e.get("mode") == "probe" for e in ledger):
-            raise FetchError(f"{source}: no probe recorded; run `probe` and read its chains before `bulk`")
+        completed = any(e.get("mode") == "probe" and e.get("state") in TERMINAL and e.get("requests", 0) > 0
+                        and not e.get("interrupted_urls") for e in ledger)
+        if require_probe and todo and not completed:
+            raise FetchError(f"{source}: no completed probe recorded; run `probe` and read its chains before `bulk`")
         cap = limit
 
-    for c in todo:
+    for i, c in enumerate(todo):
         if cap is not None and result.attempted >= cap:
+            result.remaining = sum(1 for x in todo[i:] if not _cached(raw, source, x["meeting_id"]))
             break
         mid, url = c["meeting_id"], c["url"]
         base = {"meeting_id": mid, "url": url, "mode": mode, "fetched_at": _now_iso()}
         if on_disk := _cached(raw, source, mid):  # saved by hand since the freeze: never refetched or overwritten
-            entry = base | {"state": "already-cached", "status": "cached-since-freeze", "path": on_disk,
-                            "sha256": sha256_file(minutes_dir / on_disk), "chain": [],
-                            "reason": "on disk since the inventory froze (not fetched in this goal)"}
+            f = minutes_dir / on_disk
+            saved = dt.datetime.fromtimestamp(f.stat().st_mtime, dt.UTC).isoformat(timespec="seconds")
+            entry = base | {"state": "already-cached", "status": "cached", "path": on_disk, "fetched_at": saved,
+                            "sha256": sha256_file(f), "chain": [], "provenance": "on disk since the freeze",
+                            "reason": "on disk since the inventory froze (not fetched in this goal); dated by its "
+                                      "file time"}
             _append(raw, source, entry)
             result.entries.append(entry)
             continue
@@ -381,8 +451,11 @@ def _fetch_locked(inv: dict, source: str, raw: Path, mode: str, limit: int | Non
         result.attempted += 1
         _append(raw, source, base | {"state": "attempting", "status": "attempting"})
         sent_before = transport.sent
+
+        def journal(hop: str, base=base) -> None:
+            _append(raw, source, base | {"state": "attempting", "status": "attempting", "hop": hop})
         try:
-            state, reason, details = _fetch_one(transport, source, url, failed)
+            state, reason, details = _fetch_one(transport, source, url, failed, journal)
         except (Refused, StopNow) as exc:
             sent = transport.sent - sent_before
             if isinstance(exc, StopNow):
@@ -429,6 +502,10 @@ def candidate_states(inventory: Path, raw: Path, transport: Transport | None = N
     """Every candidate's one state, reconciled with the files on disk. `pending` (no terminal state yet) is not a
     goal state: it must reach zero. `anomalies` (a ledger claim the disk contradicts) must be empty."""
     inv = load_inventory(inventory)
+    try:
+        baseline = load_frozen(Path(inventory).with_name(BASELINE))["files"]
+    except FileNotFoundError:
+        raise FetchError("no frozen cached baseline beside the inventory (run `baseline`)") from None
     transport = transport or Transport(raw)
     last: dict[str, dict] = {}
     for source in SOURCE_MAP:
@@ -442,6 +519,14 @@ def candidate_states(inventory: Path, raw: Path, transport: Transport | None = N
             state = "no-url"
         elif c["cached"]:
             state = "already-cached"
+            b = baseline.get(mid)
+            f = Path(raw) / SOURCE_MAP[source].raw_dir / "minutes" / c["cached"]
+            if b is None:
+                anomalies.append({"meeting_id": mid, "problem": "cached at the freeze but missing from the baseline"})
+            elif not f.is_file():
+                anomalies.append({"meeting_id": mid, "problem": f"baseline file {c['cached']} is missing"})
+            elif sha256_file(f) != b["sha256"]:
+                anomalies.append({"meeting_id": mid, "problem": f"baseline file {c['cached']} changed since the freeze"})
         elif mid in last:
             e = last[mid]
             state = e["state"]
@@ -475,6 +560,7 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--source", required=True, choices=sorted(SOURCE_MAP))
         p.add_argument("--limit", type=int)
     sub.add_parser("states")
+    sub.add_parser("baseline")
     for p in sub.choices.values():
         p.add_argument("--raw", type=Path, default=DEFAULT_RAW)
         p.add_argument("--inventory", type=Path, default=STAGING / INVENTORY)
@@ -485,6 +571,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"wrote {path} (sha256 {sha256_file(path)})")
             for s, c in json.loads(path.read_text())["counts"].items():
                 print(f"  {s}: {c}")
+            return 0
+        if args.cmd == "baseline":
+            print(f"wrote {freeze_baseline(args.inventory, args.raw)}")
             return 0
         if args.cmd == "states":
             states = candidate_states(args.inventory, args.raw)
@@ -498,7 +587,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{e['state']:<26} {e['meeting_id']}  {e.get('reason') or ''}")
         for hop in e.get("chain") or []:
             print(f"    {hop['status']} {hop['url']}" + (f" -> {hop['location']}" if hop["location"] else ""))
-    print(f"attempted {res.attempted}, fetched {res.fetched}")
+    print(f"attempted {res.attempted}, fetched {res.fetched}"
+          + (f"; LIMIT REACHED: {res.remaining} eligible candidates left for a later run" if res.remaining else ""))
     if res.skipped:
         print(f"SKIPPED: {res.skipped}", file=sys.stderr)
     if res.stop:

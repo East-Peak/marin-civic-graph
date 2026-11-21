@@ -42,7 +42,8 @@ class Net:
         assert s > 0
         self.t += s
 
-    def http(self, url, headers, on_head):
+    def http(self, url, headers, on_head, deadline=None):
+        self.deadlines = getattr(self, "deadlines", []) + [deadline]
         self.calls.append((self.t, url, dict(headers)))
         self.t += 0.25  # every request takes a little time
         r = self.responses.get(url, (404, b"not found", {}))
@@ -123,6 +124,9 @@ def test_robots_absent_admits_everything(tmp_path):
     (401, b"login", {}),
     (200, b"<html><body>Welcome to the town site</body></html>", {"content-type": "text/html"}),
     (200, b"Service temporarily unavailable", {"content-type": "text/plain"}),
+    (200, b"Error: Service temporarily unavailable", {"content-type": "text/plain"}),
+    (200, b"Status: 503\nMessage: backend offline\n", {"content-type": "text/plain"}),
+    (200, b"Disallow: /\n", {"content-type": "text/plain"}),  # rules with no User-agent group
     (200, b"User-agent: *\nDisallow: /\n", {"content-type": "application/json"}),
     (200, b"User-agent: *\n\xff\xfe broken bytes\n", {"content-type": "text/plain"}),
     (302, b"", {}),  # a redirect without a Location
@@ -398,3 +402,81 @@ def test_the_guard_runs_before_every_wire_request_including_robots_and_after_pac
         t.get(ROSS_DOC, ROSS)
     assert exc.value.kind == "window" and net.urls() == [ROSS_ROBOTS]
     assert checked[1] >= net.calls[0][0] + 0.25 + mt.MIN_INTERVAL_S  # checked after the pacing sleep
+
+
+def test_a_stop_is_persisted_even_when_the_request_log_cannot_be_written(tmp_path, monkeypatch):
+    net = Net({NOV_DOC: (429, b"", {})})
+    t = transport(tmp_path, net)
+    monkeypatch.setattr(t, "_log", lambda entry: (_ for _ in ()).throw(OSError("disk full")))
+    with pytest.raises(mt.StopNow):
+        t.get(NOV_DOC, NOVATO)
+    assert json.loads((tmp_path / mt.STOPS_FILE).read_text())["stops"][0]["status"] == 429
+
+
+def test_a_challenge_header_stops_before_the_body_is_read(tmp_path):
+    net = Net({NOV_DOC: (200, TimeoutError("body never arrives"), {"cf-mitigated": "challenge"})})
+    with pytest.raises(mt.StopNow):
+        transport(tmp_path, net).get(NOV_DOC, NOVATO)
+    assert (tmp_path / mt.STOPS_FILE).exists()
+
+
+def test_a_challenge_prefix_in_a_body_that_then_fails_is_still_a_stop(tmp_path):
+    err = mt.PartialBody(TimeoutError("reset"), CHALLENGE_HTML[:80] + b"cf_chl_opt")
+    net = Net({NOV_DOC: (200, err, {"content-type": "text/html"})})
+    with pytest.raises(mt.StopNow):
+        transport(tmp_path, net).get(NOV_DOC, NOVATO)
+
+
+def test_short_legitimate_minutes_that_mention_captcha_are_not_a_wall(tmp_path):
+    body = b"<html><head><title>Council minutes</title></head><body>The council approved CAPTCHA for the " \
+           b"permit portal. Access denied appeals: none.</body></html>"
+    net = Net({NOV_DOC: (200, body, {})})
+    assert transport(tmp_path, net).get(NOV_DOC, NOVATO).status == 200
+
+
+def test_pacing_is_reserved_before_the_request_so_a_killed_process_still_paces_the_next(tmp_path):
+    class Killed(BaseException):
+        pass
+
+    net = Net({})
+
+    def dies(url, headers, on_head, deadline=None):
+        net.calls.append((net.t, url, headers))
+        raise Killed()
+
+    t = mt.Transport(tmp_path, http=dies, sleep=net.sleep, now=net.now)
+    t._finish_pacing = lambda family: None  # SIGKILL: nothing after the send is recorded
+    with pytest.raises(Killed):
+        t.get(NOV_DOC, NOVATO)
+    later = Net({NOV_DOC: (200, PDF, {})}, t=net.t + 1)
+    transport(tmp_path, later).get(NOV_DOC, NOVATO)
+    assert later.calls[0][0] - net.calls[0][0] >= mt.INFLIGHT_GRACE_S
+
+
+def test_a_request_too_close_to_the_window_is_refused_and_others_get_a_deadline(tmp_path):
+    net = Net({NOV_DOC: (200, PDF, {})})
+    with pytest.raises(mt.Refused) as exc:
+        transport(tmp_path, net, guard=lambda: 30.0).get(NOV_DOC, NOVATO)
+    assert exc.value.kind == "window" and net.calls == []
+    transport(tmp_path, net, guard=lambda: 3600.0).get(NOV_DOC, NOVATO)
+    assert net.deadlines[-1] == pytest.approx(net.calls[-1][0] + 3600.0)
+
+
+def test_the_live_client_aborts_a_transfer_at_its_deadline(monkeypatch):
+    import requests
+
+    class Resp:
+        status_code, headers = 200, {"Content-Type": "application/pdf"}
+
+        def iter_content(self, n):
+            yield b"%PDF-1.4 "
+            yield b"more"
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    clock = iter([0.0, 100.0, 200.0])
+    monkeypatch.setattr(mt.time, "time", lambda: next(clock))
+    with pytest.raises(mt.PartialBody):
+        mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: None, deadline=50.0)

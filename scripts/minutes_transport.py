@@ -41,6 +41,9 @@ from robots_gate import parse as parse_robots
 PRODUCT_TOKEN = "MarinCivicGraph"
 USER_AGENT = f"Mozilla/5.0 (compatible; {PRODUCT_TOKEN}/1.0; civic records research; single documents)"
 MIN_INTERVAL_S = 3.0
+CONNECT_TIMEOUT_S, READ_TIMEOUT_S = 20, 90
+INFLIGHT_GRACE_S = CONNECT_TIMEOUT_S + READ_TIMEOUT_S  # a request with no recorded end: assume it ran this long
+MIN_TIME_BEFORE_WINDOW_S = 600  # never start a request this close to the weekly job window
 MAX_ROBOTS_HOPS = 5
 MAX_BODY = 200 * 1024 * 1024
 MAX_ROBOTS = 512 * 1024
@@ -52,17 +55,23 @@ REQUEST_LOG = "minutes-fetch-requests.jsonl"
 STRONG_MARKERS = (b"cf-challenge", b"challenge-platform", b"cf_chl_", b"/cdn-cgi/challenge", b"_incapsula_resource",
                   b"request unsuccessful. incapsula", b"g-recaptcha", b"recaptcha/api.js", b"h-captcha",
                   b"hcaptcha.com/1/api.js", b"px-captcha", b"captcha-delivery.com", b"awswaf", b"aws-waf-token")
-# Words a wall uses, but so might minutes: a wall only in a page's <title> or on a short page.
+# Words a wall uses, but so might minutes ("the council approved CAPTCHA for the portal"): a wall only in a page's
+# <title>, or as a wall's own phrasing on a short page.
 WEAK_MARKERS = (b"just a moment", b"attention required", b"checking your browser", b"access denied",
                 b"are you a robot", b"verify you are human", b"captcha", b"bot detection", b"unusual traffic",
                 b"enable javascript and cookies", b"request blocked")
+WALL_PHRASES = re.compile(rb"checking (?:if the site connection is secure|your browser)|verify (?:that )?you are (?:a )?"
+                          rb"human|are you a robot|(?:complete|solve) the (?:captcha|security check)|captcha to "
+                          rb"continue|enable javascript and cookies to continue|unusual traffic from your|"
+                          rb"your request (?:has been|was) blocked|you have been blocked|press (?:and|&) hold")
 SHORT_PAGE = 3000  # visible characters
 PASSWORD_INPUT = re.compile(rb"<input\b[^>]*\btype\s*=\s*[\"']?password", re.I)
 HTML_SIGNS = (b"<!doctype html", b"<html", b"<head", b"<body", b"<script", b"<form", b"<div", b"<input")
-ROBOTS_LINE = re.compile(r"^\s*[A-Za-z][A-Za-z-]*\s*:")
+ROBOTS_FIELDS = ("user-agent", "allow", "disallow", "crawl-delay", "sitemap", "host", "clean-param", "request-rate",
+                 "visit-time", "noindex")
 
 OnHead = Callable[[int, dict], None]
-HttpGet = Callable[[str, dict, OnHead], tuple[int, bytes, dict]]
+HttpGet = Callable[..., tuple[int, bytes, dict]]  # (url, headers, on_head, deadline=None)
 
 
 class Refused(Exception):
@@ -86,6 +95,14 @@ class NetworkError(Exception):
     """The request was made and failed without a usable response (timeout, reset, oversize)."""
 
 
+class PartialBody(Exception):
+    """The body failed (or ran past its deadline) after `body` had arrived: still inspected for a wall."""
+
+    def __init__(self, cause: BaseException | str, body: bytes):
+        super().__init__(f"body failed after {len(body)} bytes: {cause}")
+        self.body = body
+
+
 @dataclass(frozen=True)
 class Response:
     url: str
@@ -95,9 +112,10 @@ class Response:
     location: str | None  # absolute; only on a 3xx with a Location
 
 
-def http_get(url: str, headers: dict, on_head: OnHead) -> tuple[int, bytes, dict]:
+def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = None) -> tuple[int, bytes, dict]:
     """One request, exactly `url`: no redirects, no proxies, no .netrc or other ambient settings, streamed so that
-    `on_head` sees the status and headers before any of the body is read (it may raise to abandon the body)."""
+    `on_head` sees the status and headers before any of the body is read (it may raise to abandon the body). The
+    whole transfer ends by `deadline` (epoch seconds) if one is given."""
     import requests  # only the live path needs the network stack
 
     session = requests.Session()
@@ -105,15 +123,26 @@ def http_get(url: str, headers: dict, on_head: OnHead) -> tuple[int, bytes, dict
     prepared = session.prepare_request(requests.Request("GET", url, headers=headers))
     if prepared.url != url or "Authorization" in prepared.headers:
         raise UnsafeUrl(f"requests would send {prepared.url!r}, not the authorized {url!r}")
-    resp = session.send(prepared, allow_redirects=False, stream=True, timeout=(20, 90), proxies={}, verify=True)
+    timeout = (CONNECT_TIMEOUT_S, READ_TIMEOUT_S)
+    if deadline is not None:
+        left = deadline - time.time()
+        timeout = (max(1.0, min(CONNECT_TIMEOUT_S, left)), max(1.0, min(READ_TIMEOUT_S, left)))
+    resp = session.send(prepared, allow_redirects=False, stream=True, timeout=timeout, proxies={}, verify=True)
     try:
         hdrs = {k.lower(): v for k, v in resp.headers.items()}
         on_head(resp.status_code, hdrs)
         body = bytearray()
-        for chunk in resp.iter_content(65536):
-            body += chunk
-            if len(body) > MAX_BODY:
-                raise NetworkError(f"response larger than {MAX_BODY} bytes")
+        try:
+            for chunk in resp.iter_content(65536):
+                body += chunk
+                if len(body) > MAX_BODY:
+                    raise PartialBody(f"larger than {MAX_BODY} bytes", bytes(body))
+                if deadline is not None and time.time() > deadline:
+                    raise PartialBody("the transfer ran into the weekly job window", bytes(body))
+        except PartialBody:
+            raise
+        except Exception as exc:
+            raise PartialBody(exc, bytes(body)) from exc
         return resp.status_code, bytes(body), hdrs
     finally:
         resp.close()
@@ -149,8 +178,8 @@ def wall(body: bytes, headers: dict, *, robots: bool = False) -> str | None:
     if title and (weak := next((m for m in WEAK_MARKERS if m in title.group(1)), None)):
         return f"wall title {weak.decode()!r}"
     text = _visible(body).lower() if html else head
-    if len(text) < SHORT_PAGE and (weak := next((m for m in WEAK_MARKERS if m in text), None)):
-        return f"short page naming {weak.decode()!r}"
+    if len(text) < SHORT_PAGE and (phrase := WALL_PHRASES.search(text)):
+        return f"short page saying {phrase.group().decode()!r}"
     return None
 
 
@@ -164,10 +193,17 @@ def robots_text(body: bytes, headers: dict) -> str | None:
         text = body.decode("utf-8-sig")
     except UnicodeDecodeError:
         return None
+    fields = []
     for line in text.splitlines():
         content = line.split("#", 1)[0].strip()
-        if content and not ROBOTS_LINE.match(content):
-            return None
+        if not content:
+            continue
+        key, sep, _ = content.partition(":")
+        if not sep or key.strip().lower() not in ROBOTS_FIELDS:
+            return None  # "Error: ...", "Status: 503": not a robots file
+        fields.append(key.strip().lower())
+    if any(f in ("allow", "disallow", "crawl-delay") for f in fields) and "user-agent" not in fields:
+        return None  # rules belonging to no group: not a policy anyone wrote on purpose
     return text
 
 
@@ -213,15 +249,32 @@ class Transport:
     def _pacing(self) -> dict:
         path = self.raw / PACING_FILE
         data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
-        return {"last": data.get("last", {}), "delay": data.get("delay", {})}
+        return {"last": data.get("last", {}), "delay": data.get("delay", {}), "inflight": data.get("inflight", {})}
 
-    def _set_pacing(self, family: str, *, last: float | None = None, delay: float | None = None) -> None:
+    def _last_end(self, pacing: dict, family: str) -> float | None:
+        """When the family's last request ended; one whose end was never recorded (the process died) is assumed to
+        have run INFLIGHT_GRACE_S."""
+        ends = [pacing["last"][family]] if family in pacing["last"] else []
+        if family in pacing["inflight"]:
+            ends.append(pacing["inflight"][family] + INFLIGHT_GRACE_S)
+        return max(ends) if ends else None
+
+    def _write_pacing(self, mutate) -> None:
         data = self._pacing()
-        if last is not None:
-            data["last"][family] = last
-        if delay is not None:
-            data["delay"][family] = max(delay, data["delay"].get(family, 0.0))
+        mutate(data)
         _atomic_json(self.raw / PACING_FILE, data)
+
+    def _reserve_pacing(self, family: str, start: float) -> None:
+        self._write_pacing(lambda d: d["inflight"].__setitem__(family, start))
+
+    def _finish_pacing(self, family: str) -> None:
+        def done(d):
+            d["last"][family] = self._now()
+            d["inflight"].pop(family, None)
+        self._write_pacing(done)
+
+    def _set_delay(self, family: str, delay: float) -> None:
+        self._write_pacing(lambda d: d["delay"].__setitem__(family, max(delay, d["delay"].get(family, 0.0))))
 
     # --- log --------------------------------------------------------------------------------------------------
 
@@ -266,8 +319,14 @@ class Transport:
         record = {"host_family": family, "source": source.id, "at": at, "url": url, "status": status,
                   "evidence": f"HTTP {status} {why} on {purpose} {url}",
                   "body_head": body[:300].decode("utf-8", "replace")}
-        self._write_stop(record)
+        self._write_stop(record)  # first: nothing after this (logging included) can lose the stop
         return StopNow(record)
+
+    def _log_quietly(self, entry: dict) -> None:
+        try:
+            self._log(entry)
+        except Exception:  # the request log is evidence, never a gate; a stop must not depend on it
+            pass
 
     def _send(self, url: str, source: Source, purpose: str, *, robots: bool = False) -> Response:
         host = urlsplit(url).hostname
@@ -275,39 +334,62 @@ class Transport:
         self._check_stop(host)
         pacing = self._pacing()
         interval = max(MIN_INTERVAL_S, pacing["delay"].get(family, 0.0))
-        if family in pacing["last"] and (wait := interval - (self._now() - pacing["last"][family])) > 0:
+        last = self._last_end(pacing, family)
+        if last is not None and (wait := interval - (self._now() - last)) > 0:
             self._sleep(wait)
+        deadline = None
         if self.guard:
-            self.guard()
+            left = self.guard()  # raises Refused('window') inside the window; else seconds until it (or None)
+            if left is not None:
+                if left < MIN_TIME_BEFORE_WINDOW_S:
+                    raise Refused("window", f"only {left:.0f} s before the weekly job window; not starting a request")
+                deadline = self._now() + left
         self._check_stop(host)
         entry = {"at": self._clock(), "url": url, "purpose": purpose, "source": source.id, "host_family": family}
 
         def on_head(status: int, headers: dict) -> None:
+            shown = {k: v for k, v in headers.items() if k in ("retry-after", "server", "cf-ray", "cf-mitigated")}
             if status in (403, 429):
-                shown = {k: v for k, v in headers.items() if k in ("retry-after", "server", "cf-ray")}
-                self._log(entry | {"status": status, "head_only": True})
-                raise self._stop(family, source, url, purpose, status, f"(headers {shown})", entry["at"])
+                stop = self._stop(family, source, url, purpose, status, f"(headers {shown})", entry["at"])
+            elif (headers.get("cf-mitigated") or "").lower() == "challenge":
+                stop = self._stop(family, source, url, purpose, status, f"challenge header (headers {shown})",
+                                  entry["at"])
+            else:
+                return
+            self._log_quietly(entry | {"status": status, "head_only": True})
+            raise stop
 
+        self._reserve_pacing(family, self._now())  # before the send: a killed process still paces the next
         self.sent += 1
         try:
-            status, body, headers = self._http(url, {"User-Agent": USER_AGENT}, on_head)
+            status, body, headers = self._http(url, {"User-Agent": USER_AGENT}, on_head, deadline=deadline)
         except StopNow:
+            self._finish_pacing(family)
             raise
         except UnsafeUrl as exc:
             self.sent -= 1
             raise Refused("malformed", str(exc)) from None
+        except PartialBody as exc:
+            self._finish_pacing(family)
+            if why := wall(exc.body, {}, robots=robots):
+                raise self._stop(family, source, url, purpose, 200, f"{why} (body then failed)", entry["at"],
+                                 exc.body) from None
+            self._log_quietly(entry | {"error": str(exc)})
+            raise NetworkError(str(exc)) from exc
         except Exception as exc:
-            self._log(entry | {"error": f"{type(exc).__name__}: {exc}"})
+            self._finish_pacing(family)
+            self._log_quietly(entry | {"error": f"{type(exc).__name__}: {exc}"})
             raise NetworkError(f"{type(exc).__name__}: {exc}") from exc
-        finally:
-            self._set_pacing(family, last=self._now())
+        self._finish_pacing(family)
         headers = {k.lower(): v for k, v in (headers or {}).items()}
         loc = headers.get("location")
         resp = Response(url, status, body, headers, urljoin(url, loc) if loc and 300 <= status < 400 else None)
+        if why := wall(body, headers, robots=robots):
+            stop = self._stop(family, source, url, purpose, status, why, entry["at"], body)
+            self._log_quietly(entry | {"status": status, "bytes": len(body), "wall": why})
+            raise stop
         self._log(entry | {"status": status, "bytes": len(body), "sha256": hashlib.sha256(body).hexdigest(),
                            "location": resp.location})
-        if why := wall(body, headers, robots=robots):
-            raise self._stop(family, source, url, purpose, status, why, entry["at"], body)
         return resp
 
     def _admit_by_robots(self, url: str, host: str, source: Source) -> None:
@@ -365,7 +447,7 @@ class Transport:
                 return self._unreadable(host, "HTTP 200 but not plainly a robots.txt file", source)
             rules = parse_robots(text, PRODUCT_TOKEN)
             if rules.crawl_delay:
-                self._set_pacing(host_family(host), delay=rules.crawl_delay)
+                self._set_delay(host_family(host), rules.crawl_delay)
             self._decide(host, "read", f"{len(rules.rules)} rules for {PRODUCT_TOKEN}"
                          + (f"; Crawl-delay {rules.crawl_delay}" if rules.crawl_delay else ""), source)
             return rules
