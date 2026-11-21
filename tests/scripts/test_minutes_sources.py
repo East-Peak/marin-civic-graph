@@ -121,3 +121,43 @@ def test_granicus_authority_is_the_vendor_host_or_a_listed_attachment_rule():
                                   (rule,))
     assert not ms.granicus_authorized("https://granicus_production_attachments.s3.amazonaws.com/other/a.pdf",
                                       (rule,))
+
+
+@pytest.mark.parametrize("url", [
+    "https://novato.gov\\@novato.granicus.com/a",                  # backslash authority confusion
+    "https://novato.gov@novato.granicus.com/a",                    # userinfo
+    "https://user:pw@novato.granicus.com/a",
+    "https://novato.granicus.com:8443/a",                          # a port
+    "https://novato.granicus.com:443/a",
+    "https://NOVATO.granicus.com/a",                               # not lower case
+    "https://novato.granicus.com./a",                              # trailing dot
+    "https://xn--nvato-6qa.granicus.com/a".replace("xn--nvato-6qa", "növato"),  # non-ASCII
+    "https://novato.granicus.com/public/../private/x",
+    "https://novato.granicus.com/a/%2e%2e/b",
+    "https://novato.granicus.com/a%2fb",
+    "https://novato.granicus.com/a%5cb",
+    "https://novato.granicus.com//a",
+    "https://novato.granicus.com/a b",
+    "https://novato.granicus.com/a#frag",
+    "https://novato.granicus.com/a?x=%zz",
+    "http://novato.granicus.com/a",
+    "https://127.0.0.1/a",
+    "https://novato.granicus.com",                                  # no path
+])
+def test_non_canonical_urls_are_unsafe_and_admitted_by_nothing(url):
+    with pytest.raises(ms.UnsafeUrl):
+        ms.canonical_url(url)
+    assert not ms.SOURCE_MAP["novato-city-council"].admits(url)
+    assert not ms.granicus_authorized(url)
+
+
+@pytest.mark.parametrize("url", [
+    "https://townoftiburon.granicus.com/MinutesViewer.php?view_id=5&clip_id=1000&doc_id=9d30e6d4-50ff-11ee",
+    "https://cityofmillvalley.org/AgendaCenter/ViewFile/Minutes/_04082021-10",
+    "https://storage.googleapis.com/proudcity/fairfaxca/uploads/2020/12/12-16-20-TC-Spec-Minutes.pdf",
+    "https://granicus_production_attachments.s3.amazonaws.com/sausalito/a%20b.pdf",
+])
+def test_canonical_urls_pass_unchanged_and_requests_prepares_them_byte_for_byte(url):
+    import requests
+    assert ms.canonical_url(url) == url
+    assert requests.Request("GET", url).prepare().url == url

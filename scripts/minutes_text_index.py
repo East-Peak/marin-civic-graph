@@ -122,8 +122,14 @@ def _saved_dates(source_dir: Path) -> tuple[dict[str, str], dict[str, dict] | No
     fetched: dict[str, set[str]] = {}
     log = source_dir / FETCH_LOG
     if log.is_file():
-        for line in log.read_text(encoding="utf-8").splitlines():
-            row = json.loads(line) if line.strip() else {}
+        lines = log.read_text(encoding="utf-8", errors="replace").split("\n")
+        for i, line in enumerate(lines):
+            try:
+                row = json.loads(line) if line.strip() else {}
+            except json.JSONDecodeError:
+                if i == len(lines) - 1:  # a torn final append (a crash mid-write): skipped
+                    continue
+                raise IndexBuildError(f"{log} line {i + 1} is not JSON") from None
             name = Path(row.get("path") or "").name
             if row.get("status") in ("ok", "cached") and name and row.get("fetched_at"):
                 saved[name] = max(saved.get(name, ""), row["fetched_at"])

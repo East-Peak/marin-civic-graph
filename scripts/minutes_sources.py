@@ -35,6 +35,42 @@ class SourceMapError(ValueError):
     pass
 
 
+class UnsafeUrl(ValueError):
+    """Not in the one canonical form every gate and the wire agree on."""
+
+
+_HOST_RE = re.compile(r"(?:[a-z0-9_](?:[a-z0-9_-]*[a-z0-9_])?\.)+[a-z]{2,63}")  # a name, never an IP literal
+_PATH_CHARS = re.compile(r"[A-Za-z0-9\-._~!$&'()*+,;=:@/%]*")
+_QUERY_CHARS = re.compile(r"[A-Za-z0-9\-._~!$&'()*+,;=:@/?%]*")
+_BAD_ESCAPES = re.compile(r"%(?:2[eEfF]|5[cC]|00)|%(?![0-9A-Fa-f]{2})")
+
+
+def canonical_url(url: str) -> str:
+    """The URL itself if it is in the strict form the gates check and the wire sends unchanged: https, a plain
+    lower-case ASCII host (no userinfo, no port, no trailing dot), a path of whole segments (no '.', '..', empty
+    segments, backslashes or encoded dots/slashes), no fragment. Anything else raises UnsafeUrl; nothing is
+    repaired, so the URL that was authorized is byte for byte the URL that is requested."""
+    if not isinstance(url, str) or not url.isascii() or any(c <= " " or c == "\x7f" or c == "\\" for c in url):
+        raise UnsafeUrl(f"not plain ASCII without spaces or backslashes: {url!r}")
+    parts = urlsplit(url)
+    if parts.scheme != "https":
+        raise UnsafeUrl(f"not https: {url}")
+    if parts.netloc != parts.hostname or not _HOST_RE.fullmatch(parts.netloc or ""):
+        raise UnsafeUrl(f"host must be a plain lower-case name (no userinfo, port or trailing dot): {url}")
+    if parts.fragment or "#" in url:
+        raise UnsafeUrl(f"has a fragment: {url}")
+    path = parts.path
+    if not path.startswith("/") or not _PATH_CHARS.fullmatch(path) or _BAD_ESCAPES.search(path):
+        raise UnsafeUrl(f"path is not plain whole segments: {url}")
+    if any(seg in (".", "..") for seg in path.split("/")) or "//" in path:
+        raise UnsafeUrl(f"path has dot or empty segments: {url}")
+    if parts.query and (not _QUERY_CHARS.fullmatch(parts.query) or re.search(r"%(?![0-9A-Fa-f]{2})", parts.query)):
+        raise UnsafeUrl(f"query is not plain: {url}")
+    if url.endswith("?"):
+        raise UnsafeUrl(f"empty query: {url}")
+    return url
+
+
 def _host(host: str) -> str:
     return (host or "").lower().rstrip(".")
 
@@ -72,12 +108,14 @@ class HostRule:
     authority: str = "robots"  # "robots" (robots.txt must admit) or "granicus" (the 2026-10-15 decision)
 
     def admits(self, url: str) -> bool:
-        parts = urlsplit(url)
-        if parts.scheme != "https" or _host(parts.hostname or "") != self.host:
+        try:
+            canonical_url(url)
+        except UnsafeUrl:
             return False
-        if self.path_prefix is None:
-            return True
-        return _clean_path(parts.path) and parts.path.startswith(self.path_prefix)
+        parts = urlsplit(url)
+        if parts.hostname != self.host:
+            return False
+        return self.path_prefix is None or parts.path.startswith(self.path_prefix)
 
 
 @dataclass(frozen=True)
@@ -124,9 +162,11 @@ class Source:
 
 
 def granicus_authorized(url: str, rules: tuple[HostRule, ...] = ()) -> bool:
-    parts = urlsplit(url)
-    h = _host(parts.hostname or "")
-    if parts.scheme == "https" and h.endswith("." + GRANICUS):
+    try:
+        canonical_url(url)
+    except UnsafeUrl:
+        return False
+    if (urlsplit(url).hostname or "").endswith("." + GRANICUS):
         return True
     return any(r.authority == "granicus" and r.admits(url) for r in rules)
 

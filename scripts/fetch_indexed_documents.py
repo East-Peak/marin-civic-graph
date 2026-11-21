@@ -18,8 +18,15 @@ Every request goes through minutes_transport (one agent, pacing, allow-lists, ro
   - only real documents are filed (PDF, HTML, DOCX), as <raw>/<source>/minutes/<meeting_id>.<ext>;
   - the attempted-URL ledger, <raw>/<source>/minutes-fetch-log.jsonl: one line per attempt, ending the candidate in
     `fetched`, `failed` (with its reason; never retried in this goal) or `excluded-by-authorization`;
-  - a stop (403, 429, a challenge page) ends the run; a stopped host family is never asked again (any source);
-  - never during the weekly job window (Mondays 05:00–07:00 local), never two fetch processes at once.
+  - each attempt is journaled (`attempting`) before its first request; an attempt that never reached an outcome
+    (the process died) becomes `failed` on the next run and is never retried; a URL that failed, initial or
+    redirect hop, is never requested again for any candidate;
+  - a stop (403, 429, a challenge or login page) ends the run; a stopped host family is never asked again;
+  - the probe takes at most 3 documents per source over all runs, and bulk refuses a source with no probe;
+  - live runs only against the canonical raw store the inventory was frozen against; the inventory is written
+    once, exclusively, and never replaced;
+  - all state is read under one lock (never two fetch processes at once), and the weekly job window
+    (Mondays 05:00–07:00 local) is checked before every request.
 """
 from __future__ import annotations
 
@@ -115,9 +122,14 @@ def freeze_inventory(substrate: Path, raw: Path, out_dir: Path) -> Path:
            "counts": counts, "unassigned": sorted(unassigned), "candidates": candidates}
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / INVENTORY
-    path.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-    (out_dir / f"{INVENTORY}.sha256").write_text(f"{sha256_file(path)}  {INVENTORY}\n")
+    path, sha_path = out_dir / INVENTORY, out_dir / f"{INVENTORY}.sha256"
+    data = (json.dumps(doc, indent=1, sort_keys=True) + "\n").encode("utf-8")
+    try:  # exclusive: a frozen inventory and its checksum are never replaced
+        with sha_path.open("x") as sh, path.open("xb") as fh:
+            fh.write(data)
+            sh.write(f"{sha256_bytes(data)}  {INVENTORY}\n")
+    except FileExistsError:
+        raise FetchError(f"{path} (or its .sha256) exists: the inventory is frozen and is never replaced") from None
     return path
 
 
@@ -132,15 +144,37 @@ def load_inventory(path: Path) -> dict:
 # --- the ledger -----------------------------------------------------------------------------------------------------
 
 def read_ledger(raw: Path, source: str) -> list[dict]:
+    """Every ledger line. A torn final line (a crash mid-append) is skipped; a torn line anywhere else is
+    corruption and refuses."""
     path = Path(raw) / SOURCE_MAP[source].raw_dir / FETCH_LOG
     if not path.is_file():
         return []
-    return [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
+    lines = path.read_text(encoding="utf-8", errors="replace").split("\n")
+    out = []
+    for i, line in enumerate(lines):
+        if not line.strip():
+            continue
+        try:
+            out.append(json.loads(line))
+        except json.JSONDecodeError:
+            if i == len(lines) - 1:  # the last line, with no newline after it: a torn append
+                continue
+            raise FetchError(f"{path} line {i + 1} is not JSON: the ledger is corrupt") from None
+    return out
 
 
 def _append(raw: Path, source: str, entry: dict) -> None:
     path = Path(raw) / SOURCE_MAP[source].raw_dir / FETCH_LOG
     path.parent.mkdir(parents=True, exist_ok=True)
+    data = path.read_bytes() if path.is_file() else b""
+    if data and not data.endswith(b"\n"):
+        # a torn final append (a crash mid-write) was never a complete record: keep it for audit beside the
+        # ledger, then cut it off so the ledger stays whole lines. Its meeting's last whole line still stands.
+        cut = data.rfind(b"\n") + 1
+        with path.with_name(path.name + ".torn").open("ab") as torn:
+            torn.write(data[cut:] + b"\n")
+        with path.open("r+b") as fh:
+            fh.truncate(cut)
     with path.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, sort_keys=True) + "\n")
         fh.flush()
@@ -150,6 +184,13 @@ def _append(raw: Path, source: str, entry: dict) -> None:
 def _family_stops(transport: Transport, source: str) -> list[dict]:
     fams = {host_family(r.host) for r in SOURCE_MAP[source].rules}
     return [s for s in transport.stops() if s["host_family"] in fams]
+
+
+def _last_by_meeting(ledger: list[dict]) -> dict[str, dict]:
+    last: dict[str, dict] = {}
+    for e in ledger:
+        last[e["meeting_id"]] = e
+    return last
 
 
 # --- the fetch ------------------------------------------------------------------------------------------------------
@@ -186,12 +227,18 @@ def _write_new(path: Path, data: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(f".{path.name}.part")
     tmp.write_bytes(data)
-    os.link(tmp, path)  # fails if the name exists: never overwrites
-    tmp.unlink()
+    try:
+        os.link(tmp, path)  # fails if the name exists: never overwrites
+    finally:
+        tmp.unlink()
 
 
-def _fetch_one(transport: Transport, source: str, url: str) -> tuple[str, str, dict]:
-    """(state, reason, details) for one URL; raises StopNow / Refused('stopped') to end the run."""
+def _now_iso() -> str:
+    return dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
+
+
+def _fetch_one(transport: Transport, source: str, url: str, failed: dict[str, str]) -> tuple[str, str, dict]:
+    """(state, reason, details) for one URL. Raises StopNow, or Refused('stopped' | 'window'), to end the run."""
     src = SOURCE_MAP[source]
     chain: list[dict] = []
     details = {"chain": chain, "final_url": url}
@@ -199,16 +246,18 @@ def _fetch_one(transport: Transport, source: str, url: str) -> tuple[str, str, d
         return "excluded-by-authorization", f"initial URL is not on {source}'s allow-list (no request made)", details
     purpose = "document"
     for _ in range(MAX_HOPS + 1):
+        details["final_url"] = url
+        if url in failed:
+            return "failed", f"{url} already failed in this goal ({failed[url]}); not retried", details
         try:
             resp = transport.get(url, src, purpose=purpose)
         except Refused as exc:
-            if exc.kind == "stopped":
+            if exc.kind in ("stopped", "window"):
                 raise
             return "excluded-by-authorization", str(exc), details
         except NetworkError as exc:
             return "failed", f"request failed: {exc}", details
         chain.append({"url": url, "status": resp.status, "location": resp.location})
-        details["final_url"] = url
         if resp.location:
             target = resp.location
             if off_limits(urlsplit(target).hostname or "") or not src.admits(target):
@@ -227,100 +276,166 @@ def _fetch_one(transport: Transport, source: str, url: str) -> tuple[str, str, d
 
 
 def fetch_source(inventory: Path, source: str, raw: Path, *, mode: str = "bulk", limit: int | None = None,
-                 transport: Transport | None = None, clock=dt.datetime.now) -> Result:
+                 transport: Transport | None = None, clock=dt.datetime.now, require_probe: bool = True) -> Result:
     if source not in SOURCE_MAP:
         raise FetchError(f"unknown source {source}")
     if mode not in ("probe", "bulk"):
         raise FetchError(f"unknown mode {mode}")
-    inv = load_inventory(inventory)
     raw = Path(raw)
-    if in_weekly_window(clock()):
-        raise FetchError("refusing to run inside the weekly job window (Mondays 05:00–07:00 local)")
-    transport = transport or Transport(raw)
+    if transport is None and raw.resolve() != DEFAULT_RAW.resolve():
+        raise FetchError(f"live fetches run only against the canonical raw store {DEFAULT_RAW}, not {raw}")
+    with run_lock(raw):  # every piece of mutable state is read under the lock
+        inv = load_inventory(inventory)
+        if Path(inv["raw"]).resolve() != raw.resolve():
+            raise FetchError(f"the inventory was frozen against raw store {inv['raw']}, not {raw}")
+        if in_weekly_window(clock()):
+            raise FetchError("refusing to run inside the weekly job window (Mondays 05:00–07:00 local)")
+        transport = transport or Transport(raw)
+
+        def guard() -> None:
+            if in_weekly_window(clock()):
+                raise Refused("window", "the weekly job window (Mondays 05:00–07:00 local) has begun")
+
+        transport.guard = guard
+        return _fetch_locked(inv, source, raw, mode, limit, transport, clock, require_probe)
+
+
+def _fetch_locked(inv: dict, source: str, raw: Path, mode: str, limit: int | None, transport: Transport, clock,
+                  require_probe: bool) -> Result:
     result = Result()
+    minutes_dir = raw / SOURCE_MAP[source].raw_dir / "minutes"
+    ledger = read_ledger(raw, source)
+    # an attempt that never reached a terminal line (the process died mid-request) is failed, never retried
+    for mid, e in sorted(_last_by_meeting(ledger).items()):
+        if e.get("state") == "attempting":
+            entry = {"meeting_id": mid, "url": e["url"], "mode": e.get("mode"), "fetched_at": _now_iso(),
+                     "state": "failed", "status": "failed", "chain": [], "final_url": e["url"],
+                     "reason": f"interrupted attempt (started {e['fetched_at']}; the process ended mid-request); "
+                               "not retried"}
+            _append(raw, source, entry)
+            ledger.append(entry)
     if stops := _family_stops(transport, source):
         result.skipped = f"a stop record covers {', '.join(s['host_family'] for s in stops)}; no request made"
         return result
-    ledger = read_ledger(raw, source)
-    done = {e["meeting_id"] for e in ledger if e.get("state") in TERMINAL}
-    by_url = {e["url"]: e for e in ledger if e.get("state") == "fetched"}
-    tried_urls = {e["url"] for e in ledger if e.get("state") in ("failed", "excluded-by-authorization")}
+    last = _last_by_meeting(ledger)
+    done = {m for m, e in last.items() if e.get("state") in TERMINAL}
+    by_url = {e["url"]: e for e in ledger if e.get("state") == "fetched" and e.get("path")}
+    failed: dict[str, str] = {}  # URL (initial or hop) → why it failed; never requested again in this goal
+    excluded: dict[str, str] = {}  # initial URL → why authorization excluded it
+    for e in ledger:
+        if e.get("state") == "excluded-by-authorization":
+            excluded.setdefault(e["url"], e["reason"])
+        elif e.get("state") == "failed" and e.get("http_attempted", True):
+            failed.setdefault(e["url"], e["reason"])
+            if e.get("final_url"):
+                failed.setdefault(e["final_url"], e["reason"])
     todo = sorted((c for c in inv["candidates"] if c["source"] == source and c["url"] and not c["cached"]
                    and c["meeting_id"] not in done), key=lambda c: (c["meeting_date"], c["meeting_id"]), reverse=True)
-    cap = min(limit or PROBE_MAX, PROBE_MAX) if mode == "probe" else limit
-    minutes_dir = raw / SOURCE_MAP[source].raw_dir / "minutes"
-    with run_lock(raw):
-        for c in todo:
-            if cap is not None and result.attempted >= cap:
-                break
-            if in_weekly_window(clock()):
-                result.skipped = "reached the weekly job window; the rest waits"
-                break
-            mid, url = c["meeting_id"], c["url"]
-            if _cached(raw, source, mid):
-                continue  # on disk already (saved by hand since the freeze): never refetched, never overwritten
-            entry = {"meeting_id": mid, "url": url, "mode": mode, "fetched_at": dt.datetime.now(dt.UTC).isoformat(
-                timespec="seconds")}
-            if url in by_url:  # the same document under another meeting: no request
-                prior = by_url[url]
-                data = (minutes_dir / prior["path"]).read_bytes()
-                name = f"{mid}.{prior['path'].rsplit('.', 1)[1]}"
-                _write_new(minutes_dir / name, data)
-                entry |= {"state": "fetched", "status": "ok", "path": name, "sha256": sha256_bytes(data),
-                          "final_url": prior.get("final_url"), "chain": [],
-                          "reason": f"same URL as {prior['meeting_id']}; bytes copied, no request"}
-                _append(raw, source, entry)
-                result.entries.append(entry)
-                continue
-            if url in tried_urls:
-                prior = next(e for e in ledger if e["url"] == url and e.get("state") in TERMINAL)
-                entry |= {"state": prior["state"], "status": "failed" if prior["state"] == "failed" else "excluded",
-                          "chain": [], "final_url": url, "reason": f"same URL as {prior['meeting_id']}: "
-                                                                  f"{prior['reason']} (not retried)"}
-                _append(raw, source, entry)
-                result.entries.append(entry)
-                continue
-            result.attempted += 1
-            try:
-                state, reason, details = _fetch_one(transport, source, url)
-            except Refused as exc:  # a stop written by another process since this run began
-                result.skipped = str(exc)
-                break
-            except StopNow as stop:
-                entry |= {"state": "failed", "status": "failed", "reason": f"stop: {stop.record['evidence']}",
-                          "chain": [], "final_url": stop.record["url"]}
-                _append(raw, source, entry)
-                result.entries.append(entry)
-                result.stop = stop.record
-                break
-            entry |= {"state": state, "reason": reason, "chain": details["chain"], "final_url": details["final_url"]}
-            if state == "fetched":
-                name = f"{mid}.{details['kind']}"
-                _write_new(minutes_dir / name, details["data"])
-                entry |= {"status": "ok", "http_status": 200, "path": name, "sha256": sha256_bytes(details["data"])}
-                by_url[url] = entry
-                result.fetched += 1
-            else:
-                entry["status"] = "failed" if state == "failed" else "excluded"
-                tried_urls.add(url)
-                ledger.append(entry)
+    probes_used = len({e["meeting_id"] for e in ledger if e.get("mode") == "probe" and e.get("requests", 0) > 0})
+    if mode == "probe":
+        cap = max(0, min(limit or PROBE_MAX, PROBE_MAX - probes_used))
+    else:
+        if require_probe and todo and not any(e.get("mode") == "probe" for e in ledger):
+            raise FetchError(f"{source}: no probe recorded; run `probe` and read its chains before `bulk`")
+        cap = limit
+
+    for c in todo:
+        if cap is not None and result.attempted >= cap:
+            break
+        mid, url = c["meeting_id"], c["url"]
+        base = {"meeting_id": mid, "url": url, "mode": mode, "fetched_at": _now_iso()}
+        if on_disk := _cached(raw, source, mid):  # saved by hand since the freeze: never refetched or overwritten
+            entry = base | {"state": "already-cached", "status": "cached-since-freeze", "path": on_disk,
+                            "sha256": sha256_file(minutes_dir / on_disk), "chain": [],
+                            "reason": "on disk since the inventory froze (not fetched in this goal)"}
             _append(raw, source, entry)
             result.entries.append(entry)
+            continue
+        if url in by_url:  # the same document under another meeting: no request
+            prior = by_url[url]
+            src_file = minutes_dir / prior["path"]
+            if not src_file.is_file() or sha256_file(src_file) != prior["sha256"]:
+                entry = base | {"state": "failed", "status": "failed", "chain": [], "final_url": url,
+                                "http_attempted": False,
+                                "reason": f"same URL as {prior['meeting_id']}, whose file is missing or changed since "
+                                          "it was fetched; not copied, not refetched"}
+            else:
+                data = src_file.read_bytes()
+                name = f"{mid}.{prior['path'].rsplit('.', 1)[1]}"
+                _write_new(minutes_dir / name, data)
+                entry = base | {"state": "fetched", "status": "ok", "path": name, "sha256": sha256_bytes(data),
+                                "final_url": prior.get("final_url"), "chain": [], "requests": 0,
+                                "reason": f"same URL as {prior['meeting_id']}; bytes copied, no request"}
+            _append(raw, source, entry)
+            result.entries.append(entry)
+            continue
+        if url in failed or url in excluded:
+            state = "failed" if url in failed else "excluded-by-authorization"
+            entry = base | {"state": state, "status": "failed" if url in failed else "excluded", "chain": [],
+                            "final_url": url, "http_attempted": False,
+                            "reason": f"same URL as an earlier candidate: {failed.get(url) or excluded[url]} "
+                                      "(not retried)"}
+            _append(raw, source, entry)
+            result.entries.append(entry)
+            continue
+        result.attempted += 1
+        _append(raw, source, base | {"state": "attempting", "status": "attempting"})
+        sent_before = transport.sent
+        try:
+            state, reason, details = _fetch_one(transport, source, url, failed)
+        except (Refused, StopNow) as exc:
+            sent = transport.sent - sent_before
+            if isinstance(exc, StopNow):
+                result.stop = exc.record
+                reason = f"stop: {exc.record['evidence']}"
+            else:
+                result.skipped = str(exc)
+                reason = f"interrupted ({exc.kind}: {exc}) after {sent} request(s); not retried"
+            if sent or isinstance(exc, StopNow):
+                entry = base | {"state": "failed", "status": "failed", "reason": reason, "chain": [],
+                                "final_url": exc.record["url"] if isinstance(exc, StopNow) else url, "requests": sent}
+            else:  # nothing went out: the candidate is untouched and stays eligible
+                entry = base | {"state": "abandoned", "status": "abandoned", "requests": 0,
+                                "reason": f"no request made ({exc.kind}: {exc})"}
+                result.attempted -= 1
+            _append(raw, source, entry)
+            result.entries.append(entry)
+            break
+        entry = base | {"state": state, "reason": reason, "chain": details["chain"],
+                        "final_url": details["final_url"], "requests": transport.sent - sent_before}
+        if state == "fetched":
+            name = f"{mid}.{details['kind']}"
+            _write_new(minutes_dir / name, details["data"])
+            entry |= {"status": "ok", "http_status": 200, "path": name, "sha256": sha256_bytes(details["data"])}
+            by_url[url] = entry
+            result.fetched += 1
+        else:
+            entry["status"] = "failed" if state == "failed" else "excluded"
+            if state == "excluded-by-authorization":
+                excluded.setdefault(url, reason)
+            elif entry["requests"]:
+                failed.setdefault(url, reason)
+                failed.setdefault(details["final_url"], reason)
+            else:
+                failed.setdefault(url, reason)
+        _append(raw, source, entry)
+        result.entries.append(entry)
     return result
 
 
 # --- states ---------------------------------------------------------------------------------------------------------
 
 def candidate_states(inventory: Path, raw: Path, transport: Transport | None = None) -> dict:
-    """Every candidate's one state. `pending` (no terminal state yet) is not a goal state: it must reach zero."""
+    """Every candidate's one state, reconciled with the files on disk. `pending` (no terminal state yet) is not a
+    goal state: it must reach zero. `anomalies` (a ledger claim the disk contradicts) must be empty."""
     inv = load_inventory(inventory)
     transport = transport or Transport(raw)
     last: dict[str, dict] = {}
     for source in SOURCE_MAP:
         for e in read_ledger(raw, source):
-            if e.get("state") in TERMINAL:
+            if e.get("state") in TERMINAL + ("already-cached",):
                 last[e["meeting_id"]] = e
-    out, counts = {}, {}
+    out, counts, anomalies = {}, {}, []
     for c in inv["candidates"]:
         mid, source = c["meeting_id"], c["source"]
         if not c["url"]:
@@ -328,7 +443,14 @@ def candidate_states(inventory: Path, raw: Path, transport: Transport | None = N
         elif c["cached"]:
             state = "already-cached"
         elif mid in last:
-            state = last[mid]["state"]
+            e = last[mid]
+            state = e["state"]
+            if e.get("path"):
+                f = Path(raw) / SOURCE_MAP[source].raw_dir / "minutes" / e["path"]
+                if not f.is_file():
+                    anomalies.append({"meeting_id": mid, "problem": f"{e['path']} is missing"})
+                elif sha256_file(f) != e.get("sha256"):
+                    anomalies.append({"meeting_id": mid, "problem": f"{e['path']} differs from its ledger sha256"})
         elif _family_stops(transport, source):
             state = "unattempted-after-stop"
         else:
@@ -336,7 +458,7 @@ def candidate_states(inventory: Path, raw: Path, transport: Transport | None = N
         out[mid] = state
         counts.setdefault(source, {})
         counts[source][state] = counts[source].get(state, 0) + 1
-    return {"inventory_sha256": sha256_file(inventory), "states": out,
+    return {"inventory_sha256": sha256_file(inventory), "states": out, "anomalies": anomalies,
             "counts": {s: dict(sorted(v.items())) for s, v in sorted(counts.items())}}
 
 
@@ -365,8 +487,9 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  {s}: {c}")
             return 0
         if args.cmd == "states":
-            print(json.dumps(candidate_states(args.inventory, args.raw)["counts"], indent=1))
-            return 0
+            states = candidate_states(args.inventory, args.raw)
+            print(json.dumps({"counts": states["counts"], "anomalies": states["anomalies"]}, indent=1))
+            return 1 if states["anomalies"] else 0
         res = fetch_source(args.inventory, args.source, args.raw, mode=args.cmd, limit=args.limit)
     except FetchError as exc:
         print(f"REFUSED: {exc}", file=sys.stderr)

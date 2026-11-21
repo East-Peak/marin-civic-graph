@@ -77,12 +77,13 @@ class Net:
     def sleep(self, s):
         self.t += s
 
-    def http(self, url, headers):
+    def http(self, url, headers, on_head):
         self.calls.append((self.t, url))
         self.t += 0.1
         r = self.responses.get(url, (404, b"gone", {}))
         if isinstance(r, Exception):
             raise r
+        on_head(r[0], r[2])
         return r
 
     def urls(self):
@@ -101,13 +102,15 @@ def world(tmp_path):
 
 def run(world, net, source, mode="bulk", **kw):
     transport = mt.Transport(world["raw"], http=net.http, sleep=net.sleep, now=net.now)
+    kw.setdefault("require_probe", False)
     return fid.fetch_source(world["inv"], source, world["raw"], mode=mode, transport=transport,
                             clock=lambda: SATURDAY, **kw)
 
 
-def ledger(world, source):
-    path = world["raw"] / source / fid.FETCH_LOG
-    return [json.loads(x) for x in path.read_text().splitlines()] if path.exists() else []
+def ledger(world, source, journal=False):
+    """The ledger's outcome lines (with journal=True, also the `attempting` lines written before each request)."""
+    rows = fid.read_ledger(world["raw"], source)
+    return rows if journal else [r for r in rows if r["state"] not in ("attempting", "abandoned")]
 
 
 # --- the inventory ------------------------------------------------------------------------------------------------
@@ -134,6 +137,23 @@ def test_the_inventory_lists_minutes_meetings_no_source_holds(tmp_path):
     assert inv["unassigned"] == ["meeting-larkspur-city-council-9"]
 
 
+def test_the_inventory_is_never_overwritten(world):
+    before = world["inv"].read_bytes()
+    with pytest.raises(fid.FetchError, match="frozen"):
+        fid.freeze_inventory(world["sub"], world["raw"], world["staging"])
+    assert world["inv"].read_bytes() == before
+
+
+def test_a_raw_root_other_than_the_inventorys_is_refused(world, tmp_path):
+    with pytest.raises(fid.FetchError, match="raw"):
+        run({**world, "raw": tmp_path / "elsewhere"}, Net({}), NOV)
+
+
+def test_live_runs_only_from_the_canonical_raw_root(world):
+    with pytest.raises(fid.FetchError, match="canonical"):
+        fid.fetch_source(world["inv"], NOV, world["raw"], clock=lambda: SATURDAY)  # no injected transport
+
+
 def test_a_changed_inventory_is_refused(world):
     data = json.loads(world["inv"].read_text())
     data["candidates"].pop()
@@ -150,6 +170,8 @@ def test_probe_takes_at_most_three_and_records_the_chain(world):
                nov_url(3): (200, PDF, {}), nov_url(2): (200, PDF, {})})
     res = run(world, net, NOV, mode="probe")
     assert res.attempted == 3 and net.urls() == [nov_url(5), hop, nov_url(4), nov_url(3)]
+    again = Net({nov_url(2): (200, PDF, {})})
+    assert run(world, again, NOV, mode="probe").attempted == 0 and again.calls == []  # 3 per source, in all
     first = ledger(world, NOV)[0]
     assert first["chain"] == [{"url": nov_url(5), "status": 302, "location": hop},
                               {"url": hop, "status": 200, "location": None}]
@@ -286,3 +308,120 @@ def test_slug_and_date_row_ids_land_under_their_meeting_id(world):
                     "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/9/d.pdf":
                         (200, PDF, {})}), ROSS)
     assert (world["raw"] / ROSS / "minutes" / f"meeting-{ROSS}-2030-01-10-row-3.pdf").exists()
+
+
+def test_bulk_requires_a_probe_first(world):
+    net = Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4, 5)})
+    with pytest.raises(fid.FetchError, match="probe"):
+        run(world, net, NOV, require_probe=True)
+    assert net.calls == []
+    run(world, net, NOV, mode="probe", limit=1)
+    assert run(world, net, NOV, require_probe=True).attempted == 3
+
+
+def test_a_failed_redirect_target_is_never_requested_again_for_another_candidate(tmp_path):
+    bad = "https://novato.granicus.com/DocumentViewer.php?file=broken.pdf"
+    sub = make_substrate(tmp_path / "s.sqlite", meetings=[
+        (f"meeting-{NOV}-8", "2030-01-02", "City Council", nov_url(8)),
+        (f"meeting-{NOV}-9", "2030-01-01", "City Council", nov_url(9))])
+    raw = tmp_path / "raw"
+    w = {"raw": raw, "inv": fid.freeze_inventory(sub, raw, tmp_path / "st")}
+    net = Net({nov_url(8): (302, b"", {"location": bad}), nov_url(9): (302, b"", {"location": bad}),
+               bad: (500, b"", {})})
+    run(w, net, NOV)
+    assert net.urls().count(bad) == 1
+    rows = {r["meeting_id"]: r for r in ledger(w, NOV)}
+    assert rows[f"meeting-{NOV}-9"]["state"] == "failed" and "not retried" in rows[f"meeting-{NOV}-9"]["reason"]
+
+
+def test_an_attempt_interrupted_by_a_crash_is_failed_and_never_retried(world):
+    class Crash(BaseException):
+        pass
+
+    def explode(url, headers, on_head):
+        raise Crash()
+
+    transport = mt.Transport(world["raw"], http=explode)
+    with pytest.raises(Crash):
+        fid.fetch_source(world["inv"], NOV, world["raw"], transport=transport, clock=lambda: SATURDAY,
+                         require_probe=False, limit=1)
+    assert ledger(world, NOV, journal=True)[-1]["state"] == "attempting"  # journaled before the request
+    net = Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4, 5)})
+    run(world, net, NOV)
+    assert nov_url(5) not in net.urls()
+    last = {r["meeting_id"]: r for r in ledger(world, NOV)}
+    assert last[f"meeting-{NOV}-5"]["state"] == "failed" and "interrupted" in last[f"meeting-{NOV}-5"]["reason"]
+
+
+def test_a_torn_last_ledger_line_is_tolerated_by_the_fetcher_and_the_index(world):
+    import minutes_text_index as mti
+    run(world, Net({nov_url(5): (200, PDF, {})}), NOV, limit=1)
+    path = world["raw"] / NOV / fid.FETCH_LOG
+    with path.open("a") as fh:
+        fh.write('{"meeting_id": "meeting-novato-city-council-4", "sta')
+    assert [r["state"] for r in fid.read_ledger(world["raw"], NOV)][-1] == "fetched"
+    saved, _, fetched = mti._saved_dates(world["raw"] / NOV)
+    assert f"meeting-{NOV}-5.pdf" in saved and fetched[f"meeting-{NOV}-5.pdf"]
+    run(world, Net({nov_url(4): (200, PDF, {})}), NOV, limit=1)  # appends after the torn line, still readable
+    assert fid.read_ledger(world["raw"], NOV)[-1]["meeting_id"] == f"meeting-{NOV}-4"
+    assert (world["raw"] / NOV / (fid.FETCH_LOG + ".torn")).read_text().startswith('{"meeting_id"')
+
+
+def test_the_window_mid_chain_ends_the_run_and_a_candidate_with_no_request_is_retried_later(world):
+    hop = "https://novato.granicus.com/DocumentViewer.php?file=5.pdf"
+    net = Net({nov_url(5): (302, b"", {"location": hop}), hop: (200, PDF, {}), nov_url(4): (200, PDF, {})})
+    times = iter([SATURDAY, SATURDAY])  # the start check, the first request's guard; then Monday 05:00
+    transport = mt.Transport(world["raw"], http=net.http, sleep=net.sleep, now=net.now)
+    res = fid.fetch_source(world["inv"], NOV, world["raw"], transport=transport, require_probe=False,
+                           clock=lambda: next(times, dt.datetime(2030, 1, 7, 5, 0)))
+    assert hop not in net.urls() and "window" in res.skipped
+    last = {r["meeting_id"]: r for r in ledger(world, NOV)}
+    assert last[f"meeting-{NOV}-5"]["state"] == "failed"  # one request had gone out: never retried
+    assert f"meeting-{NOV}-4" not in last
+
+
+def test_states_reconcile_ledger_claims_with_files_on_disk(world):
+    run(world, Net({nov_url(n): (200, PDF + bytes([n]), {}) for n in (2, 3, 4, 5)}), NOV)
+    (world["raw"] / NOV / "minutes" / f"meeting-{NOV}-5.pdf").unlink()
+    (world["raw"] / NOV / "minutes" / f"meeting-{NOV}-4.pdf").write_bytes(b"%PDF-1.4 changed")
+    states = fid.candidate_states(world["inv"], world["raw"])
+    assert sorted(a["meeting_id"] for a in states["anomalies"]) == [f"meeting-{NOV}-4", f"meeting-{NOV}-5"]
+
+
+def test_a_file_saved_by_hand_since_the_freeze_is_recorded_already_cached(world):
+    (world["raw"] / NOV / "minutes" / f"meeting-{NOV}-5.html").write_bytes(HTML)
+    net = Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4)})
+    run(world, net, NOV)
+    assert nov_url(5) not in net.urls()
+    assert fid.candidate_states(world["inv"], world["raw"])["states"][f"meeting-{NOV}-5"] == "already-cached"
+
+
+def test_a_shared_url_copy_refuses_a_source_file_that_changed(tmp_path):
+    shared = nov_url(9)
+    sub = make_substrate(tmp_path / "s.sqlite", meetings=[
+        (f"meeting-{NOV}-8", "2030-01-02", "City Council", shared),
+        (f"meeting-{NOV}-9", "2030-01-01", "City Council", shared)])
+    raw = tmp_path / "raw"
+    w = {"raw": raw, "inv": fid.freeze_inventory(sub, raw, tmp_path / "st")}
+    run(w, Net({shared: (200, PDF, {})}), NOV, limit=1)
+    (raw / NOV / "minutes" / f"meeting-{NOV}-8.pdf").write_bytes(b"%PDF-1.4 tampered")
+    run(w, Net({}), NOV)
+    last = {r["meeting_id"]: r for r in ledger(w, NOV)}
+    assert last[f"meeting-{NOV}-9"]["state"] == "failed" and "changed" in last[f"meeting-{NOV}-9"]["reason"]
+    assert not (raw / NOV / "minutes" / f"meeting-{NOV}-9.pdf").exists()
+
+
+def test_fetched_slug_and_date_row_documents_are_indexed_end_to_end(world, tmp_path):
+    import minutes_text_index as mti
+    from test_minutes_text_index import make_pdf
+    long = " The invented Ross council approved a gazebo." * 6
+    ross = "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/9/d.pdf"
+    run(world, Net({"https://www.townofrossca.gov/robots.txt": (404, b"", {}),
+                    ross: (200, make_pdf(["Ross minutes January 10, 2030." + long]), {})}), ROSS)
+    run(world, Net({f"{GCS}/robots.txt": ALLOW_ALL,
+                    fx_url("a"): (200, make_pdf(["Fairfax minutes January 3, 2030." + long]), {})}), FX)
+    report = mti.build_index(raw=world["raw"], substrate=world["sub"], out=tmp_path / "i.sqlite",
+                             sources=(ROSS, FX))
+    d = {Path(f["path"]).name: f["disposition"] for f in report["files"]}
+    assert d == {f"meeting-{ROSS}-2030-01-10-row-3.pdf": "indexed",
+                 f"meeting-{FX}-town-council-meeting-january-3-2030.pdf": "indexed"}
