@@ -133,7 +133,10 @@ def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = 
     if deadline is not None:
         left = deadline - time.time()
         timeout = (max(1.0, min(CONNECT_TIMEOUT_S, left)), max(1.0, min(READ_TIMEOUT_S, left)))
-    resp = session.send(prepared, allow_redirects=False, stream=True, timeout=timeout, proxies={}, verify=True)
+    # The adapter, not Session.send: Session.send reads a 3xx body to build Response.next even with
+    # allow_redirects=False, before on_head, the watchdog or the size cap could act. The adapter follows nothing and
+    # reads no body.
+    resp = session.get_adapter(url).send(prepared, stream=True, timeout=timeout, verify=True, cert=None, proxies={})
     # Socket timeouts measure silence, not duration: a server trickling bytes never trips one. A wall-clock watchdog
     # shuts the socket down at the deadline, which ends a blocked read; the transfer is bounded however it behaves.
     watchdog = None

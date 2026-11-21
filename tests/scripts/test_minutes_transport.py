@@ -199,24 +199,24 @@ def test_the_live_client_sends_exactly_the_authorized_url_with_no_ambient_settin
             pass
 
     def fake_send(self, prepared, **kw):
-        sent.update(kw, url=prepared.url, headers=dict(prepared.headers), trust_env=self.trust_env)
+        sent.update(kw, url=prepared.url, headers=dict(prepared.headers))
         return Resp()
 
-    monkeypatch.setattr(requests.Session, "send", fake_send)
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", fake_send)
     monkeypatch.setenv("HTTPS_PROXY", "http://proxy.invalid:1")
     (tmp_path / ".netrc").write_text("machine novato.granicus.com login a password b\n")
     monkeypatch.setenv("NETRC", str(tmp_path / ".netrc"))
     seen = []
     status, body, headers = mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: seen.append(s))
-    assert sent["url"] == NOV_DOC and sent["allow_redirects"] is False and sent["stream"] is True
-    assert sent["trust_env"] is False and sent["proxies"] == {}
+    assert sent["url"] == NOV_DOC and "allow_redirects" not in sent and sent["stream"] is True
+    assert sent["proxies"] == {} and sent["verify"] is True
     assert "Authorization" not in sent["headers"] and sent["headers"]["User-Agent"] == mt.USER_AGENT
     assert seen == [200] and body == b"%PDF-1.4 body" and headers["content-type"] == "application/pdf"
 
 
 def test_the_live_client_refuses_a_url_requests_would_rewrite(monkeypatch):
     import requests
-    monkeypatch.setattr(requests.Session, "send", lambda *a, **k: pytest.fail("sent"))
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", lambda *a, **k: pytest.fail("sent"))
     with pytest.raises(mt.UnsafeUrl):
         mt.http_get("https://x.granicus.com/a b", {"User-Agent": mt.USER_AGENT}, lambda s, h: None)
 
@@ -486,7 +486,7 @@ def test_the_live_client_aborts_a_transfer_at_its_deadline(monkeypatch):
         def close(self):
             pass
 
-    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", lambda self, p, **kw: Resp())
     clock = iter(range(0, 10**6, 100))  # each reading of the clock is 100 s later
     monkeypatch.setattr(mt.time, "time", lambda: float(next(clock)))
     with pytest.raises(mt.PartialBody):
@@ -531,7 +531,7 @@ def test_the_live_client_reads_in_small_chunks_so_a_wall_prefix_survives_a_failu
         def close(self):
             pass
 
-    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", lambda self, p, **kw: Resp())
     with pytest.raises(mt.PartialBody) as exc:
         mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: None)
     assert sizes == [mt.CHUNK] and mt.CHUNK <= 4096 and exc.value.body == CHALLENGE_HTML
@@ -577,7 +577,7 @@ def test_a_trickling_body_is_cut_off_at_the_deadline_by_a_watchdog(monkeypatch):
         def close(self):
             pass
 
-    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", lambda self, p, **kw: Resp())
     threading.Thread(target=trickle, daemon=True).start()
     import time as real_time
     t0 = real_time.time()
@@ -608,7 +608,7 @@ def test_without_an_interruptible_socket_the_body_is_never_read(monkeypatch):
         def close(self):
             pass
 
-    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", lambda self, p, **kw: Resp())
     with pytest.raises(mt.NetworkError, match="bound"):
         mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: None, deadline=1e12)
     assert read == []
@@ -659,8 +659,39 @@ def test_block_headers_are_seen_even_when_no_socket_can_bound_the_body(monkeypat
         def close(self):
             pass
 
-    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", lambda self, p, **kw: Resp())
     seen = []
     with pytest.raises(mt.NetworkError):
         mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda st, h: seen.append((st, h)), deadline=1e12)
     assert seen == [(429, {"retry-after": "60"})]
+
+
+def test_a_redirect_body_is_never_read_before_on_head(monkeypatch):
+    import requests
+    order = []
+
+    class Resp:
+        status_code, headers, raw = 302, {"Location": "/next", "cf-mitigated": "challenge"}, None
+        is_redirect = True
+
+        @property
+        def content(self):
+            order.append("body")
+            raise ConnectionError("a trickling redirect body")
+
+        def iter_content(self, n):
+            order.append("body")
+            yield b""
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(requests.adapters.HTTPAdapter, "send", lambda self, p, **kw: Resp())
+
+    def on_head(status, headers):
+        order.append("head")
+        raise RuntimeError("stop")
+
+    with pytest.raises(RuntimeError):
+        mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, on_head, deadline=1e12)
+    assert order == ["head"]
