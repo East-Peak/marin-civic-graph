@@ -41,8 +41,10 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from minutes_bodies import MINUTES_EXTENSIONS, SOURCES, normalize_body
-from votes_inventory import normalize_url, printed_date, shared_owner, sniff_format
+from minutes_bodies import SOURCES, normalize_body
+from minutes_sidecars import check as check_sidecar, read_sidecar, sidecar_path
+from minutes_sources import SOURCE_MAP
+from votes_inventory import normalize_url, printed_date, printed_date_in, shared_owner, sniff_format
 from votes_text import _FOLD, docx_lines, html_lines
 
 HOME = Path.home()
@@ -66,13 +68,14 @@ SCHEMA = """
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE pages (id INTEGER PRIMARY KEY, meeting_id TEXT NOT NULL, source TEXT NOT NULL, body TEXT NOT NULL,
     meeting_date TEXT NOT NULL, page INTEGER NOT NULL, text TEXT NOT NULL, official_url TEXT,
-    source_sha256 TEXT NOT NULL, UNIQUE (meeting_id, page));
+    source_sha256 TEXT NOT NULL, text_source TEXT NOT NULL CHECK (text_source IN ('text', 'ocr', 'converted')),
+    UNIQUE (meeting_id, page));
 CREATE VIRTUAL TABLE pages_fts USING fts5(text, content='pages', content_rowid='id',
     tokenize='unicode61 remove_diacritics 2');
 CREATE TABLE coverage (meeting_id TEXT PRIMARY KEY, source TEXT NOT NULL, body TEXT NOT NULL,
     meeting_date TEXT NOT NULL, minutes_url TEXT, state TEXT NOT NULL);
 CREATE TABLE dispositions (path TEXT PRIMARY KEY, source TEXT NOT NULL, meeting_id TEXT, sha256 TEXT,
-    disposition TEXT NOT NULL, reason TEXT);
+    disposition TEXT NOT NULL, reason TEXT, text_source TEXT);
 """
 
 
@@ -91,20 +94,21 @@ def load_meetings(substrate: Path, sources) -> tuple[dict[str, dict], str]:
     db = sqlite3.connect(f"file:{Path(substrate)}?mode=ro", uri=True)
     try:
         meetings: dict[str, dict] = {}
-        for source in sources:
-            like = f"meeting-{source}-%"
-            for mid, props in db.execute("SELECT id, props FROM nodes WHERE type = 'Meeting' AND id LIKE ?",
-                                         (like,)):
-                p = json.loads(props)
-                meetings[mid] = {"source": source, "date": p.get("meeting_date") or "", "title": p.get("title") or "",
-                                 "url": None}
-            for mid, url in db.execute(
-                    "SELECT e.source, json_extract(r.props, '$.preferred_public_url') FROM edges e "
-                    "JOIN nodes r ON r.id = e.target WHERE e.rel = 'EVIDENCED_BY' AND e.source LIKE ? "
-                    "AND json_extract(r.props, '$.record_type') = 'meeting_minutes' ORDER BY e.source, r.id",
-                    (like,)):
-                if mid in meetings and url and not meetings[mid]["url"]:
-                    meetings[mid]["url"] = normalize_url(url)
+        shapes = [SOURCE_MAP[s] for s in sources]
+        for mid, props in db.execute("SELECT id, props FROM nodes WHERE type = 'Meeting' AND id LIKE 'meeting-%' "
+                                     "ORDER BY id"):
+            src = next((s for s in shapes if s.matches(mid)), None)
+            if src is None:
+                continue
+            p = json.loads(props)
+            meetings[mid] = {"source": src.id, "date": p.get("meeting_date") or "", "title": p.get("title") or "",
+                             "url": None}
+        for mid, url in db.execute(
+                "SELECT e.source, json_extract(r.props, '$.preferred_public_url') FROM edges e "
+                "JOIN nodes r ON r.id = e.target WHERE e.rel = 'EVIDENCED_BY' AND e.source LIKE 'meeting-%' "
+                "AND json_extract(r.props, '$.record_type') = 'meeting_minutes' ORDER BY e.source, r.id"):
+            if mid in meetings and url and not meetings[mid]["url"]:
+                meetings[mid]["url"] = normalize_url(url)
         row = db.execute("SELECT value FROM meta WHERE key = 'as_of_date'").fetchone()
         return meetings, row[0] if row else ""
     finally:
@@ -159,34 +163,49 @@ def extract_pages(path: Path, fmt: str) -> list[str]:
 
 # --- dispositions -------------------------------------------------------------------------------------------------
 
-def _name_re(source: str) -> re.Pattern:
-    return re.compile(rf"^(meeting-{re.escape(source)}-\d+)\.({'|'.join(MINUTES_EXTENSIONS)})$")
+def _pdf_pages(path: Path) -> int | None:
+    out = subprocess.run(["pdfinfo", str(path)], capture_output=True, timeout=60)
+    m = re.search(rb"^Pages:\s+(\d+)", out.stdout, re.M) if out.returncode == 0 else None
+    return int(m.group(1)) if m else None
+
+
+def _sidecar(raw: Path, f: dict, text_source: str, page_count: int | None = None) -> tuple[list[str] | None,
+                                                                                         str | None]:
+    """(pages, None) from this file's valid sidecar; (None, problem) for an invalid one; (None, None) for none."""
+    path = sidecar_path(raw, SOURCE_MAP[f["source"]].raw_dir, f["meeting_id"], text_source)
+    doc = read_sidecar(path)
+    if doc is None:
+        return None, None
+    try:
+        return check_sidecar(doc, f["path"], f["sha256"], text_source, page_count)
+    except Exception as exc:  # a malformed sidecar is a reported problem, never a crash
+        return None, f"malformed sidecar ({type(exc).__name__})"
 
 
 def _classify(raw: Path, sources, meetings: dict) -> tuple[list[dict], list[dict]]:
     """(every file with a disposition or None = still a candidate, the documents to index)."""
     files: list[dict] = []
     for source in sources:
-        sdir = raw / source
+        src = SOURCE_MAP[source]
+        sdir = raw / src.raw_dir
         saved, manifest, fetched = _saved_dates(sdir)
         root = sdir / "minutes"
-        pattern = _name_re(source)
         for p in sorted(x for x in root.rglob("*") if x.is_file()) if root.is_dir() else []:
             f = {"path": p.relative_to(raw).as_posix(), "abs": p, "source": source, "meeting_id": None,
-                 "sha256": None, "format": None, "saved": None, "disposition": None, "reason": None}
+                 "sha256": None, "format": None, "saved": None, "disposition": None, "reason": None,
+                 "text_source": None, "raw": raw}
             files.append(f)
-            m = pattern.match(p.name) if p.parent == root else None
+            mid = src.file_meeting_id(p.name) if p.parent == root else None
             try:
                 data = p.read_bytes()
             except OSError as exc:
-                f.update(disposition="unreadable", reason=f"could not be read: {type(exc).__name__}",
-                         meeting_id=m.group(1) if m else None)
+                f.update(disposition="unreadable", reason=f"could not be read: {type(exc).__name__}", meeting_id=mid)
                 continue
             f["sha256"] = _sha(data)
-            if not m:
+            if not mid:
                 f.update(disposition="unmapped", reason="file name is not a meeting id")
                 continue
-            f["meeting_id"] = m.group(1)
+            f["meeting_id"] = mid
             entry = (manifest or {}).get(p.name)
             if f["meeting_id"] not in meetings:
                 f.update(disposition="unmapped", reason="no Meeting with this id in the substrate")
@@ -195,9 +214,17 @@ def _classify(raw: Path, sources, meetings: dict) -> tuple[list[dict], list[dict
                                                         f"or a matching {FETCH_LOG} entry")
             elif entry and entry.get("sha256") and entry["sha256"] != f["sha256"]:
                 f.update(disposition="unmapped", reason=f"bytes differ from {source}/{MANIFEST}")
-            elif (fmt := sniff_format(data)) is None:
-                f.update(disposition="unreadable", reason="a legacy Word .doc (OLE2) under this name; no .doc reader"
-                         if data[:8] == OLE2_MAGIC else "not a PDF, HTML or DOCX document")
+            elif (fmt := sniff_format(data)) is None and data[:8] == OLE2_MAGIC:
+                pages, problem = _sidecar(raw, f, "converted")
+                if pages is not None:
+                    f.update(format="converted", converted=pages, saved=saved.get(p.name), url=(entry or {}).get("url"))
+                else:
+                    f.update(disposition="unreadable", reason="a legacy Word .doc (OLE2) under this name; no .doc reader"
+                             + (f"; converted sidecar ignored: {problem}" if problem else ""))
+                    if problem:
+                        f["sidecar_problem"] = problem
+            elif fmt is None:
+                f.update(disposition="unreadable", reason="not a PDF, HTML or DOCX document")
             else:
                 f.update(format=fmt, saved=saved.get(p.name), url=(entry or {}).get("url"))
     return files, _supersede(_share(files, meetings))
@@ -246,7 +273,7 @@ def _share(files: list[dict], meetings: dict) -> list[dict]:
             docs.append({"files": fs, "meeting_id": mids[0], "shared": False})
             continue
         try:
-            date, closed = printed_date(fs[0]["abs"], fs[0]["format"])
+            date, closed = _printed(fs)
         except Exception as exc:  # an unreadable shared document resolves nobody
             date, closed, why = None, False, f"its text could not be read ({type(exc).__name__})"
         else:
@@ -262,13 +289,40 @@ def _share(files: list[dict], meetings: dict) -> list[dict]:
     return docs
 
 
+def _printed(fs: list[dict]) -> tuple[str | None, bool]:
+    """The date a shared document prints: from its own text, else from any one of its files' valid sidecars."""
+    f = fs[0]
+    if f["format"] == "converted":
+        return printed_date_in("\n".join(f["converted"]))
+    date, closed = printed_date(f["abs"], f["format"])
+    if date is None and f["format"] == "pdf":
+        for x in fs:
+            pages, _ = _sidecar(x["raw"], x, "ocr", _pdf_pages(x["abs"]))
+            if pages is not None:
+                return printed_date_in("\n".join(_clean(p) for p in pages))
+    return date, closed
+
+
+def _chars(pages: list[str]) -> int:
+    return sum(len(re.sub(r"\s", "", p)) for p in pages)
+
+
 def _extract(doc: dict) -> dict:
+    """The document's pages as (text, text_source); a scan with no text layer takes its valid OCR sidecar."""
     f = next((x for x in doc["files"] if x["meeting_id"] == doc["meeting_id"]), doc["files"][0])
+    out = {**doc, "error": None, "url_hint": f.get("url"), "sidecar_problem": None}
+    if f["format"] == "converted":
+        return out | {"pages": [(_clean(t), "converted") for t in f["converted"]]}
     try:
         pages = extract_pages(f["abs"], f["format"])
     except Exception as exc:
-        return {**doc, "pages": None, "error": f"text extraction failed: {exc}"}
-    return {**doc, "pages": pages, "error": None, "url_hint": f.get("url")}
+        return out | {"pages": None, "error": f"text extraction failed: {exc}"}
+    if f["format"] == "pdf" and _chars(pages) < MIN_TEXT_CHARS:
+        ocr, problem = _sidecar(f["raw"], f, "ocr", _pdf_pages(f["abs"]))
+        if ocr is not None:
+            return out | {"pages": [(_clean(t), "ocr") for t in ocr]}
+        out["sidecar_problem"] = problem
+    return out | {"pages": [(t, "text") for t in pages]}
 
 
 # --- build --------------------------------------------------------------------------------------------------------
@@ -283,15 +337,25 @@ def build_index(raw: Path = RAW_ROOT, substrate: Path = SUBSTRATE, out: Path = I
 
     rows, covered = [], {}
     for doc in extracted:
-        text_chars = sum(len(re.sub(r"\s", "", p)) for p in doc["pages"] or [])
+        text_chars = _chars([t for t, _ in doc["pages"] or []])
+        kinds = sorted({k for t, k in doc["pages"] or [] if t})
+        text_source = kinds[0] if len(kinds) == 1 else None
         if doc["pages"] is None:
             disp, reason = "unreadable", doc["error"]
         elif text_chars < MIN_TEXT_CHARS:
             disp, reason = "no-text", f"no text layer ({text_chars} characters; a scanned image or empty)"
+            if doc["sidecar_problem"]:
+                reason += f"; OCR sidecar ignored: {doc['sidecar_problem']}"
         else:
-            disp, reason = ("shared-indexed" if doc["shared"] else "indexed"), None
+            disp = "shared-indexed" if doc["shared"] else "indexed"
+            reason = {"ocr": "scanned; text by OCR (minutes-ocr sidecar, validated)",
+                      "converted": "legacy Word .doc; text converted by textutil (minutes-converted sidecar, "
+                                   "validated)"}.get(text_source)
         for f in doc["files"]:
-            f.update(disposition=disp, reason=reason or f["reason"])
+            f.update(disposition=disp, text_source=text_source if disp in INDEXED else None,
+                     reason="; ".join(r for r in (f["reason"], reason) if r) or None)
+            if disp == "no-text" and doc["sidecar_problem"]:
+                f["sidecar_problem"] = f"no text layer; OCR sidecar ignored: {doc['sidecar_problem']}"
         if disp not in INDEXED:
             continue
         mid = doc["meeting_id"]
@@ -300,8 +364,8 @@ def build_index(raw: Path = RAW_ROOT, substrate: Path = SUBSTRATE, out: Path = I
         body = normalize_body(m["source"], m["title"])[0]
         url = m["url"] or normalize_url(doc.get("url_hint"))
         sha = next(f["sha256"] for f in doc["files"])
-        rows += [(mid, m["source"], body, m["date"], n, text, url, sha)
-                 for n, text in enumerate(doc["pages"], start=1) if text]
+        rows += [(mid, m["source"], body, m["date"], n, text, url, sha, kind)
+                 for n, (text, kind) in enumerate(doc["pages"], start=1) if text]
     rows.sort(key=lambda r: (r[0], r[4]))
 
     coverage = _coverage(meetings, files, covered)
@@ -343,15 +407,15 @@ def _fill(tmp: Path, rows: list[tuple], coverage: list[tuple], files: list[dict]
     db = sqlite3.connect(tmp)
     try:
         db.executescript(SCHEMA)
-        db.executemany("INSERT INTO meta VALUES (?, ?)", [("schema", "minutes-text-v1"),
+        db.executemany("INSERT INTO meta VALUES (?, ?)", [("schema", "minutes-text-v2"),
                                                           ("substrate_as_of_date", as_of)])
         db.executemany("INSERT INTO pages (meeting_id, source, body, meeting_date, page, text, official_url, "
-                       "source_sha256) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", rows)
+                       "source_sha256, text_source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", rows)
         db.execute("INSERT INTO pages_fts (pages_fts) VALUES ('rebuild')")
         db.executemany("INSERT INTO coverage VALUES (?, ?, ?, ?, ?, ?)", coverage)
-        db.executemany("INSERT INTO dispositions VALUES (?, ?, ?, ?, ?, ?)",
-                       [(f["path"], f["source"], f["meeting_id"], f["sha256"], f["disposition"], f["reason"])
-                        for f in files])
+        db.executemany("INSERT INTO dispositions VALUES (?, ?, ?, ?, ?, ?, ?)",
+                       [(f["path"], f["source"], f["meeting_id"], f["sha256"], f["disposition"], f["reason"],
+                         f.get("text_source")) for f in files])
         db.commit()
         db.execute("VACUUM")
     finally:
@@ -381,8 +445,11 @@ def _report(files: list[dict], coverage: list[tuple], meetings: dict, sources, a
         "substrate_as_of_date": as_of,
         "sources": per,
         "shortfall": {s: v["indexed_share"] for s, v in per.items() if v["indexed_share"] < SHORTFALL_BELOW},
-        "files": [{k: f[k] for k in ("path", "source", "meeting_id", "sha256", "disposition", "reason")}
-                  for f in files],
+        "files": [{k: f.get(k) for k in ("path", "source", "meeting_id", "sha256", "disposition", "reason",
+                                          "text_source")} for f in files],
+        "sidecar_problems": [{"path": f["path"], "problem": f["sidecar_problem"].split("ignored: ", 1)[-1]
+                              if f["sidecar_problem"].startswith("no text layer") else f["sidecar_problem"]}
+                             for f in files if f.get("sidecar_problem")],
         "unknown_titles": [{"source": s, "title": t, "meetings": n} for (s, t), n in sorted(unknown.items())],
         "coverage": dict(sorted(bodies.items())),
     }
@@ -408,6 +475,9 @@ def render_report(r: dict) -> str:
     for f in r["files"]:
         if f["disposition"] not in INDEXED:
             lines.append(f"- `{f['path']}` — {f['disposition']}: {f['reason']}")
+    lines += ["", "## Sidecars ignored", ""]
+    lines += [f"- `{p['path']}` — OCR sidecar ignored: {p['problem']}" for p in r.get("sidecar_problems", [])] \
+        or ["None."]
     lines += ["", "## Shared documents", ""]
     lines += [f"- `{f['path']}` — {f['reason']}" for f in r["files"] if f["disposition"] == "shared-indexed"] or ["None."]
     lines += ["", "## Unknown meeting titles (passed through as the body)", ""]
@@ -459,7 +529,7 @@ def import_san_anselmo(staging: Path = SA_STAGING, raw: Path = RAW_ROOT) -> dict
     dest_dir.mkdir(parents=True, exist_ok=True)
     docs = []
     for e in sorted(entries, key=lambda e: e["meeting"]):
-        if not _name_re(SA).match(e["meeting"] + ".pdf"):
+        if not SOURCE_MAP[SA].file_meeting_id(e["meeting"] + ".pdf"):
             raise IndexBuildError(f"not a San Anselmo meeting id: {e['meeting']}")
         src = staging / "cache" / e["file"]
         data = src.read_bytes()

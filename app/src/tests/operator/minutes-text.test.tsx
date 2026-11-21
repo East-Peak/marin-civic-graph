@@ -20,13 +20,13 @@ const SCHEMA = `
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE pages (id INTEGER PRIMARY KEY, meeting_id TEXT NOT NULL, source TEXT NOT NULL, body TEXT NOT NULL,
     meeting_date TEXT NOT NULL, page INTEGER NOT NULL, text TEXT NOT NULL, official_url TEXT,
-    source_sha256 TEXT NOT NULL, UNIQUE (meeting_id, page));
+    source_sha256 TEXT NOT NULL, text_source TEXT NOT NULL, UNIQUE (meeting_id, page));
 CREATE VIRTUAL TABLE pages_fts USING fts5(text, content='pages', content_rowid='id',
     tokenize='unicode61 remove_diacritics 2');
 CREATE TABLE coverage (meeting_id TEXT PRIMARY KEY, source TEXT NOT NULL, body TEXT NOT NULL,
     meeting_date TEXT NOT NULL, minutes_url TEXT, state TEXT NOT NULL);
 CREATE TABLE dispositions (path TEXT PRIMARY KEY, source TEXT NOT NULL, meeting_id TEXT, sha256 TEXT,
-    disposition TEXT NOT NULL, reason TEXT);`;
+    disposition TEXT NOT NULL, reason TEXT, text_source TEXT);`;
 
 let dir: string;
 let dbPath: string;
@@ -34,11 +34,12 @@ let dbPath: string;
 function buildFixture(file: string) {
   const db = new Database(file);
   db.exec(SCHEMA);
-  db.prepare("INSERT INTO meta VALUES ('schema', 'minutes-text-v1'), ('substrate_as_of_date', '2030-01-09')").run();
-  const page = db.prepare(
-    "INSERT INTO pages (meeting_id, source, body, meeting_date, page, text, official_url, source_sha256) " +
-      "VALUES (?, 'sa', ?, ?, ?, ?, ?, 'abc')",
+  db.prepare("INSERT INTO meta VALUES ('schema', 'minutes-text-v2'), ('substrate_as_of_date', '2030-01-09')").run();
+  const insert = db.prepare(
+    "INSERT INTO pages (meeting_id, source, body, meeting_date, page, text, official_url, source_sha256, " +
+      "text_source) VALUES (?, 'sa', ?, ?, ?, ?, ?, 'abc', ?)",
   );
+  const page = { run: (...a: (string | number)[]) => insert.run(...a.slice(0, 6), a[6] ?? "text") };
   page.run("m-old", "Fernwood Town Council", "2028-02-01", 3,
     "Council discussed the Willow Glade picnic lot layout.\nThe vote was 4-1.", "https://town.example/old");
   page.run("m-new", "Fernwood Town Council", "2029-05-05", 1,
@@ -47,6 +48,10 @@ function buildFixture(file: string) {
     "Staff presented a revised Willow Glade picnic lot with fewer spaces.", "https://town.example/new");
   page.run("m-parks", "Fernwood Parks Commission", "2029-01-10", 2,
     "The commission toured the Willow Glade picnic lot.", "https://town.example/parks");
+  page.run("m-scan2", "Fernwood Town Council", "2026-03-03", 4,
+    "Scanned page naming the Quillmore aqueduct.", "https://town.example/scan2", "ocr");
+  page.run("m-doc", "Fernwood Town Council", "2025-04-04", 1,
+    "Converted text naming the Quillmore aqueduct.", "https://town.example/doc", "converted");
   db.exec("INSERT INTO pages_fts (pages_fts) VALUES ('rebuild')");
   const cov = db.prepare("INSERT INTO coverage VALUES (?, 'sa', ?, ?, ?, ?)");
   cov.run("m-old", "Fernwood Town Council", "2028-02-01", "https://town.example/old", "indexed");
@@ -119,6 +124,34 @@ describe("searchMinutes", () => {
     try {
       expect(searchMinutes(db, "  ")).toEqual({ results: [], truncated: false });
       expect(searchMinutes(db, "zeppelin")).toEqual({ results: [], truncated: false });
+    } finally {
+      db.close();
+    }
+  });
+});
+
+describe("text provenance", () => {
+  it("carries each page's text source", () => {
+    const db = openFixture();
+    try {
+      const { results } = searchMinutes(db, "Quillmore aqueduct");
+      expect(results.map((r) => [r.meetingId, r.hits[0].textSource])).toEqual([
+        ["m-scan2", "ocr"], ["m-doc", "converted"]]);
+      expect(searchMinutes(db, "library roof").results[0].hits[0].textSource).toBe("text");
+    } finally {
+      db.close();
+    }
+  });
+
+  it("reads an index built before text sources existed as plain text", () => {
+    const old = path.join(dir, "v1.sqlite");
+    const db = new Database(old);
+    db.exec(SCHEMA.replace(" text_source TEXT NOT NULL,", ""));
+    db.prepare("INSERT INTO pages (meeting_id, source, body, meeting_date, page, text, official_url, source_sha256) " +
+      "VALUES ('m1', 'sa', 'B', '2020-01-01', 1, 'Quillmore aqueduct', NULL, 'x')").run();
+    db.exec("INSERT INTO pages_fts (pages_fts) VALUES ('rebuild')");
+    try {
+      expect(searchMinutes(db, "Quillmore").results[0].hits[0].textSource).toBe("text");
     } finally {
       db.close();
     }
@@ -199,6 +232,18 @@ describe("/minutes page", () => {
     const row = within(table).getByText("Fernwood Town Council").closest("tr")!;
     expect(within(row).getByText("2027-11-11 – 2029-05-05")).toBeInTheDocument();
     expect(row.textContent).toContain("2");
+  });
+
+  it("labels OCR and converted pages on the page, and plain pages not at all", async () => {
+    await renderPage("Quillmore aqueduct");
+    const [scan, doc] = screen.getAllByRole("article");
+    expect(within(scan).getByText(/scanned; text by OCR/)).toBeInTheDocument();
+    expect(within(doc).getByText(/converted from a Word \.doc/)).toBeInTheDocument();
+  });
+
+  it("gives a page with its own text layer no provenance label", async () => {
+    await renderPage("library roof");
+    expect(screen.queryByText(/text by OCR|converted from/)).not.toBeInTheDocument();
   });
 
   it("says plainly when the index file is absent", async () => {

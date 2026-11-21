@@ -12,7 +12,14 @@ import {
   loadMinutesPage,
   type BodyCoverage,
   type MeetingResult,
+  type TextSource,
 } from "../_lib/minutes-text";
+
+const PROVENANCE: Record<TextSource, string | null> = {
+  text: null,
+  ocr: "scanned; text by OCR",
+  converted: "converted from a Word .doc",
+};
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +46,10 @@ function Result({ m }: { m: MeetingResult }) {
       <ul className="mt-1 space-y-1">
         {m.hits.map((h) => (
           <li key={h.page}>
-            <span className="text-hairline">page {h.page}: </span>
+            <span className="text-hairline">
+              page {h.page}
+              {PROVENANCE[h.textSource] && ` (${PROVENANCE[h.textSource]})`}:{" "}
+            </span>
             <Passage text={h.snippet} />
           </li>
         ))}

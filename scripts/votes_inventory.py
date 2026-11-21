@@ -182,7 +182,12 @@ def printed_date(path: Path, fmt: str) -> tuple[str | None, bool]:
     """(the first date the document prints, whether its heading says closed session)."""
     from votes_text import canonical_text
 
-    head = canonical_text(path, fmt).text[:3000]
+    return printed_date_in(canonical_text(path, fmt).text)
+
+
+def printed_date_in(text: str) -> tuple[str | None, bool]:
+    """printed_date over text already extracted (an OCR or converted sidecar)."""
+    head = text[:3000]
     m = _PRINTED_DATE_RE.search(head)
     date = None
     if m:

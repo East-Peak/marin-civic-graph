@@ -381,3 +381,145 @@ def test_a_file_that_cannot_be_read_is_unreadable_not_a_crash(world, monkeypatch
 def test_builds_publish_through_their_own_temporary_file(world):
     _build(world)
     assert [p.name for p in world["out"].parent.iterdir()] == [world["out"].name]
+
+
+# --- minutes coverage: more id shapes, OCR and converted sidecars ---------------------------------------------
+
+import minutes_sidecars as msc  # noqa: E402
+
+TB, FX, ROSS = "tiburon-town-council-granicus", "fairfax-town-council", "ross-town-council"
+
+
+def test_slug_date_row_and_long_prefix_ids_map_end_to_end(tmp_path):
+    raw = tmp_path / "raw"
+    fx_id = f"meeting-{FX}-town-council-meeting-may-1-2030"
+    ross_id = f"meeting-{ROSS}-2030-05-02-row-4"
+    ross_slug = f"meeting-{ROSS}-towncouncil-page-ross-town-council-meeting-1"
+    tb_id = f"meeting-{TB}-1000"
+    sub = _substrate(tmp_path / "s.sqlite", [
+        (fx_id, "2030-05-01", "Town Council Meeting: May 1, 2030", "https://storage.example/fx.pdf"),
+        (ross_id, "2030-05-02", "Ross Town Council Meeting", "https://ross.example/r.pdf"),
+        (ross_slug, "2030-05-03", "Advisory Design Review Group Meeting", "https://ross.example/s.pdf"),
+        (tb_id, "2030-05-04", "Design Review Board Meeting", "https://tb.example/1000")])
+    _put(raw, FX, f"{fx_id}.pdf", make_pdf(["Fairfax minutes May 1, 2030." + LONG]))
+    _put(raw, ROSS, f"{ross_id}.pdf", make_pdf(["Ross minutes May 2, 2030." + LONG]))
+    _put(raw, ROSS, f"{ross_slug}.html", f"<html><body>Ross design review May 3, 2030.{LONG}</body></html>".encode())
+    _put(raw, TB, f"{tb_id}.pdf", make_pdf(["Tiburon minutes May 4, 2030." + LONG]))
+    _put(raw, TB, "meeting-tiburon-town-council-1000.pdf", make_pdf(["Another source's id." + LONG]))
+    out = tmp_path / "idx.sqlite"
+    report = mti.build_index(raw=raw, substrate=sub, out=out, sources=(FX, ROSS, TB))
+    d = _disp(report)
+    assert d[f"{fx_id}.pdf"][0] == d[f"{ross_id}.pdf"][0] == d[f"{ross_slug}.html"][0] == d[f"{tb_id}.pdf"][0] \
+        == "indexed"
+    assert d["meeting-tiburon-town-council-1000.pdf"] == ("unmapped", "file name is not a meeting id")
+    bodies = dict(_rows(out, "SELECT DISTINCT meeting_id, body FROM pages"))
+    assert bodies == {fx_id: "Fairfax Town Council", ross_id: "Ross Town Council",
+                      ross_slug: "Ross Advisory Design Review Group", tb_id: "Tiburon Design Review Board"}
+
+
+def _scan_world(tmp_path, pages_in_pdf=3):
+    raw = tmp_path / "raw"
+    mid = f"meeting-{CM}-50"
+    sub = _substrate(tmp_path / "s.sqlite", [(mid, "2030-09-01", "Regular Town Council Meeting",
+                                              "https://town.example/m50")])
+    original = _put(raw, CM, f"{mid}.pdf", make_pdf([""] * pages_in_pdf))
+    return raw, sub, mid, original
+
+
+PAGE1 = "Minutes of the Town Council, September 1, 2030, scanned." + LONG
+PAGE3 = "Page three: the imaginary Larkfield footbridge was approved unanimously." + LONG
+
+
+def _write_sidecar(raw, source, mid, original, pages, text_source="ocr", override=None):
+    doc = msc.make_sidecar(original.relative_to(raw).as_posix(), mti._sha(original.read_bytes()), pages,
+                           text_source, tools={"fixture": "1"}, settings={"lang": "eng"})
+    doc.update(override or {})
+    path = msc.sidecar_path(raw, source, mid, text_source)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(doc))
+    return path
+
+
+def test_an_ocr_sidecar_indexes_a_multipage_scan_keeping_blank_pages_in_place(tmp_path):
+    raw, sub, mid, original = _scan_world(tmp_path)
+    before = original.read_bytes()
+    _write_sidecar(raw, CM, mid, original, [PAGE1, "", PAGE3])
+    out = tmp_path / "idx.sqlite"
+    report = mti.build_index(raw=raw, substrate=sub, out=out, sources=(CM,))
+    assert _disp(report)[f"{mid}.pdf"][0] == "indexed"
+    rows = _rows(out, "SELECT page, text_source, text FROM pages ORDER BY page")
+    assert [(p, s) for p, s, _ in rows] == [(1, "ocr"), (3, "ocr")]
+    assert [(h["meeting_id"], h["page"]) for h in mti.search(out, "Larkfield footbridge")] == [(mid, 3)]
+    assert original.read_bytes() == before  # the original is never modified
+
+
+def test_a_sidecar_whose_source_hash_no_longer_matches_is_reported_and_ignored(tmp_path):
+    raw, sub, mid, original = _scan_world(tmp_path)
+    _write_sidecar(raw, CM, mid, original, [PAGE1, "", PAGE3])
+    original.write_bytes(make_pdf(["", "", "", ""]))  # the original was replaced after the OCR
+    report = mti.build_index(raw=raw, substrate=sub, out=tmp_path / "i.sqlite", sources=(CM,))
+    disp, reason = _disp(report)[f"{mid}.pdf"]
+    assert disp == "no-text" and "OCR sidecar ignored" in reason and "sha256" in reason
+    assert report["sidecar_problems"] == [{"path": f"{CM}/minutes/{mid}.pdf", "problem": reason.split(
+        "OCR sidecar ignored: ", 1)[1]}]
+    assert "OCR sidecar ignored" in mti.render_report(report)
+
+
+@pytest.mark.parametrize("override, problem", [
+    ({"text_sha256": "0" * 64}, "text"),
+    ({"original": {"path": f"{CM}/minutes/meeting-{CM}-51.pdf"}}, "path"),
+])
+def test_a_tampered_or_misbound_sidecar_is_ignored(tmp_path, override, problem):
+    raw, sub, mid, original = _scan_world(tmp_path)
+    if "original" in override:
+        override["original"]["sha256"] = mti._sha(original.read_bytes())
+    _write_sidecar(raw, CM, mid, original, [PAGE1, "", PAGE3], override=override)
+    reason = _disp(mti.build_index(raw=raw, substrate=sub, out=tmp_path / "i.sqlite", sources=(CM,)))[f"{mid}.pdf"]
+    assert reason[0] == "no-text" and problem in reason[1]
+
+
+def test_a_sidecar_with_a_different_page_count_is_ignored(tmp_path):
+    raw, sub, mid, original = _scan_world(tmp_path, pages_in_pdf=2)
+    _write_sidecar(raw, CM, mid, original, [PAGE1, "", PAGE3])
+    reason = _disp(mti.build_index(raw=raw, substrate=sub, out=tmp_path / "i.sqlite", sources=(CM,)))[f"{mid}.pdf"]
+    assert reason[0] == "no-text" and "pages" in reason[1]
+
+
+def test_a_below_threshold_sidecar_leaves_the_document_no_text(tmp_path):
+    raw, sub, mid, original = _scan_world(tmp_path)
+    _write_sidecar(raw, CM, mid, original, ["Minutes", "", "p3"])
+    reason = _disp(mti.build_index(raw=raw, substrate=sub, out=tmp_path / "i.sqlite", sources=(CM,)))[f"{mid}.pdf"]
+    assert reason[0] == "no-text" and "200" in reason[1]
+
+
+def test_a_document_with_its_own_text_never_uses_a_sidecar(world):
+    mid = f"meeting-{CM}-1"
+    original = world["raw"] / CM / "minutes" / f"{mid}.pdf"
+    _write_sidecar(world["raw"], CM, mid, original, ["OCR text that must not appear." + LONG, "x" + LONG])
+    _build(world)
+    rows = [r for r in _rows(world["out"], "SELECT meeting_id, text_source, text FROM pages") if r[0] == mid]
+    assert {r[1] for r in rows} == {"text"} and not any("must not appear" in r[2] for r in rows)
+
+
+def test_a_converted_word_doc_goes_through_the_normal_rules_as_one_page(world):
+    raw, mid = world["raw"], f"meeting-{NOV}-3"
+    for p in (raw / NOV / "minutes").glob(f"{mid}.*"):
+        p.unlink()
+    original = _put(raw, NOV, f"{mid}.html", bytes.fromhex("d0cf11e0a1b11ae1") + b"\0" * 64)
+    text = "Novato State of the City, July 3, 2030: the imaginary Quillmore aqueduct." + LONG
+    _write_sidecar(raw, NOV, mid, original, [text], text_source="converted")
+    d = _disp(_build(world))
+    assert d[f"{mid}.html"][0] == "indexed"
+    rows = [r for r in _rows(world["out"], "SELECT meeting_id, page, text_source FROM pages") if r[0] == mid]
+    assert rows == [(mid, 1, "converted")]
+    # shared bytes still resolve by the date the converted text prints
+    other = _put(raw, NOV, f"meeting-{NOV}-1.html", original.read_bytes())
+    _write_sidecar(raw, NOV, f"meeting-{NOV}-1", other, [text], text_source="converted")
+    d = _disp(_build(world))
+    assert d[f"{mid}.html"][0] == d[f"meeting-{NOV}-1.html"][0] == "shared-indexed"
+    assert {r[0] for r in _rows(world["out"], "SELECT meeting_id FROM pages WHERE text LIKE '%Quillmore%'")} == {mid}
+
+
+def test_pages_with_their_own_text_layer_are_labelled_text(world):
+    _build(world)
+    assert {r[0] for r in _rows(world["out"], "SELECT DISTINCT text_source FROM pages")} == {"text"}

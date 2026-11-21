@@ -20,7 +20,9 @@ export type CoverageState = (typeof COVERAGE_STATES)[number];
 export const MARK_START = "\u0002";
 export const MARK_END = "\u0003";
 
-export type PageHit = { page: number; snippet: string };
+/** Where a page's text came from: its own text layer, OCR of a scan, or a converted legacy Word .doc. */
+export type TextSource = "text" | "ocr" | "converted";
+export type PageHit = { page: number; snippet: string; textSource: TextSource };
 export type MeetingResult = {
   meetingId: string;
   body: string;
@@ -59,7 +61,14 @@ type HitRow = {
   official_url: string | null;
   page: number;
   snippet: string;
+  text_source: TextSource;
 };
+
+/** An index built before text sources existed (minutes-text-v1) has no column: all of its pages are plain text. */
+function textSourceColumn(db: Database.Database): string {
+  const cols = db.prepare("PRAGMA table_info(pages)").all() as { name: string }[];
+  return cols.some((c) => c.name === "text_source") ? "p.text_source" : "'text'";
+}
 
 /** Page hits grouped by meeting, newest first; at most `limit` pages, `truncated` when more matched. */
 export function searchMinutes(db: Database.Database, q: string, limit = MAX_PAGE_HITS): SearchResult {
@@ -67,7 +76,7 @@ export function searchMinutes(db: Database.Database, q: string, limit = MAX_PAGE
   if (!match) return { results: [], truncated: false };
   const rows = db
     .prepare(
-      `SELECT p.meeting_id, p.body, p.meeting_date, p.official_url, p.page,
+      `SELECT p.meeting_id, p.body, p.meeting_date, p.official_url, p.page, ${textSourceColumn(db)} AS text_source,
               snippet(pages_fts, 0, '${MARK_START}', '${MARK_END}', '…', 28) AS snippet
          FROM pages_fts JOIN pages p ON p.id = pages_fts.rowid
         WHERE pages_fts MATCH ?
@@ -83,7 +92,7 @@ export function searchMinutes(db: Database.Database, q: string, limit = MAX_PAGE
       m = { meetingId: r.meeting_id, body: r.body, meetingDate: r.meeting_date, officialUrl: r.official_url, hits: [] };
       byMeeting.set(r.meeting_id, m);
     }
-    m.hits.push({ page: r.page, snippet: r.snippet.replace(/\s+/g, " ").trim() });
+    m.hits.push({ page: r.page, snippet: r.snippet.replace(/\s+/g, " ").trim(), textSource: r.text_source });
   }
   return { results: [...byMeeting.values()], truncated };
 }
