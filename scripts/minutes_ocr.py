@@ -54,7 +54,7 @@ def targets(index: Path, kind: str) -> list[dict]:
                               "AND lower(path) LIKE '%.pdf' ORDER BY path").fetchall()
         elif kind == "convert":
             rows = db.execute("SELECT path, source, meeting_id, sha256 FROM dispositions WHERE disposition = "
-                              "'unreadable' AND reason LIKE ? ORDER BY path", (f"{LEGACY_DOC}%",)).fetchall()
+                              "'unreadable' AND reason LIKE ? ORDER BY path", (f"%{LEGACY_DOC}%",)).fetchall()
         else:
             raise ValueError(kind)
     finally:
@@ -110,30 +110,54 @@ def textutil_text(path: Path) -> str:
 
 
 def _write(path: Path, doc: dict) -> None:
+    """Publish `doc` at `path` atomically and exclusively: FileExistsError, and nothing changed, if a file is there."""
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, tmp = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
-    with os.fdopen(fd, "w", encoding="utf-8") as fh:
-        json.dump(doc, fh, ensure_ascii=False, indent=1, sort_keys=True)
-        fh.write("\n")
-    os.replace(tmp, path)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            json.dump(doc, fh, ensure_ascii=False, indent=1, sort_keys=True)
+            fh.write("\n")
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.link(tmp, path)
+    finally:
+        os.unlink(tmp)
 
 
 def _one(raw: Path, t: dict, kind: str, runner, tools: dict) -> dict:
-    original = Path(raw) / t["path"]
-    source_dir = SOURCE_MAP[t["source"]].raw_dir
+    """Every target ends in exactly one outcome; nothing it does can stop the others."""
     text_source = "ocr" if kind == "ocr" else "converted"
-    out = sidecar_path(raw, source_dir, t["meeting_id"], text_source)
     res = {"path": t["path"], "meeting_id": t["meeting_id"], "sha256_before": None, "sha256_after": None,
-           "sidecar": out.relative_to(raw).as_posix()}
-    before = _sha(original)
-    res["sha256_before"] = before
+           "sidecar": None}
+    try:
+        return _attempt(raw, t, kind, text_source, runner, tools, res)
+    except Exception as exc:
+        return res | {"state": "failed", "reason": f"{type(exc).__name__}: {exc}"}
+
+
+def _attempt(raw: Path, t: dict, kind: str, text_source: str, runner, tools: dict, res: dict) -> dict:
+    original = Path(raw) / t["path"]
+    out = sidecar_path(raw, SOURCE_MAP[t["source"]].raw_dir, t["meeting_id"], text_source)
+    res["sidecar"] = out.relative_to(raw).as_posix()
+    before = res["sha256_before"] = _sha(original)
     if before != t["sha256"]:
         return res | {"state": "hash-mismatch", "reason": "the original changed since the index was built"}
     n_pages = pdf_pages(original) if kind == "ocr" else 1
-    existing = read_sidecar(out)
-    if existing is not None and check(existing, t["path"], before, text_source, n_pages)[1] is None:
-        return res | {"state": "exists", "sha256_after": before, "pages": len(existing["pages"]),
-                      "chars": existing["non_whitespace_chars"]}
+    if out.exists():
+        try:
+            problem = check(read_sidecar(out), t["path"], before, text_source, n_pages)[1]
+        except Exception as exc:
+            problem = f"unreadable ({type(exc).__name__})"
+        if problem is None:
+            existing = read_sidecar(out)
+            return res | {"state": "exists", "sha256_after": before, "pages": len(existing["pages"]),
+                          "chars": existing["non_whitespace_chars"]}
+        return res | {"state": "conflict", "sha256_after": before,
+                      "reason": f"a sidecar is already there and is not valid for this original ({problem}); "
+                                "it is never overwritten"}
+    if not n_pages:
+        return res | {"state": "failed", "sha256_after": before,
+                      "reason": "the original's page count could not be read (pdfinfo)"}
     try:
         pages = runner(original) if kind == "ocr" else [runner(original).strip()]
     except Exception as exc:
@@ -146,9 +170,15 @@ def _one(raw: Path, t: dict, kind: str, runner, tools: dict) -> dict:
         return res | {"state": "failed", "reason": f"{len(pages)} pages of text for {n_pages} pages in the PDF"}
     if kind == "ocr" and res["chars"] < MIN_CHARS:
         return res | {"state": "below-threshold", "reason": f"{res['chars']} non-whitespace characters"}
+    if kind == "convert" and res["chars"] == 0:
+        return res | {"state": "failed", "reason": "textutil produced no text"}
     doc = make_sidecar(t["path"], before, pages, text_source, tools=tools,
                        settings=OCR_SETTINGS if kind == "ocr" else CONVERT_SETTINGS)
-    _write(out, doc)
+    try:
+        _write(out, doc)
+    except FileExistsError:
+        return res | {"state": "conflict", "reason": "another sidecar was published while the tool ran; "
+                                                     "it is never overwritten"}
     return res | {"state": "written"}
 
 
@@ -183,7 +213,7 @@ def main(argv=None) -> int:
     for r in results:
         counts[r["state"]] = counts.get(r["state"], 0) + 1
     print(f"{len(results)} targets: {counts}; report {report}")
-    return 0 if not counts.get("failed") and not counts.get("hash-mismatch") else 1
+    return 0 if not counts.keys() & {"failed", "hash-mismatch", "conflict"} else 1
 
 
 if __name__ == "__main__":

@@ -523,3 +523,72 @@ def test_a_converted_word_doc_goes_through_the_normal_rules_as_one_page(world):
 def test_pages_with_their_own_text_layer_are_labelled_text(world):
     _build(world)
     assert {r[0] for r in _rows(world["out"], "SELECT DISTINCT text_source FROM pages")} == {"text"}
+
+
+# --- full-diff review: sidecars across shared bytes, malformed sidecars, unverified page counts -------------------
+
+OLE2_BYTES = bytes.fromhex("d0cf11e0a1b11ae1") + b"\1" * 64
+
+
+def _share_cm3_cm4(world, data, ext):
+    raw = world["raw"]
+    for n in (3, 4):
+        (raw / CM / "minutes" / f"meeting-{CM}-{n}.pdf").unlink()
+    return [_put(raw, CM, f"meeting-{CM}-{n}.{ext}", data) for n in (3, 4)]
+
+
+def test_a_shared_legacy_doc_converted_under_only_one_copy_still_resolves_by_its_printed_date(world):
+    cm3, cm4 = _share_cm3_cm4(world, OLE2_BYTES, "html")
+    text = "Planning Commission minutes, April 1, 2030: the imaginary Brambleford culvert." + LONG
+    _write_sidecar(world["raw"], CM, f"meeting-{CM}-4", cm4, [text], text_source="converted")
+    d = _disp(_build(world))
+    assert d[cm3.name][0] == d[cm4.name][0] == "shared-indexed"
+    hits = _rows(world["out"], "SELECT meeting_id, text_source FROM pages WHERE text LIKE '%Brambleford%'")
+    assert hits == [(f"meeting-{CM}-3", "converted")]  # April 1 is meeting 3's date, not 4's
+
+
+def test_a_shared_legacy_doc_with_no_conversion_stays_a_conversion_target(world):
+    cm3, cm4 = _share_cm3_cm4(world, OLE2_BYTES, "html")
+    d = _disp(_build(world))
+    for f in (cm3, cm4):
+        assert d[f.name][0] == "unreadable" and "a legacy Word .doc (OLE2)" in d[f.name][1]
+
+
+def test_a_shared_scan_takes_the_ocr_sidecar_of_whichever_copy_has_one(world):
+    cm3, cm4 = _share_cm3_cm4(world, make_pdf(["", "", ""]), "pdf")
+    page1 = "Planning Commission minutes, April 1, 2030, scanned." + LONG
+    _write_sidecar(world["raw"], CM, f"meeting-{CM}-4", cm4, [page1, "", PAGE3])
+    d = _disp(_build(world))
+    assert d[cm3.name][0] == d[cm4.name][0] == "shared-indexed"
+    rows = _rows(world["out"], f"SELECT meeting_id, page, text_source FROM pages WHERE meeting_id LIKE '%-{CM}-_' "
+                               "AND text_source = 'ocr' ORDER BY page")
+    assert rows == [(f"meeting-{CM}-3", 1, "ocr"), (f"meeting-{CM}-3", 3, "ocr")]
+
+
+@pytest.mark.parametrize("payload", [b'{"schema": "minutes-sidecar-v1", "pages": [', b"\xff\xfe\x00garbage"])
+def test_a_truncated_or_undecodable_sidecar_is_reported_never_a_crash(tmp_path, payload):
+    raw, sub, mid, _ = _scan_world(tmp_path)
+    path = msc.sidecar_path(raw, CM, mid, "ocr")
+    path.parent.mkdir(parents=True)
+    path.write_bytes(payload)
+    report = mti.build_index(raw=raw, substrate=sub, out=tmp_path / "i.sqlite", sources=(CM,))
+    disp, reason = _disp(report)[f"{mid}.pdf"]
+    assert disp == "no-text" and "OCR sidecar ignored: malformed" in reason
+    assert report["sidecar_problems"]
+
+
+def test_an_ocr_sidecar_is_refused_when_the_originals_page_count_cannot_be_read(tmp_path, monkeypatch):
+    raw, sub, mid, original = _scan_world(tmp_path)
+    _write_sidecar(raw, CM, mid, original, [PAGE1, "", PAGE3])
+    monkeypatch.setattr(mti, "_pdf_pages", lambda path: None)
+    disp, reason = _disp(mti.build_index(raw=raw, substrate=sub, out=tmp_path / "i.sqlite", sources=(CM,)))[
+        f"{mid}.pdf"]
+    assert disp == "no-text" and "page count" in reason
+
+
+def test_check_requires_a_verified_page_count_for_ocr():
+    doc = msc.make_sidecar("a/minutes/x.pdf", "f" * 64, [PAGE1 * 3], "ocr", tools={}, settings={})
+    for count in (None, 0):
+        pages, problem = msc.check(doc, "a/minutes/x.pdf", "f" * 64, "ocr", count)
+        assert pages is None and "page count" in problem
+    assert msc.check(doc, "a/minutes/x.pdf", "f" * 64, "ocr", 1)[1] is None

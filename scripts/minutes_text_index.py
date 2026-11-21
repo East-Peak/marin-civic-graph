@@ -60,6 +60,7 @@ DISPOSITIONS = ("indexed", "shared-indexed", "superseded", "quarantined-ambiguou
 COVERAGE_STATES = ("indexed", "not cached", "no-text", "quarantined", "unmapped")
 INDEXED = ("indexed", "shared-indexed")
 MIN_TEXT_CHARS = 40  # fewer non-space characters than this in a whole document: no text layer
+LEGACY_DOC_REASON = "a legacy Word .doc (OLE2) under this name; no .doc reader"
 SHORTFALL_BELOW = 0.90
 OLE2_MAGIC = bytes.fromhex("d0cf11e0a1b11ae1")
 MANIFEST, FETCH_LOG = "minutes-manifest.json", "minutes-fetch-log.jsonl"
@@ -175,16 +176,17 @@ def _pdf_pages(path: Path) -> int | None:
     return int(m.group(1)) if m else None
 
 
-def _sidecar(raw: Path, f: dict, text_source: str, page_count: int | None = None) -> tuple[list[str] | None,
-                                                                                         str | None]:
-    """(pages, None) from this file's valid sidecar; (None, problem) for an invalid one; (None, None) for none."""
+def _sidecar(raw: Path, f: dict, text_source: str) -> tuple[list[str] | None, str | None]:
+    """(pages, None) from this file's valid sidecar; (None, problem) for an invalid one; (None, None) for none.
+    An OCR sidecar must match the original's page count, which pdfinfo has to read."""
     path = sidecar_path(raw, SOURCE_MAP[f["source"]].raw_dir, f["meeting_id"], text_source)
-    doc = read_sidecar(path)
-    if doc is None:
-        return None, None
     try:
+        doc = read_sidecar(path)
+        if doc is None:
+            return None, None
+        page_count = _pdf_pages(f["abs"]) if text_source == "ocr" else None
         return check_sidecar(doc, f["path"], f["sha256"], text_source, page_count)
-    except Exception as exc:  # a malformed sidecar is a reported problem, never a crash
+    except Exception as exc:  # a malformed or unreadable sidecar is a reported problem, never a crash
         return None, f"malformed sidecar ({type(exc).__name__})"
 
 
@@ -222,13 +224,9 @@ def _classify(raw: Path, sources, meetings: dict) -> tuple[list[dict], list[dict
                 f.update(disposition="unmapped", reason=f"bytes differ from {source}/{MANIFEST}")
             elif (fmt := sniff_format(data)) is None and data[:8] == OLE2_MAGIC:
                 pages, problem = _sidecar(raw, f, "converted")
-                if pages is not None:
-                    f.update(format="converted", converted=pages, saved=saved.get(p.name), url=(entry or {}).get("url"))
-                else:
-                    f.update(disposition="unreadable", reason="a legacy Word .doc (OLE2) under this name; no .doc reader"
-                             + (f"; converted sidecar ignored: {problem}" if problem else ""))
-                    if problem:
-                        f["sidecar_problem"] = problem
+                # still a candidate without a conversion: a byte-identical copy's sidecar may convert it
+                f.update(format="converted" if pages is not None else "ole2", converted=pages, ole2_problem=problem,
+                         saved=saved.get(p.name), url=(entry or {}).get("url"))
             elif fmt is None:
                 f.update(disposition="unreadable", reason="not a PDF, HTML or DOCX document")
             else:
@@ -275,6 +273,14 @@ def _share(files: list[dict], meetings: dict) -> list[dict]:
     docs = []
     for sha, fs in sorted(groups.items()):
         mids = sorted({f["meeting_id"] for f in fs})
+        if all(f["format"] == "ole2" for f in fs):  # a legacy .doc no copy of which has a valid conversion
+            shared = f"same bytes under {', '.join(mids)}; " if len(mids) > 1 else ""
+            for f in fs:
+                f.update(disposition="unreadable", reason=shared + LEGACY_DOC_REASON
+                         + (f"; converted sidecar ignored: {f['ole2_problem']}" if f["ole2_problem"] else ""))
+                if f["ole2_problem"]:
+                    f["sidecar_problem"] = f["ole2_problem"]
+            continue
         if len(mids) == 1:
             docs.append({"files": fs, "meeting_id": mids[0], "shared": False})
             continue
@@ -296,17 +302,32 @@ def _share(files: list[dict], meetings: dict) -> list[dict]:
 
 
 def _printed(fs: list[dict]) -> tuple[str | None, bool]:
-    """The date a shared document prints: from its own text, else from any one of its files' valid sidecars."""
+    """The date a shared document prints: from its own text, else from any one of its files' valid sidecars (the
+    bytes are identical, so any copy's validated text is the document's)."""
+    if (converted := _converted(fs)) is not None:
+        return printed_date_in("\n".join(converted))
     f = fs[0]
-    if f["format"] == "converted":
-        return printed_date_in("\n".join(f["converted"]))
     date, closed = printed_date(f["abs"], f["format"])
     if date is None and f["format"] == "pdf":
-        for x in fs:
-            pages, _ = _sidecar(x["raw"], x, "ocr", _pdf_pages(x["abs"]))
-            if pages is not None:
-                return printed_date_in("\n".join(_clean(p) for p in pages))
+        pages, _ = _ocr(fs)
+        if pages is not None:
+            return printed_date_in("\n".join(_clean(p) for p in pages))
     return date, closed
+
+
+def _converted(fs: list[dict]) -> list[str] | None:
+    return next((x["converted"] for x in fs if x["format"] == "converted"), None)
+
+
+def _ocr(fs: list[dict]) -> tuple[list[str] | None, str | None]:
+    """The first valid OCR sidecar among byte-identical files (in the order given), else the first problem."""
+    problem = None
+    for x in fs:
+        pages, p = _sidecar(x["raw"], x, "ocr")
+        if pages is not None:
+            return pages, None
+        problem = problem or p
+    return None, problem
 
 
 def _chars(pages: list[str]) -> int:
@@ -315,16 +336,17 @@ def _chars(pages: list[str]) -> int:
 
 def _extract(doc: dict) -> dict:
     """The document's pages as (text, text_source); a scan with no text layer takes its valid OCR sidecar."""
-    f = next((x for x in doc["files"] if x["meeting_id"] == doc["meeting_id"]), doc["files"][0])
+    files = sorted(doc["files"], key=lambda x: x["meeting_id"] != doc["meeting_id"])  # the owner's copy first
+    f = files[0]
     out = {**doc, "error": None, "url_hint": f.get("url"), "sidecar_problem": None}
-    if f["format"] == "converted":
-        return out | {"pages": [(_clean(t), "converted") for t in f["converted"]]}
+    if (converted := _converted(files)) is not None:
+        return out | {"pages": [(_clean(t), "converted") for t in converted]}
     try:
         pages = extract_pages(f["abs"], f["format"])
     except Exception as exc:
         return out | {"pages": None, "error": f"text extraction failed: {exc}"}
     if f["format"] == "pdf" and _chars(pages) < MIN_TEXT_CHARS:
-        ocr, problem = _sidecar(f["raw"], f, "ocr", _pdf_pages(f["abs"]))
+        ocr, problem = _ocr(files)
         if ocr is not None:
             return out | {"pages": [(_clean(t), "ocr") for t in ocr]}
         out["sidecar_problem"] = problem

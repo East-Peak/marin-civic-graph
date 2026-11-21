@@ -178,3 +178,85 @@ def test_real_ocr_keeps_page_positions_of_an_invented_scan(tmp_path):
     assert len(texts) == 3 and "WILLOWMERE" in texts[0] and texts[1].strip() == "" and "LARKFIELD" in texts[2]
     assert original.read_bytes() == buf.getvalue()
     assert doc["tools"]["ocrmypdf"] and doc["tools"]["tesseract"]
+
+
+# --- full-diff review: never overwrite, contain every failure, no empty conversions -------------------------------
+
+def test_an_invalid_existing_sidecar_is_a_conflict_and_never_overwritten(scan):
+    raw, idx, mid, _ = scan
+    path = msc.sidecar_path(raw, SZ, mid, "ocr")
+    path.parent.mkdir(parents=True)
+    path.write_text('{"stale": true}')
+    runner = fake([PAGE1, "", PAGE3])
+    [res] = mo.run_ocr(raw, mo.targets(idx, "ocr"), runner=runner, tools={})
+    assert res["state"] == "conflict" and runner.calls == []
+    assert path.read_text() == '{"stale": true}'
+
+
+def test_publication_is_exclusive_even_if_a_sidecar_appears_meanwhile(tmp_path):
+    path = tmp_path / "minutes-ocr" / "m.json"
+    path.parent.mkdir()
+    path.write_text("first")
+    with pytest.raises(FileExistsError):
+        mo._write(path, {"second": True})
+    assert path.read_text() == "first"
+    assert [p.name for p in path.parent.iterdir()] == ["m.json"]
+
+
+def test_a_sidecar_published_while_the_tool_ran_is_a_conflict(scan):
+    raw, idx, mid, _ = scan
+    path = msc.sidecar_path(raw, SZ, mid, "ocr")
+
+    def racing(p):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("another writer")
+        return [PAGE1, "", PAGE3]
+    [res] = mo.run_ocr(raw, mo.targets(idx, "ocr"), runner=racing, tools={})
+    assert res["state"] == "conflict" and path.read_text() == "another writer"
+
+
+def test_one_target_failing_anywhere_still_lets_the_others_finish_and_report(tmp_path, scan, monkeypatch):
+    raw, idx, mid, _ = scan
+    bad = f"meeting-{SZ}-79"
+    data = make_pdf(["", ""])
+    put(raw, SZ, f"{bad}.pdf", data)
+    todo = mo.targets(idx, "ocr") + [{"path": f"{SZ}/minutes/{bad}.pdf", "source": SZ, "meeting_id": bad,
+                                      "sha256": sha(data)}]
+    real = mo.pdf_pages
+
+    def flaky(path):
+        if bad in str(path):
+            raise mo.subprocess.TimeoutExpired("pdfinfo", 60)
+        return real(path)
+    monkeypatch.setattr(mo, "pdf_pages", flaky)
+    res = {r["meeting_id"]: r for r in mo.run_ocr(raw, todo, runner=fake([PAGE1, "", PAGE3]), tools={}, workers=2)}
+    assert res[mid]["state"] == "written"
+    assert res[bad]["state"] == "failed" and "TimeoutExpired" in res[bad]["reason"]
+
+
+def test_an_unreadable_page_count_is_a_failure_not_a_guess(scan, monkeypatch):
+    raw, idx, mid, _ = scan
+    monkeypatch.setattr(mo, "pdf_pages", lambda path: None)
+    runner = fake([PAGE1, "", PAGE3])
+    [res] = mo.run_ocr(raw, mo.targets(idx, "ocr"), runner=runner, tools={})
+    assert res["state"] == "failed" and "page count" in res["reason"] and runner.calls == []
+    assert not msc.sidecar_path(raw, SZ, mid, "ocr").exists()
+
+
+def test_an_empty_conversion_writes_no_sidecar(tmp_path):
+    raw = tmp_path / "raw"
+    mid = f"meeting-{SA}-9"
+    data = bytes.fromhex("d0cf11e0a1b11ae1") + b"\0" * 64
+    put(raw, SA, f"{mid}.html", data)
+    idx = index_with(tmp_path / "d.sqlite", [(f"{SA}/minutes/{mid}.html", SA, mid, sha(data), "unreadable",
+                                              "a legacy Word .doc (OLE2) under this name; no .doc reader")])
+    [res] = mo.run_convert(raw, mo.targets(idx, "convert"), runner=lambda p: " \n\t ", tools={})
+    assert res["state"] == "failed" and "no text" in res["reason"]
+    assert not msc.sidecar_path(raw, SA, mid, "converted").exists()
+
+
+def test_convert_targets_include_shared_legacy_docs(tmp_path):
+    idx = index_with(tmp_path / "d.sqlite", [
+        (f"{SA}/minutes/meeting-{SA}-9.html", SA, f"meeting-{SA}-9", "a" * 64, "unreadable",
+         f"same bytes under meeting-{SA}-9, meeting-{SA}-8; a legacy Word .doc (OLE2) under this name; no .doc reader")])
+    assert [t["meeting_id"] for t in mo.targets(idx, "convert")] == [f"meeting-{SA}-9"]

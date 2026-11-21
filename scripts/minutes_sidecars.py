@@ -47,6 +47,7 @@ def make_sidecar(original_rel: str, original_sha256: str, pages: list[str], text
 
 
 def read_sidecar(path: Path) -> dict | None:
+    """The sidecar's JSON, or None when there is none; raises on an unreadable or undecodable one."""
     return json.loads(Path(path).read_text(encoding="utf-8")) if Path(path).is_file() else None
 
 
@@ -67,6 +68,8 @@ def check(doc: dict, original_rel: str, original_sha256: str, text_source: str,
         pages = [e["text"] for e in entries]
         if text_sha256(pages) != doc["text_sha256"]:
             return None, "its text does not match its own text sha256"
+        if text_source == "ocr" and not (isinstance(page_count, int) and page_count > 0):
+            return None, "the original's page count could not be read, so the OCR pages cannot be verified"
         if page_count is not None and len(pages) != page_count:
             return None, f"{len(pages)} pages in the sidecar, {page_count} in the original"
         if text_source == "converted" and len(pages) != 1:
