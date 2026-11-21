@@ -573,24 +573,37 @@ def test_a_window_interruption_keeps_the_requested_hops_and_is_no_completed_prob
 # --- probe-driven changes (Phase C, 2026-11-21) ------------------------------------------------------------------
 
 TB, MV, SZ = "tiburon-town-council-granicus", "mill-valley-committees", "sausalito-city-council"
-def make_ole2(stream_name="WordDocument", sector_shift=9, truncate=None, stream_sector=1, stream_size=4096,
-              fib=b"\xec\xa5"):
-    """A minimal compound file: header, one directory sector (root entry + one stream entry) and the stream."""
+def make_ole2(stream_name="WordDocument", sector_shift=9, truncate=None, stream_size=4096, fib=b"\xec\xa5",
+              chain=None, stream_bytes=None):
+    """A minimal valid compound file: header; sector 0 the FAT, sector 1 the directory (a root entry and one
+    stream entry), sectors 2.. the stream. `chain` overrides the stream's FAT entries; `stream_bytes` the bytes
+    actually present."""
     import struct
     size = 1 << sector_shift
+    n = max(1, -(-stream_size // size))
     header = bytearray(512)
     header[0:8] = bytes.fromhex("d0cf11e0a1b11ae1")
     struct.pack_into("<HHHH", header, 24, 0x3E, 3 if sector_shift == 9 else 4, 0xFFFE, sector_shift)
-    struct.pack_into("<I", header, 48, 0)  # the first directory sector is sector 0
+    struct.pack_into("<I", header, 44, 1)        # one FAT sector
+    struct.pack_into("<I", header, 48, 1)        # the directory starts at sector 1
+    struct.pack_into("<I", header, 60, 0xFFFFFFFE)  # no mini FAT
+    struct.pack_into("<I", header, 68, 0xFFFFFFFE)  # no extra DIFAT
+    header[76:512] = b"\xff" * 436
+    struct.pack_into("<I", header, 76, 0)        # DIFAT[0]: the FAT is sector 0
+    fat = [0xFFFFFFFD, 0xFFFFFFFE] + (chain if chain is not None else [3 + i for i in range(n - 1)] + [0xFFFFFFFE])
+    fat_sector = bytearray(b"\xff" * size)
+    for i, v in enumerate(fat[: size // 4]):
+        struct.pack_into("<I", fat_sector, i * 4, v)
     directory = bytearray(size)
     for i, (name, kind) in enumerate((("Root Entry", 5), (stream_name, 2))):
         raw = name.encode("utf-16-le") + b"\0\0"
         directory[i * 128:i * 128 + len(raw)] = raw
         struct.pack_into("<HB", directory, i * 128 + 64, len(raw), kind)
         if kind == 2:
-            struct.pack_into("<IQ", directory, i * 128 + 116, stream_sector, stream_size)
-    stream = fib + b"\0" * (4096 - len(fib))
-    data = bytes(header) + (b"\0" * (size - 512) if size > 512 else b"") + bytes(directory) + stream
+            struct.pack_into("<IQ", directory, i * 128 + 116, 2, stream_size)
+    stream = stream_bytes if stream_bytes is not None else fib + b"\0" * (n * size - len(fib))
+    pad = b"\0" * (size - 512) if size > 512 else b""
+    data = bytes(header) + pad + bytes(fat_sector) + bytes(directory) + stream
     return data[:truncate] if truncate else data
 
 
@@ -691,10 +704,13 @@ def test_an_attempt_excluded_before_any_document_request_uses_no_probe_slot(worl
     make_ole2(truncate=700),                            # cut off inside the directory sector
     make_ole2(stream_name="Workbook"),                  # an Excel file, not Word
     make_ole2(stream_name="PowerPoint Document"),
-    make_ole2(stream_sector=10000),                     # the stream points outside the file
     make_ole2(stream_size=10_000_000),                  # a stream longer than the file
     make_ole2(fib=b"\x00\x00"),                         # no Word FIB at the stream's start
-], ids=["signature-only", "truncated", "excel", "powerpoint", "stream-outside", "stream-too-long", "no-fib"])
+    make_ole2(sector_shift=12, stream_bytes=b"\xec\xa5"),  # declares 4096 bytes, holds two
+    make_ole2(chain=[2]),                               # the chain loops on itself
+    make_ole2(chain=[3, 4, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE, 0xFFFFFFFE]),  # too short
+], ids=["signature-only", "truncated", "excel", "powerpoint", "stream-too-long", "no-fib", "fib-only",
+        "chain-loop", "chain-short"])
 def test_only_a_structurally_valid_word_file_is_a_doc(data):
     assert fid._document_kind(data) is None
 

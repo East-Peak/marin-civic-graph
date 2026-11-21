@@ -73,33 +73,71 @@ def _document_kind(body: bytes) -> str | None:
 
 
 def is_word_doc(body: bytes) -> bool:
-    """A structurally valid OLE2 compound file whose directory holds a `WordDocument` stream: the signature, the
-    byte-order mark, a version-3 (512-byte) or version-4 (4096-byte) sector size, and the stream's entry in the
-    first directory sector, which must lie wholly inside the file."""
+    """A structurally valid OLE2 compound file holding a Word `WordDocument` stream: the signature, the byte-order
+    mark, a version-3 (512-byte) or version-4 (4096-byte) sector size, the stream's directory entry, and its FAT
+    allocation chain walked end to end — every sector inside the file, no loops, enough sectors for the declared
+    length — with the Word FIB identifier (0xA5EC; 0xA5DC for Word 6/95) at the stream's first byte."""
     import struct
+    end_of_chain, free = 0xFFFFFFFE, 0xFFFFFFFF
     if len(body) < 512 or body[:8] != OLE2_MAGIC:
         return False
     major, order, shift = struct.unpack_from("<HHH", body, 26)
     if order != 0xFFFE or (major, shift) not in ((3, 9), (4, 12)):
         return False
     size = 1 << shift
-    first_dir = struct.unpack_from("<I", body, 48)[0]
-    start = max(512, size) + first_dir * size
-    if start + size > len(body):
+    base = max(512, size)
+    n_sectors = (len(body) - base) // size
+
+    def sector(i: int) -> bytes | None:
+        return body[base + i * size: base + (i + 1) * size] if 0 <= i < n_sectors else None
+
+    # the FAT: its sectors are listed in the header's 109 DIFAT slots (larger files chain more DIFAT sectors)
+    n_fat, first_difat = struct.unpack_from("<I", body, 44)[0], struct.unpack_from("<I", body, 68)[0]
+    fat_sectors = [v for v in struct.unpack_from("<109I", body, 76) if v not in (free, end_of_chain)]
+    seen_difat = set()
+    while first_difat not in (free, end_of_chain) and len(fat_sectors) < n_fat:
+        block = sector(first_difat)
+        if block is None or first_difat in seen_difat:
+            return False
+        seen_difat.add(first_difat)
+        vals = struct.unpack_from(f"<{size // 4}I", block)
+        fat_sectors += [v for v in vals[:-1] if v not in (free, end_of_chain)]
+        first_difat = vals[-1]
+    fat: list[int] = []
+    for i in fat_sectors[:n_fat]:
+        block = sector(i)
+        if block is None:
+            return False
+        fat += struct.unpack_from(f"<{size // 4}I", block)
+
+    def chain(start: int, limit: int) -> list[int] | None:
+        out, cur = [], start
+        while cur != end_of_chain:
+            if cur >= len(fat) or sector(cur) is None or cur in out or len(out) > limit:
+                return None
+            out.append(cur)
+            cur = fat[cur]
+        return out
+
+    directory = chain(struct.unpack_from("<I", body, 48)[0], n_sectors)
+    if not directory:
         return False
-    for off in range(start, start + size, 128):
-        name_len, kind = struct.unpack_from("<HB", body, off + 64)
-        if kind == 2 and 2 <= name_len <= 64:
-            name = body[off:off + name_len - 2].decode("utf-16-le", "replace")
-            if name == "WordDocument":
-                sector, length = struct.unpack_from("<II", body, off + 116)  # v3 keeps a 32-bit size
-                if major == 4:
-                    length = struct.unpack_from("<Q", body, off + 120)[0]
-                # a Word stream is never a mini stream (it is far over 4096 bytes); it must lie in the file and
-                # begin with the Word FIB identifier (0xA5EC; 0xA5DC for Word 6/95)
-                at = max(512, size) + sector * size
-                return length >= 4096 and at + length <= len(body) + size and \
-                    body[at:at + 2] in (b"\xec\xa5", b"\xdc\xa5")
+    for d in directory:
+        block = sector(d)
+        for off in range(0, size, 128):
+            name_len, kind = struct.unpack_from("<HB", block, off + 64)
+            if kind != 2 or not 2 <= name_len <= 64:
+                continue
+            if block[off:off + name_len - 2].decode("utf-16-le", "replace") != "WordDocument":
+                continue
+            start, length = struct.unpack_from("<II", block, off + 116)  # v3 keeps a 32-bit size
+            if major == 4:
+                length = struct.unpack_from("<Q", block, off + 120)[0]
+            if length < 4096:  # a real Word stream is never a mini stream
+                return False
+            sectors = chain(start, n_sectors)
+            return bool(sectors) and len(sectors) * size >= length and sector(sectors[0])[:2] in (b"\xec\xa5",
+                                                                                              b"\xdc\xa5")
     return False
 
 
