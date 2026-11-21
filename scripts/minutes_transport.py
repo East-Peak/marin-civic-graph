@@ -138,7 +138,11 @@ def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = 
     # shuts the socket down at the deadline, which ends a blocked read; the transfer is bounded however it behaves.
     watchdog = None
     if deadline is not None:
-        sock = getattr(getattr(getattr(resp, "raw", None), "connection", None), "sock", None)
+        sock = _body_socket(resp)
+        if sock is None:  # fail closed: a body we could not cut off at the deadline is never read
+            resp.close()
+            session.close()
+            raise NetworkError("no interruptible socket to bound the transfer; body not read")
 
         def cut() -> None:
             try:
@@ -146,10 +150,9 @@ def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = 
             except Exception:
                 pass
 
-        if sock is not None:
-            watchdog = threading.Timer(max(0.0, deadline - time.time()), cut)
-            watchdog.daemon = True
-            watchdog.start()
+        watchdog = threading.Timer(max(0.0, deadline - time.time()), cut)
+        watchdog.daemon = True
+        watchdog.start()
     try:
         hdrs = {k.lower(): v for k, v in resp.headers.items()}
         on_head(resp.status_code, hdrs)
@@ -171,6 +174,18 @@ def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = 
             watchdog.cancel()
         resp.close()
         session.close()
+
+
+def _body_socket(resp) -> socket.socket | None:
+    """The socket the body is read from. urllib3 keeps it on the connection, but may drop that reference after the
+    headers (a `Connection: close` response); the body's file object still holds it."""
+    raw = getattr(resp, "raw", None)
+    sock = getattr(getattr(raw, "connection", None), "sock", None)
+    if isinstance(sock, socket.socket):
+        return sock
+    fp = getattr(getattr(getattr(raw, "_fp", None), "fp", None), "raw", None)  # http.client → SocketIO
+    sock = getattr(fp, "_sock", None)
+    return sock if isinstance(sock, socket.socket) else None
 
 
 def _looks_html(body: bytes) -> bool:

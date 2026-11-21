@@ -465,10 +465,19 @@ def test_a_request_too_close_to_the_window_is_refused_and_others_get_a_deadline(
 
 
 def test_the_live_client_aborts_a_transfer_at_its_deadline(monkeypatch):
+    import socket
+
     import requests
+    pair = socket.socketpair()
+
+    class Conn:
+        sock = pair[0]
+
+    class Raw:
+        connection = Conn()
 
     class Resp:
-        status_code, headers = 200, {"Content-Type": "application/pdf"}
+        status_code, headers, raw = 200, {"Content-Type": "application/pdf"}, Raw()
 
         def iter_content(self, n):
             yield b"%PDF-1.4 "
@@ -478,8 +487,8 @@ def test_the_live_client_aborts_a_transfer_at_its_deadline(monkeypatch):
             pass
 
     monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
-    clock = iter([0.0, 100.0, 200.0])
-    monkeypatch.setattr(mt.time, "time", lambda: next(clock))
+    clock = iter(range(0, 10**6, 100))  # each reading of the clock is 100 s later
+    monkeypatch.setattr(mt.time, "time", lambda: float(next(clock)))
     with pytest.raises(mt.PartialBody):
         mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: None, deadline=50.0)
 
@@ -579,3 +588,56 @@ def test_a_trickling_body_is_cut_off_at_the_deadline_by_a_watchdog(monkeypatch):
     finally:
         stop.set()
         b.close()
+
+
+def test_without_an_interruptible_socket_the_body_is_never_read(monkeypatch):
+    import requests
+    read = []
+
+    class Raw:
+        connection = None
+        _fp = None
+
+    class Resp:
+        status_code, headers, raw = 200, {}, Raw()
+
+        def iter_content(self, n):
+            read.append(n)
+            yield b"%PDF-1.4 "
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    with pytest.raises(mt.NetworkError, match="bound"):
+        mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: None, deadline=1e12)
+    assert read == []
+
+
+def test_a_connection_close_response_is_still_cut_off_by_the_watchdog():
+    """Real requests/urllib3 against a local trickling server that sends Connection: close."""
+    import socket
+    import threading
+    import time as real_time
+    srv = socket.socket()
+    srv.bind(("127.0.0.1", 0))
+    srv.listen(1)
+    port = srv.getsockname()[1]
+
+    def serve():
+        c, _ = srv.accept()
+        c.recv(65536)
+        c.sendall(b"HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: application/pdf\r\n\r\n%PDF-1.4 ")
+        try:
+            for _ in range(2000):
+                c.sendall(b"x")
+                real_time.sleep(0.05)
+        except OSError:
+            pass
+
+    threading.Thread(target=serve, daemon=True).start()
+    t0 = real_time.time()
+    with pytest.raises((mt.PartialBody, mt.NetworkError)):
+        mt.http_get(f"http://127.0.0.1:{port}/a.pdf", {"User-Agent": mt.USER_AGENT}, lambda s, h: None,
+                    deadline=t0 + 1.0)
+    assert real_time.time() - t0 < 5
