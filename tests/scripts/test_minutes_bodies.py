@@ -16,15 +16,22 @@ from minutes_bodies import SOURCES, normalize_body, source_of  # noqa: E402
     ("meeting-sausalito-city-council-1064", "sausalito-city-council"),
     ("meeting-san-anselmo-town-council-2739", "san-anselmo-town-council"),
     ("meeting-san-rafael-city-council-1", None),
+    ("meeting-tiburon-town-council-granicus-1000", "tiburon-town-council-granicus"),
+    ("meeting-ross-town-council-2025-11-13-row-17", "ross-town-council"),
+    ("meeting-2026-04-06-san-rafael-city-council", "san-rafael-city-council"),
     ("record-novato-city-council-1", None),
 ])
 def test_source_of_a_meeting_id(meeting_id, source):
     assert source_of(meeting_id) == source
 
 
-def test_the_five_sources_are_named():
-    assert set(SOURCES) == {"corte-madera-town-council", "novato-city-council", "marin-county-bos",
-                            "sausalito-city-council", "san-anselmo-town-council"}
+def test_the_eleven_sources_are_named_with_their_jurisdictions():
+    assert SOURCES == {"san-anselmo-town-council": "San Anselmo", "corte-madera-town-council": "Corte Madera",
+                       "tiburon-town-council-granicus": "Tiburon", "novato-city-council": "Novato",
+                       "marin-county-bos": "Marin County", "sausalito-city-council": "Sausalito",
+                       "mill-valley-committees": "Mill Valley", "fairfax-town-council": "Fairfax",
+                       "belvedere-city-council": "Belvedere", "ross-town-council": "Ross",
+                       "san-rafael-city-council": "San Rafael"}
 
 
 @pytest.mark.parametrize("source,title,body", [
@@ -73,6 +80,52 @@ def test_the_five_sources_are_named():
     ("marin-county-bos", "Joint BOS/Planning Commission", "Marin County joint meeting"),
     ("sausalito-city-council", "City Council- Special", "Sausalito City Council"),
     ("sausalito-city-council", "Special City Council", "Sausalito City Council"),
+    # Tiburon's council-prefixed Granicus id space holds its boards and commissions
+    ("tiburon-town-council-granicus", "Town Council Special and Regular Meeting", "Tiburon Town Council"),
+    ("tiburon-town-council-granicus", "Design Review Board Virtual Meeting", "Tiburon Design Review Board"),
+    ("tiburon-town-council-granicus", "Planning Commission Regular and Special Meeting",
+     "Tiburon Planning Commission"),
+    ("tiburon-town-council-granicus", "Parks, Open Space,& Trails Commission Special Meeting",
+     "Tiburon Parks, Open Space and Trails Commission"),
+    ("tiburon-town-council-granicus", "Heritage & Arts Commission Regular Meeting", "Tiburon Heritage & Arts Commission"),
+    ("tiburon-town-council-granicus", "Diversity Inclusion Task Force Regular Meeting",
+     "Tiburon Diversity Inclusion Task Force"),
+    ("tiburon-town-council-granicus", "Town Council Special Meeting - Joint Meeting with Belvedere City Council",
+     "Tiburon joint meeting"),
+    ("tiburon-town-council-granicus",
+     "Town Council Special Meeting & Joint Special Parks, Open Space and Trails Commission Meeting",
+     "Tiburon joint meeting"),
+    # Mill Valley's one AgendaCenter id space is many bodies (registry/body-attribution.yaml aliases)
+    ("mill-valley-committees", "Arts Commission Regular Meeting Agenda (PDF)", "Mill Valley Arts Commission"),
+    ("mill-valley-committees", "Library Board of Trustees Fall Retreat Meeting Agenda (PDF)",
+     "Mill Valley Library Board of Trustees"),
+    ("mill-valley-committees", "Emergency Preparedness Commission Agenda for May 5, 2022 (PDF)",
+     "Mill Valley Emergency Preparedness Commission"),
+    ("mill-valley-committees", "Sewerage Agency of Southern Marin Board of Commissioners Regular Meeting Packet",
+     "Sewerage Agency of Southern Marin"),
+    ("mill-valley-committees", "BPAC Meeting Agenda - 6/29/2022 (PDF)",
+     "Mill Valley Bicycle & Pedestrian Advisory Committee"),
+    ("mill-valley-committees", "TMAC Meeting Agenda - 3/1/2023 (PDF)",
+     "Mill Valley Transportation & Mobility Advisory Committee"),
+    ("mill-valley-committees", "Traffic & Mobility Advisory Committee (TMAC) Agenda",
+     "Mill Valley Transportation & Mobility Advisory Committee"),
+    ("mill-valley-committees", "Zoning Administrator Agenda", "Mill Valley Zoning Administrator"),
+    ("mill-valley-committees", "Design Advisory Committee Regular Meeting Materials",
+     "Mill Valley Design Advisory Committee"),
+    ("mill-valley-committees", "Infrastructure Funding Study Committee Meeting Agenda, March 2, 2023",
+     "Mill Valley Infrastructure Funding Study Committee"),
+    ("mill-valley-committees", "Planning Commission Agenda", "Mill Valley Planning Commission"),
+    ("mill-valley-committees", "Parks and Recreation Commission Agenda", "Mill Valley Parks & Recreation Commission"),
+    ("fairfax-town-council", "Town Council Meeting: April 3, 2024", "Fairfax Town Council"),
+    ("fairfax-town-council", "Town Council Special Meeting – Annual Retreat: March 15, 2019", "Fairfax Town Council"),
+    ("fairfax-town-council", "Town Council-Planning Commission Joint Study Session: May 1, 2023",
+     "Fairfax joint meeting"),
+    ("fairfax-town-council", "Town Council – RESJ Joint Meeting: June 1, 2022", "Fairfax joint meeting"),
+    ("belvedere-city-council", "City Council Meeting: April 10, 2023 – Closed & Regular", "Belvedere City Council"),
+    ("ross-town-council", "Ross Town Council Meeting", "Ross Town Council"),
+    ("ross-town-council", "Town of Ross Annual Budget Workshop", "Ross Town Council"),
+    ("ross-town-council", "Advisory Design Review Group Meeting", "Ross Advisory Design Review Group"),
+    ("san-rafael-city-council", "San Rafael City Council meeting", "San Rafael City Council"),
 ])
 def test_known_titles_normalize_to_the_real_body(source, title, body):
     assert normalize_body(source, title) == (body, True)

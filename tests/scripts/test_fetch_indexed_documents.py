@@ -1,4 +1,6 @@
-"""Manual single-document minutes fetcher: every rule of the 2026-10-15 decision, with mocked HTTP."""
+"""Minutes coverage: the frozen inventory, the probe/bulk fetcher and its attempted-URL ledger (mocked network,
+fictional meetings and text)."""
+import datetime as dt
 import json
 import sqlite3
 import sys
@@ -9,44 +11,65 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 import fetch_indexed_documents as fid  # noqa: E402
+import minutes_transport as mt  # noqa: E402
 
-SRC = "novato-city-council"
-HOST = "https://novato.granicus.com"
-PDF = b"%PDF-1.4 fictional minutes"
+PDF = b"%PDF-1.4 fictional minutes of the Pinewood council"
 HTML = b"<html><body>Fictional minutes of the Pinewood Council</body></html>"
-CHALLENGE = b"<html><body>Just a moment... cf-challenge</body></html>"
+NOV, FX, BV, ROSS, SR = ("novato-city-council", "fairfax-town-council", "belvedere-city-council",
+                         "ross-town-council", "san-rafael-city-council")
+GCS = "https://storage.googleapis.com"
+ALLOW_ALL = (200, b"User-agent: *\nDisallow:\n", {"content-type": "text/plain"})
+SATURDAY = dt.datetime(2030, 1, 5, 10, 0)
 
 
-def _url(n):
-    return f"{HOST}/MinutesViewer.php?clip_id={n}"
+def nov_url(n):
+    return f"https://novato.granicus.com/MinutesViewer.php?clip_id={n}"
 
 
-@pytest.fixture
-def substrate(tmp_path):
-    path = tmp_path / "sub.sqlite"
+def fx_url(slug):
+    return f"{GCS}/proudcity/fairfaxca/uploads/2030/01/{slug}.pdf"
+
+
+MEETINGS = [  # (meeting id, date, title, minutes URL or None = a Record without one)
+    (f"meeting-{NOV}-1", "2030-01-01", "City Council", "//novato.granicus.com/MinutesViewer.php?clip_id=1"),
+    (f"meeting-{NOV}-2", "2030-01-08", "City Council", nov_url(2)),
+    (f"meeting-{NOV}-3", "2030-01-15", "City Council", nov_url(3)),
+    (f"meeting-{NOV}-4", "2030-01-22", "Planning Commission", nov_url(4)),
+    (f"meeting-{NOV}-5", "2030-01-29", "City Council", nov_url(5)),
+    (f"meeting-{FX}-town-council-meeting-january-3-2030", "2030-01-03", "Town Council Meeting: January 3, 2030",
+     fx_url("a")),
+    (f"meeting-{FX}-town-council-meeting-january-17-2030", "2030-01-17", "Town Council Meeting: January 17, 2030",
+     f"{GCS}/proudcity/2030/01/b.pdf"),
+    (f"meeting-{BV}-city-council-meeting-january-9-2030", "2030-01-09", "City Council Meeting: January 9, 2030",
+     f"{GCS}/proudcity/belvedereca/2030/01/c.pdf"),
+    (f"meeting-{ROSS}-2030-01-10-row-3", "2030-01-10", "Ross Town Council Meeting",
+     "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/9/d.pdf"),
+    (f"meeting-{SR}-city-council-january-6-2030", "2030-01-06", "City Council", None),
+    ("meeting-2030-01-06-san-rafael-city-council", "2030-01-06", "San Rafael City Council meeting", None),
+]
+
+
+def make_substrate(path, meetings=MEETINGS, extra=()):
     db = sqlite3.connect(path)
-    db.execute("create table nodes(id, type, search_label, props)")
-    db.execute("create table edges(source, rel, target, props)")
-    meetings = [(1, "2020-01-01", "City Council"), (2, "2021-01-01", "City Council"),
-                (3, "2022-01-01", "Planning Commission"), (4, "2023-01-01", "City Council - Special")]
-    for n, date, title in meetings:
-        mid = f"meeting-{SRC}-{n}"
-        rid = f"record-{n}"
-        db.execute("insert into nodes values(?,?,?,?)", (mid, "Meeting", title,
-                   json.dumps({"meeting_date": date, "title": title})))
-        db.execute("insert into nodes values(?,?,?,?)", (rid, "Record", "m", json.dumps(
-            {"record_type": "meeting_minutes", "preferred_public_url": _url(n).replace("https:", "")})))
-        db.execute("insert into edges values(?,?,?,?)", (mid, "EVIDENCED_BY", rid, ""))
+    db.executescript("CREATE TABLE nodes (id TEXT PRIMARY KEY, type TEXT, search_label TEXT, props TEXT);"
+                     "CREATE TABLE edges (source TEXT, rel TEXT, target TEXT, props TEXT);"
+                     "CREATE TABLE meta (key TEXT, value TEXT);")
+    db.execute("INSERT INTO meta VALUES ('as_of_date', '2030-02-01')")
+    for mid, date, title, url in list(meetings) + list(extra):
+        db.execute("INSERT INTO nodes VALUES (?, 'Meeting', '', ?)",
+                   (mid, json.dumps({"meeting_date": date, "title": title})))
+        rid = f"record-{mid}-minutes"
+        props = {"record_type": "meeting_minutes"} | ({"preferred_public_url": url} if url else {})
+        db.execute("INSERT INTO nodes VALUES (?, 'Record', '', ?)", (rid, json.dumps(props)))
+        db.execute("INSERT INTO edges VALUES (?, 'EVIDENCED_BY', ?, NULL)", (mid, rid))
     db.commit()
     db.close()
     return path
 
 
 class Net:
-    """Fake clock + fake HTTP; records (time, url) per request."""
-
     def __init__(self, responses):
-        self.responses, self.t, self.calls = dict(responses), 100.0, []
+        self.responses, self.t, self.calls = dict(responses), 0.0, []
 
     def now(self):
         return self.t
@@ -54,146 +77,212 @@ class Net:
     def sleep(self, s):
         self.t += s
 
-    def fetch(self, url):
+    def http(self, url, headers):
         self.calls.append((self.t, url))
-        resp = self.responses.get(url, (404, b"", None))
-        return resp(url) if callable(resp) else resp
+        self.t += 0.1
+        r = self.responses.get(url, (404, b"gone", {}))
+        if isinstance(r, Exception):
+            raise r
+        return r
+
+    def urls(self):
+        return [u for _, u in self.calls]
 
 
-def run(substrate, tmp_path, net, body="council", limit=25):
-    return fid.fetch_indexed(SRC, body, substrate, tmp_path / "raw", limit=limit,
-                             fetch=net.fetch, sleep=net.sleep, now=net.now)
+@pytest.fixture
+def world(tmp_path):
+    raw, staging = tmp_path / "raw", tmp_path / "staging"
+    sub = make_substrate(tmp_path / "sub.sqlite")
+    (raw / NOV / "minutes").mkdir(parents=True)
+    (raw / NOV / "minutes" / f"meeting-{NOV}-1.pdf").write_bytes(PDF)  # cached before the goal
+    inv = fid.freeze_inventory(sub, raw, staging)
+    return {"raw": raw, "staging": staging, "sub": sub, "inv": inv}
 
 
-def log(tmp_path):
-    p = tmp_path / "raw" / SRC / "minutes-fetch-log.jsonl"
-    return [json.loads(x) for x in p.read_text().splitlines()]
+def run(world, net, source, mode="bulk", **kw):
+    transport = mt.Transport(world["raw"], http=net.http, sleep=net.sleep, now=net.now)
+    return fid.fetch_source(world["inv"], source, world["raw"], mode=mode, transport=transport,
+                            clock=lambda: SATURDAY, **kw)
 
 
-def test_candidates_newest_first_and_body_filter(substrate):
-    ids = [c[0] for c in fid.candidates(substrate, SRC, "COUNCIL")]
-    assert ids == [f"meeting-{SRC}-{n}" for n in (4, 2, 1)]
-    assert [c[0] for c in fid.candidates(substrate, SRC, "planning")] == [f"meeting-{SRC}-3"]
+def ledger(world, source):
+    path = world["raw"] / source / fid.FETCH_LOG
+    return [json.loads(x) for x in path.read_text().splitlines()] if path.exists() else []
 
 
-def test_caches_pdf_and_html_and_logs(substrate, tmp_path):
-    net = Net({_url(2): (200, PDF, None), _url(4): (200, HTML, None), _url(1): (404, b"", None)})
-    run(substrate, tmp_path, net)
-    d = tmp_path / "raw" / SRC / "minutes"
-    assert (d / f"meeting-{SRC}-2.pdf").read_bytes() == PDF
-    assert (d / f"meeting-{SRC}-4.html").read_bytes() == HTML
-    assert not list(d.glob("*.tmp")) and not (d / "minutes-fetch-log.jsonl").exists()
-    entries = {e["meeting_id"]: e for e in log(tmp_path)}
-    e = entries[f"meeting-{SRC}-2"]
-    assert e["status"] == "ok" and e["http_status"] == 200 and len(e["sha256"]) == 64
-    assert e["path"] == f"meeting-{SRC}-2.pdf"  # the name minutes_text_index orders saved versions by
-    assert "sha256" not in entries[f"meeting-{SRC}-1"] and entries[f"meeting-{SRC}-1"]["error"]
+# --- the inventory ------------------------------------------------------------------------------------------------
+
+def test_the_inventory_freezes_every_minutes_meeting_with_its_sha(world):
+    inv = json.loads(world["inv"].read_text())
+    ids = [c["meeting_id"] for c in inv["candidates"]]
+    assert sorted(ids) == sorted(m[0] for m in MEETINGS) and len(ids) == len(set(ids))
+    assert (world["inv"].parent / (world["inv"].name + ".sha256")).read_text().split()[0] == fid.sha256_file(
+        world["inv"])
+    by = {c["meeting_id"]: c for c in inv["candidates"]}
+    assert by[f"meeting-{NOV}-1"]["url"] == nov_url(1) and by[f"meeting-{NOV}-1"]["cached"] == f"meeting-{NOV}-1.pdf"
+    assert by[f"meeting-{NOV}-4"]["body"] == "Novato Planning Commission"
+    assert by["meeting-2030-01-06-san-rafael-city-council"]["source"] == SR
+    assert by["meeting-2030-01-06-san-rafael-city-council"]["url"] is None
+    assert inv["counts"][SR] == {"candidates": 2, "no-url": 2, "cached": 0, "to-fetch": 0}
+    assert inv["counts"][NOV] == {"candidates": 5, "no-url": 0, "cached": 1, "to-fetch": 4}
 
 
-def test_cache_hit_makes_no_request(substrate, tmp_path):
-    d = tmp_path / "raw" / SRC / "minutes"
-    d.mkdir(parents=True)
-    (d / f"meeting-{SRC}-4.docx").write_bytes(b"x")
-    (d / f"meeting-{SRC}-3.htm").write_bytes(b"x")  # the index accepts .htm: so must the cache check
-    assert fid.CACHE_EXTENSIONS == ("pdf", "html", "htm", "docx")
-    net = Net({_url(2): (200, PDF, None), _url(1): (200, PDF, None)})
-    run(substrate, tmp_path, net)
-    assert [u for _, u in net.calls] == [_url(2), _url(1)]
-    run(substrate, tmp_path, net)
-    assert len(net.calls) == 2  # everything cached now
+def test_the_inventory_lists_minutes_meetings_no_source_holds(tmp_path):
+    sub = make_substrate(tmp_path / "s.sqlite", extra=[("meeting-larkspur-city-council-9", "2030-01-01", "x",
+                                                        "https://larkspur.example/m.pdf")])
+    inv = json.loads(fid.freeze_inventory(sub, tmp_path / "raw", tmp_path / "st").read_text())
+    assert inv["unassigned"] == ["meeting-larkspur-city-council-9"]
 
 
-def test_throttle_between_requests_and_hops(substrate, tmp_path):
-    hop = f"{HOST}/real.pdf"
-    net = Net({_url(4): (302, b"", "/real.pdf"), hop: (200, PDF, None), _url(2): (200, PDF, None),
-               _url(1): (200, PDF, None)})
-    run(substrate, tmp_path, net)
-    times = [t for t, _ in net.calls]
-    assert [u for _, u in net.calls][:2] == [_url(4), hop]
-    assert all(b - a >= 3.0 for a, b in zip(times, times[1:], strict=False)) and len(times) == 4
-    assert (tmp_path / "raw" / SRC / "minutes" / f"meeting-{SRC}-4.pdf").exists()
+def test_a_changed_inventory_is_refused(world):
+    data = json.loads(world["inv"].read_text())
+    data["candidates"].pop()
+    world["inv"].write_text(json.dumps(data))
+    with pytest.raises(fid.FetchError, match="sha256"):
+        run(world, Net({}), NOV)
 
 
-@pytest.mark.parametrize("stop", [(403, b"denied", None), (429, b"", None), (200, CHALLENGE, None),
-                                  (200, b"Access denied: are you a robot?", None),  # a challenge that is not HTML
-                                  (200, b"<div>Checking your browser before you continue</div>", None)])
-def test_whole_run_stops_on_block(substrate, tmp_path, stop):
-    net = Net({_url(4): (200, PDF, None), _url(2): stop, _url(1): (200, PDF, None)})
-    result = run(substrate, tmp_path, net)
-    assert [u for _, u in net.calls] == [_url(4), _url(2)]
-    assert result.stop_reason
-    assert not (tmp_path / "raw" / SRC / "minutes" / f"meeting-{SRC}-2.pdf").exists()
-    assert not (tmp_path / "raw" / SRC / "minutes" / f"meeting-{SRC}-2.html").exists()
-    assert log(tmp_path)[-1]["error"]
+# --- probe and bulk -----------------------------------------------------------------------------------------------
+
+def test_probe_takes_at_most_three_and_records_the_chain(world):
+    hop = "https://novato.granicus.com/DocumentViewer.php?file=x.pdf"
+    net = Net({nov_url(5): (302, b"", {"location": hop}), hop: (200, PDF, {}), nov_url(4): (200, HTML, {}),
+               nov_url(3): (200, PDF, {}), nov_url(2): (200, PDF, {})})
+    res = run(world, net, NOV, mode="probe")
+    assert res.attempted == 3 and net.urls() == [nov_url(5), hop, nov_url(4), nov_url(3)]
+    first = ledger(world, NOV)[0]
+    assert first["chain"] == [{"url": nov_url(5), "status": 302, "location": hop},
+                              {"url": hop, "status": 200, "location": None}]
+    assert first["state"] == "fetched" and first["mode"] == "probe" and first["final_url"] == hop
+    assert (world["raw"] / NOV / "minutes" / f"meeting-{NOV}-4.html").read_bytes() == HTML
 
 
-def test_challenge_in_redirect_hop_stops_run(substrate, tmp_path):
-    net = Net({_url(4): (302, b"", "/wall"), f"{HOST}/wall": (200, CHALLENGE, None)})
-    assert run(substrate, tmp_path, net).stop_reason
-    assert len(net.calls) == 2
+def test_bulk_fetches_everything_left_and_writes_an_index_readable_ledger(world):
+    net = Net({nov_url(n): (200, PDF + str(n).encode(), {}) for n in (2, 3, 4, 5)})
+    res = run(world, net, NOV)
+    assert res.attempted == 4 and res.stop is None
+    rows = ledger(world, NOV)
+    assert {r["meeting_id"] for r in rows} == {f"meeting-{NOV}-{n}" for n in (2, 3, 4, 5)}
+    for r in rows:
+        data = (world["raw"] / NOV / "minutes" / r["path"]).read_bytes()
+        assert r["status"] == "ok" and r["state"] == "fetched" and r["fetched_at"]
+        assert r["sha256"] == fid.sha256_bytes(data)
+    assert nov_url(1) not in net.urls()  # cached before the goal: never requested
+    states = fid.candidate_states(world["inv"], world["raw"])
+    assert states["counts"][NOV] == {"already-cached": 1, "fetched": 4}
 
 
-def test_disallowed_redirect_host_skips_document_without_request(substrate, tmp_path):
-    net = Net({_url(4): (302, b"", "https://evil.example.com/x.pdf"), _url(2): (200, PDF, None),
-               _url(1): (200, PDF, None)})
-    result = run(substrate, tmp_path, net)
-    assert result.stop_reason is None
-    assert "https://evil.example.com/x.pdf" not in [u for _, u in net.calls]
-    assert not (tmp_path / "raw" / SRC / "minutes" / f"meeting-{SRC}-4.pdf").exists()
-    assert "host" in log(tmp_path)[0]["error"]
-    assert len(net.calls) == 3
+def test_a_failed_url_is_never_retried(world):
+    net = Net({nov_url(5): (404, b"", {}), nov_url(4): OSError("reset"), nov_url(3): (200, b"plain text", {}),
+               nov_url(2): (200, PDF, {})})
+    run(world, net, NOV)
+    reasons = {r["meeting_id"]: (r["state"], r["reason"]) for r in ledger(world, NOV)}
+    assert reasons[f"meeting-{NOV}-5"] == ("failed", "HTTP 404")
+    assert reasons[f"meeting-{NOV}-4"][0] == "failed" and "reset" in reasons[f"meeting-{NOV}-4"][1]
+    assert reasons[f"meeting-{NOV}-3"] == ("failed", "response is not a PDF, HTML or DOCX document")
+    again = Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4, 5)})
+    assert run(world, again, NOV).attempted == 0 and again.calls == []
 
 
-def test_redirect_loop_is_capped(substrate, tmp_path):
-    net = Net({_url(n): (302, b"", f"/loop{n}") for n in (4, 2, 1)})
-    for n in (4, 2, 1):
-        net.responses[f"{HOST}/loop{n}"] = (302, b"", f"/loop{n}")
-    run(substrate, tmp_path, net, limit=1)
-    assert len(net.calls) == fid.MAX_HOPS + 1
+def test_an_unknown_redirect_target_is_logged_and_not_requested(world):
+    elsewhere = "https://files.elsewhere.example/minutes/5.pdf"
+    net = Net({nov_url(5): (302, b"", {"location": elsewhere}), elsewhere: (200, PDF, {})})
+    run(world, net, NOV, limit=1)
+    row = ledger(world, NOV)[0]
+    assert elsewhere not in net.urls()
+    assert row["state"] == "failed" and elsewhere in row["reason"] and "not requested" in row["reason"]
+    assert row["chain"][-1] == {"url": nov_url(5), "status": 302, "location": elsewhere}
 
 
-def test_refuses_url_not_in_substrate(substrate):
-    with pytest.raises(fid.RefusedUrl):
-        fid.fetch_document(SRC, f"{HOST}/ViewPublisher.php?view_id=7", substrate)
-    with pytest.raises(fid.RefusedUrl):
-        fid.fetch_document(SRC, "https://evil.example.com/x", substrate)
+def test_a_redirect_to_an_off_limits_host_is_never_requested(world):
+    wall = "https://www.novato.gov/minutes/5.pdf"
+    net = Net({nov_url(5): (302, b"", {"location": wall})})
+    run(world, net, NOV, limit=1)
+    assert wall not in net.urls() and ledger(world, NOV)[0]["state"] == "failed"
 
 
-@pytest.mark.parametrize("data", [b"", b"plain text bytes", b"PK\x03\x04zip", b"\x00\x01\x02"])
-def test_non_document_bytes_never_cached(substrate, tmp_path, data):
-    net = Net({_url(4): (200, data, None)})
-    result = run(substrate, tmp_path, net, limit=1)
-    assert result.stop_reason is None
-    assert not list((tmp_path / "raw").rglob("meeting-*"))
-    assert log(tmp_path)[0]["error"]
+def test_an_initial_url_outside_the_allow_list_is_excluded_without_a_request(world):
+    net = Net({f"{GCS}/robots.txt": ALLOW_ALL, fx_url("a"): (200, PDF, {})})
+    run(world, net, FX)
+    by = {r["meeting_id"]: r for r in ledger(world, FX)}
+    no_folder = by[f"meeting-{FX}-town-council-meeting-january-17-2030"]
+    assert no_folder["state"] == "excluded-by-authorization" and "allow-list" in no_folder["reason"]
+    assert f"{GCS}/proudcity/2030/01/b.pdf" not in net.urls()
+    assert by[f"meeting-{FX}-town-council-meeting-january-3-2030"]["state"] == "fetched"
+    assert (world["raw"] / FX / "minutes" / f"meeting-{FX}-town-council-meeting-january-3-2030.pdf").exists()
 
 
-def test_default_fetch_uses_no_redirects_and_honest_ua(monkeypatch):
-    seen = {}
-
-    class Resp:
-        status_code, content, headers = 302, b"", {"Location": "/b"}
-
-    def fake_get(url, **kw):
-        seen.update(kw, url=url)
-        return Resp()
-
-    import requests
-    monkeypatch.setattr(requests, "get", fake_get)
-    assert fid.http_fetch("https://x.test/a") == (302, b"", "https://x.test/b")
-    assert seen["allow_redirects"] is False
-    ua = seen["headers"]["User-Agent"]
-    assert ua == fid.USER_AGENT and "@" not in ua
+def test_robots_disallow_excludes_by_authorization(world):
+    net = Net({f"{GCS}/robots.txt": (200, b"User-agent: *\nDisallow: /proudcity/belvedereca/\n", {}),
+               f"{GCS}/proudcity/belvedereca/2030/01/c.pdf": (200, PDF, {})})
+    run(world, net, BV)
+    row = ledger(world, BV)[0]
+    assert row["state"] == "excluded-by-authorization" and "Disallow: /proudcity/belvedereca/" in row["reason"]
+    assert net.urls() == [f"{GCS}/robots.txt"]
 
 
-def test_main_exits_nonzero_on_stop_and_rejects_bad_source(substrate, tmp_path, monkeypatch):
-    def fake(*a, **k):
-        return fid.Result(attempted=1, cached=0, stop_reason="HTTP 403")
+def test_a_stop_ends_the_source_and_every_later_run_on_its_family(world):
+    net = Net({nov_url(5): (200, PDF, {}), nov_url(4): (429, b"", {})})
+    res = run(world, net, NOV)
+    assert res.stop and res.attempted == 2 and nov_url(3) not in net.urls()
+    assert json.loads((world["raw"] / mt.STOPS_FILE).read_text())["stops"][0]["host_family"] == "granicus.com"
+    later = Net({nov_url(n): (200, PDF, {}) for n in (2, 3)})
+    res2 = run(world, later, NOV)
+    assert later.calls == [] and res2.attempted == 0 and "stop record" in res2.skipped
+    states = fid.candidate_states(world["inv"], world["raw"])
+    assert states["counts"][NOV] == {"already-cached": 1, "fetched": 1, "failed": 1, "unattempted-after-stop": 2}
 
-    monkeypatch.setattr(fid, "fetch_indexed", fake)
-    argv = ["--source", SRC, "--body", "council", "--substrate", str(substrate), "--raw", str(tmp_path)]
-    assert fid.main(argv) == 1
-    monkeypatch.setattr(fid, "fetch_indexed", lambda *a, **k: fid.Result(1, 1, None))
-    assert fid.main(argv) == 0
-    with pytest.raises(SystemExit):
-        fid.main(["--source", "nowhere", "--body", "x"])
+
+def test_states_reconcile_to_the_inventory(world):
+    run(world, Net({nov_url(n): (200, PDF, {}) for n in (2, 3, 4, 5)}), NOV)
+    run(world, Net({f"{GCS}/robots.txt": ALLOW_ALL, fx_url("a"): (200, PDF, {})}), FX)
+    states = fid.candidate_states(world["inv"], world["raw"])
+    inv = json.loads(world["inv"].read_text())
+    assert sum(sum(c.values()) for c in states["counts"].values()) == len(inv["candidates"])
+    assert states["counts"][SR] == {"no-url": 2}
+    assert states["counts"][BV] == {"pending": 1}  # never run: not yet a terminal state
+    assert set(fid.STATES) >= {s for c in states["counts"].values() for s in c} - {"pending"}
+
+
+def test_one_url_under_two_meetings_is_requested_once(tmp_path):
+    shared = nov_url(9)
+    sub = make_substrate(tmp_path / "s.sqlite", meetings=[
+        (f"meeting-{NOV}-8", "2030-01-01", "City Council", shared),
+        (f"meeting-{NOV}-9", "2030-01-02", "City Council", shared)])
+    raw = tmp_path / "raw"
+    w = {"raw": raw, "inv": fid.freeze_inventory(sub, raw, tmp_path / "st")}
+    net = Net({shared: (200, PDF, {})})
+    run(w, net, NOV)
+    assert net.urls() == [shared]
+    rows = ledger(w, NOV)
+    assert [r["state"] for r in rows] == ["fetched", "fetched"] and "no request" in rows[1]["reason"]
+    assert (raw / NOV / "minutes" / f"meeting-{NOV}-8.pdf").read_bytes() == PDF
+
+
+def test_an_existing_file_is_never_overwritten(world):
+    (world["raw"] / NOV / "minutes" / f"meeting-{NOV}-5.pdf").write_bytes(b"%PDF-1.4 someone saved this by hand")
+    net = Net({nov_url(5): (200, PDF, {})})
+    run(world, net, NOV, limit=1)
+    assert nov_url(5) not in net.urls()
+    assert (world["raw"] / NOV / "minutes" / f"meeting-{NOV}-5.pdf").read_bytes().endswith(b"by hand")
+
+
+def test_the_weekly_job_window_is_refused(world):
+    monday = dt.datetime(2030, 1, 7, 5, 30)
+    transport = mt.Transport(world["raw"], http=Net({}).http)
+    with pytest.raises(fid.FetchError, match="weekly job window"):
+        fid.fetch_source(world["inv"], NOV, world["raw"], transport=transport, clock=lambda: monday)
+
+
+def test_a_second_concurrent_run_is_refused(world):
+    with fid.run_lock(world["raw"]):
+        with pytest.raises(fid.FetchError, match="another fetch"):
+            with fid.run_lock(world["raw"]):
+                pass
+
+
+def test_slug_and_date_row_ids_land_under_their_meeting_id(world):
+    run(world, Net({"https://www.townofrossca.gov/robots.txt": (404, b"", {}),
+                    "https://www.townofrossca.gov/sites/default/files/fileattachments/town_council/meeting/9/d.pdf":
+                        (200, PDF, {})}), ROSS)
+    assert (world["raw"] / ROSS / "minutes" / f"meeting-{ROSS}-2030-01-10-row-3.pdf").exists()
