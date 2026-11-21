@@ -68,8 +68,32 @@ OLE2_MAGIC = bytes.fromhex("d0cf11e0a1b11ae1")
 
 
 def _document_kind(body: bytes) -> str | None:
-    """pdf | html | docx | doc (a legacy Word OLE2 file, converted later by textutil) | None."""
-    return sniff_format(body) or ("doc" if body[:8] == OLE2_MAGIC else None)
+    """pdf | html | docx | doc (a legacy Word file, converted later by textutil) | None."""
+    return sniff_format(body) or ("doc" if is_word_doc(body) else None)
+
+
+def is_word_doc(body: bytes) -> bool:
+    """A structurally valid OLE2 compound file whose directory holds a `WordDocument` stream: the signature, the
+    byte-order mark, a version-3 (512-byte) or version-4 (4096-byte) sector size, and the stream's entry in the
+    first directory sector, which must lie wholly inside the file."""
+    import struct
+    if len(body) < 512 or body[:8] != OLE2_MAGIC:
+        return False
+    major, order, shift = struct.unpack_from("<HHH", body, 26)
+    if order != 0xFFFE or (major, shift) not in ((3, 9), (4, 12)):
+        return False
+    size = 1 << shift
+    first_dir = struct.unpack_from("<I", body, 48)[0]
+    start = max(512, size) + first_dir * size
+    if start + size > len(body):
+        return False
+    for off in range(start, start + size, 128):
+        name_len, kind = struct.unpack_from("<HB", body, off + 64)
+        if kind == 2 and 2 <= name_len <= 64:
+            name = body[off:off + name_len - 2].decode("utf-16-le", "replace")
+            if name == "WordDocument":
+                return True
+    return False
 
 
 def _resolve_redirect(src, target: str) -> tuple[str, dict]:
