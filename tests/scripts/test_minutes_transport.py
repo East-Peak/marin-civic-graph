@@ -458,8 +458,10 @@ def test_a_request_too_close_to_the_window_is_refused_and_others_get_a_deadline(
     with pytest.raises(mt.Refused) as exc:
         transport(tmp_path, net, guard=lambda: 30.0).get(NOV_DOC, NOVATO)
     assert exc.value.kind == "window" and net.calls == []
-    transport(tmp_path, net, guard=lambda: 3600.0).get(NOV_DOC, NOVATO)
-    assert net.deadlines[-1] == pytest.approx(net.calls[-1][0] + 3600.0)
+    transport(tmp_path, net, guard=lambda: 3600.0).get(NOV_DOC, NOVATO)  # the window is far: the transfer cap
+    assert net.deadlines[-1] == pytest.approx(net.calls[-1][0] + mt.MAX_TRANSFER_S)
+    transport(tmp_path, net, guard=lambda: 650.0).get(NOV_DOC, NOVATO)  # the window is near: it sets the deadline
+    assert net.deadlines[-1] == pytest.approx(net.calls[-1][0] + 650.0 - mt.READ_TIMEOUT_S - mt.DEADLINE_MARGIN_S)
 
 
 def test_the_live_client_aborts_a_transfer_at_its_deadline(monkeypatch):
@@ -480,3 +482,47 @@ def test_the_live_client_aborts_a_transfer_at_its_deadline(monkeypatch):
     monkeypatch.setattr(mt.time, "time", lambda: next(clock))
     with pytest.raises(mt.PartialBody):
         mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: None, deadline=50.0)
+
+
+def test_a_pacing_write_failure_never_suppresses_a_stop(tmp_path, monkeypatch):
+    net = Net({NOV_DOC: (200, CHALLENGE_HTML, {})})
+    t = transport(tmp_path, net)
+    monkeypatch.setattr(t, "_finish_pacing", lambda family: (_ for _ in ()).throw(OSError("disk full")))
+    with pytest.raises(mt.StopNow):
+        t.get(NOV_DOC, NOVATO)
+    assert (tmp_path / mt.STOPS_FILE).exists()
+
+
+def test_the_client_deadline_leaves_a_full_read_timeout_before_the_window(tmp_path):
+    net = Net({NOV_DOC: (200, PDF, {})})
+    transport(tmp_path, net, guard=lambda: 650.0).get(NOV_DOC, NOVATO)
+    window_at = net.calls[-1][0] + 650.0
+    assert net.deadlines[-1] <= window_at - mt.READ_TIMEOUT_S
+
+
+def test_every_transfer_has_an_overall_cap_and_the_inflight_grace_covers_it(tmp_path):
+    net = Net({NOV_DOC: (200, PDF, {})})
+    transport(tmp_path, net).get(NOV_DOC, NOVATO)
+    assert net.deadlines[-1] == pytest.approx(net.calls[-1][0] + mt.MAX_TRANSFER_S)
+    assert mt.INFLIGHT_GRACE_S >= mt.MAX_TRANSFER_S + mt.READ_TIMEOUT_S + mt.CONNECT_TIMEOUT_S
+
+
+def test_the_live_client_reads_in_small_chunks_so_a_wall_prefix_survives_a_failure(monkeypatch):
+    import requests
+    sizes = []
+
+    class Resp:
+        status_code, headers = 200, {}
+
+        def iter_content(self, n):
+            sizes.append(n)
+            yield CHALLENGE_HTML
+            raise ConnectionError("reset")
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    with pytest.raises(mt.PartialBody) as exc:
+        mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: None)
+    assert sizes == [mt.CHUNK] and mt.CHUNK <= 4096 and exc.value.body == CHALLENGE_HTML

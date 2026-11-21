@@ -484,11 +484,15 @@ def test_the_guard_gives_each_request_a_deadline_at_the_window_and_refuses_near_
     transport = mt.Transport(world["raw"], http=net.http, sleep=net.sleep, now=net.now)
     fid.fetch_source(world["inv"], NOV, world["raw"], transport=transport, require_probe=False, limit=1,
                      clock=lambda: sunday_late)
-    assert net.deadlines[0] == pytest.approx(net.calls[0][0] + 6 * 3600)
+    assert net.deadlines[0] == pytest.approx(net.calls[0][0] + mt.MAX_TRANSFER_S)  # six hours off: the cap
+    close = dt.datetime(2030, 1, 7, 4, 49)  # 11 minutes before: the window sets the deadline
+    fid.fetch_source(world["inv"], NOV, world["raw"], transport=transport, require_probe=False, limit=1,
+                     clock=lambda: close)
+    assert net.deadlines[1] == pytest.approx(net.calls[1][0] + 660 - mt.READ_TIMEOUT_S - mt.DEADLINE_MARGIN_S)
     almost = dt.datetime(2030, 1, 7, 4, 58)
     res = fid.fetch_source(world["inv"], NOV, world["raw"], transport=transport, require_probe=False,
                            clock=lambda: almost)
-    assert "window" in res.skipped and len(net.calls) == 1
+    assert "window" in res.skipped and len(net.calls) == 2
 
 
 def test_a_frozen_cached_file_that_disappears_or_changes_is_an_anomaly(world):
@@ -551,3 +555,16 @@ def test_two_competing_processes_never_both_hold_the_lock(world):
                 pass
     finally:
         p.wait()
+
+
+def test_a_window_interruption_keeps_the_requested_hops_and_is_no_completed_probe(world):
+    hop = "https://novato.granicus.com/DocumentViewer.php?file=5.pdf"
+    net = Net({nov_url(5): (302, b"", {"location": hop}), hop: (200, PDF, {})})
+    times = iter([SATURDAY, SATURDAY])
+    transport = mt.Transport(world["raw"], http=net.http, sleep=net.sleep, now=net.now)
+    fid.fetch_source(world["inv"], NOV, world["raw"], mode="probe", transport=transport,
+                     clock=lambda: next(times, dt.datetime(2030, 1, 7, 5, 0)))
+    last = {r["meeting_id"]: r for r in ledger(world, NOV)}[f"meeting-{NOV}-5"]
+    assert last["state"] == "failed" and last["interrupted_urls"] == [nov_url(5)]
+    with pytest.raises(fid.FetchError, match="probe"):
+        run(world, Net({}), NOV, require_probe=True)

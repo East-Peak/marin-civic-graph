@@ -42,7 +42,11 @@ PRODUCT_TOKEN = "MarinCivicGraph"
 USER_AGENT = f"Mozilla/5.0 (compatible; {PRODUCT_TOKEN}/1.0; civic records research; single documents)"
 MIN_INTERVAL_S = 3.0
 CONNECT_TIMEOUT_S, READ_TIMEOUT_S = 20, 90
-INFLIGHT_GRACE_S = CONNECT_TIMEOUT_S + READ_TIMEOUT_S  # a request with no recorded end: assume it ran this long
+MAX_TRANSFER_S = 600  # every transfer ends within this (checked per chunk; one blocking read may add READ_TIMEOUT_S)
+DEADLINE_MARGIN_S = 10
+CHUNK = 4096  # small reads: a wall's first bytes survive a body that then fails
+# a request with no recorded end (the process died) is assumed to have run this long
+INFLIGHT_GRACE_S = CONNECT_TIMEOUT_S + MAX_TRANSFER_S + READ_TIMEOUT_S + DEADLINE_MARGIN_S
 MIN_TIME_BEFORE_WINDOW_S = 600  # never start a request this close to the weekly job window
 MAX_ROBOTS_HOPS = 5
 MAX_BODY = 200 * 1024 * 1024
@@ -133,7 +137,7 @@ def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = 
         on_head(resp.status_code, hdrs)
         body = bytearray()
         try:
-            for chunk in resp.iter_content(65536):
+            for chunk in resp.iter_content(CHUNK):
                 body += chunk
                 if len(body) > MAX_BODY:
                     raise PartialBody(f"larger than {MAX_BODY} bytes", bytes(body))
@@ -271,7 +275,16 @@ class Transport:
         def done(d):
             d["last"][family] = self._now()
             d["inflight"].pop(family, None)
-        self._write_pacing(done)
+        try:
+            self._write_pacing(done)
+        except Exception:  # the reservation stands (conservative); a pacing error must never pre-empt a stop
+            pass
+
+    def _finish_pacing_quietly(self, family: str) -> None:
+        try:
+            self._finish_pacing(family)
+        except Exception:  # see _finish_pacing: the stop and the response come first
+            pass
 
     def _set_delay(self, family: str, delay: float) -> None:
         self._write_pacing(lambda d: d["delay"].__setitem__(family, max(delay, d["delay"].get(family, 0.0))))
@@ -337,13 +350,15 @@ class Transport:
         last = self._last_end(pacing, family)
         if last is not None and (wait := interval - (self._now() - last)) > 0:
             self._sleep(wait)
-        deadline = None
+        deadline = self._now() + MAX_TRANSFER_S
         if self.guard:
             left = self.guard()  # raises Refused('window') inside the window; else seconds until it (or None)
             if left is not None:
                 if left < MIN_TIME_BEFORE_WINDOW_S:
                     raise Refused("window", f"only {left:.0f} s before the weekly job window; not starting a request")
-                deadline = self._now() + left
+                # one blocking read can outlast the deadline by READ_TIMEOUT_S: end early enough that it cannot
+                # reach the window
+                deadline = min(deadline, self._now() + left - READ_TIMEOUT_S - DEADLINE_MARGIN_S)
         self._check_stop(host)
         entry = {"at": self._clock(), "url": url, "purpose": purpose, "source": source.id, "host_family": family}
 
@@ -364,23 +379,23 @@ class Transport:
         try:
             status, body, headers = self._http(url, {"User-Agent": USER_AGENT}, on_head, deadline=deadline)
         except StopNow:
-            self._finish_pacing(family)
+            self._finish_pacing_quietly(family)
             raise
         except UnsafeUrl as exc:
             self.sent -= 1
             raise Refused("malformed", str(exc)) from None
         except PartialBody as exc:
-            self._finish_pacing(family)
+            self._finish_pacing_quietly(family)
             if why := wall(exc.body, {}, robots=robots):
                 raise self._stop(family, source, url, purpose, 200, f"{why} (body then failed)", entry["at"],
                                  exc.body) from None
             self._log_quietly(entry | {"error": str(exc)})
             raise NetworkError(str(exc)) from exc
         except Exception as exc:
-            self._finish_pacing(family)
+            self._finish_pacing_quietly(family)
             self._log_quietly(entry | {"error": f"{type(exc).__name__}: {exc}"})
             raise NetworkError(f"{type(exc).__name__}: {exc}") from exc
-        self._finish_pacing(family)
+        self._finish_pacing_quietly(family)
         headers = {k.lower(): v for k, v in (headers or {}).items()}
         loc = headers.get("location")
         resp = Response(url, status, body, headers, urljoin(url, loc) if loc and 300 <= status < 400 else None)

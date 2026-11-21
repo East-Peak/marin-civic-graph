@@ -451,9 +451,11 @@ def _fetch_locked(inv: dict, source: str, raw: Path, mode: str, limit: int | Non
         result.attempted += 1
         _append(raw, source, base | {"state": "attempting", "status": "attempting"})
         sent_before = transport.sent
+        started = [(url, sent_before)]  # (URL, requests sent before it was journaled)
 
-        def journal(hop: str, base=base) -> None:
+        def journal(hop: str, base=base, started=started) -> None:
             _append(raw, source, base | {"state": "attempting", "status": "attempting", "hop": hop})
+            started.append((hop, transport.sent))
         try:
             state, reason, details = _fetch_one(transport, source, url, failed, journal)
         except (Refused, StopNow) as exc:
@@ -465,8 +467,12 @@ def _fetch_locked(inv: dict, source: str, raw: Path, mode: str, limit: int | Non
                 result.skipped = str(exc)
                 reason = f"interrupted ({exc.kind}: {exc}) after {sent} request(s); not retried"
             if sent or isinstance(exc, StopNow):
+                # every URL this attempt actually requested (the initial one and each hop that went out) is never
+                # requested again; a hop journaled but refused before its request stays eligible
+                reached = [u for u, before in started if transport.sent > before]
                 entry = base | {"state": "failed", "status": "failed", "reason": reason, "chain": [],
-                                "final_url": exc.record["url"] if isinstance(exc, StopNow) else url, "requests": sent}
+                                "final_url": exc.record["url"] if isinstance(exc, StopNow) else reached[-1],
+                                "requests": sent, "interrupted_urls": list(reached)}
             else:  # nothing went out: the candidate is untouched and stays eligible
                 entry = base | {"state": "abandoned", "status": "abandoned", "requests": 0,
                                 "reason": f"no request made ({exc.kind}: {exc})"}
