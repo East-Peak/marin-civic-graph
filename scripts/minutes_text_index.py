@@ -281,11 +281,19 @@ def _share(files: list[dict], meetings: dict) -> list[dict]:
                 if f["ole2_problem"]:
                     f["sidecar_problem"] = f["ole2_problem"]
             continue
+        sidecar, problem = _group_sidecar(fs)
+        if sidecar == "conflict":
+            for f in fs:
+                f.update(disposition="quarantined-ambiguous",
+                         reason=f"same bytes under {', '.join(f['path'] for f in fs)}; their validated sidecars "
+                                "disagree, so none is trusted")
+            continue
         if len(mids) == 1:
-            docs.append({"files": fs, "meeting_id": mids[0], "shared": False})
+            docs.append({"files": fs, "meeting_id": mids[0], "shared": False, "sidecar": sidecar,
+                         "sidecar_problem": problem})
             continue
         try:
-            date, closed = _printed(fs)
+            date, closed = _printed(fs, sidecar)
         except Exception as exc:  # an unreadable shared document resolves nobody
             date, closed, why = None, False, f"its text could not be read ({type(exc).__name__})"
         else:
@@ -297,37 +305,38 @@ def _share(files: list[dict], meetings: dict) -> list[dict]:
             continue
         for f in fs:
             f["reason"] = f"same bytes under {', '.join(mids)}; attached to {owner}, the meeting whose date it prints"
-        docs.append({"files": fs, "meeting_id": owner, "shared": True})
+        docs.append({"files": fs, "meeting_id": owner, "shared": True, "sidecar": sidecar, "sidecar_problem": problem})
     return docs
 
 
-def _printed(fs: list[dict]) -> tuple[str | None, bool]:
-    """The date a shared document prints: from its own text, else from any one of its files' valid sidecars (the
-    bytes are identical, so any copy's validated text is the document's)."""
-    if (converted := _converted(fs)) is not None:
-        return printed_date_in("\n".join(converted))
+def _group_sidecar(fs: list[dict]) -> tuple[tuple[str, list[str]] | str | None, str | None]:
+    """The one sidecar text that byte-identical files carry: ((text_source, pages), None); ("conflict", None) when
+    their valid sidecars differ (validation binds each to the original's bytes, not to each other); (None, the
+    first problem) when none is valid. Chosen once, so ownership and extraction read the same text."""
+    found: dict[str, tuple[str, list[str]]] = {}
+    problem = None
+    for x in sorted(fs, key=lambda x: x["path"]):
+        if x["format"] == "converted":
+            found.setdefault(json.dumps(x["converted"]), ("converted", x["converted"]))
+        elif x["format"] == "pdf":
+            pages, p = _sidecar(x["raw"], x, "ocr")
+            if pages is not None:
+                found.setdefault(json.dumps(pages), ("ocr", pages))
+            problem = problem or p
+    if len(found) > 1:
+        return "conflict", None
+    return next(iter(found.values()), None), (None if found else problem)
+
+
+def _printed(fs: list[dict], sidecar: tuple[str, list[str]] | None) -> tuple[str | None, bool]:
+    """The date a shared document prints: from its own text, else from the group's sidecar."""
+    if sidecar and sidecar[0] == "converted":
+        return printed_date_in("\n".join(sidecar[1]))
     f = fs[0]
     date, closed = printed_date(f["abs"], f["format"])
-    if date is None and f["format"] == "pdf":
-        pages, _ = _ocr(fs)
-        if pages is not None:
-            return printed_date_in("\n".join(_clean(p) for p in pages))
+    if date is None and f["format"] == "pdf" and sidecar:
+        return printed_date_in("\n".join(_clean(p) for p in sidecar[1]))
     return date, closed
-
-
-def _converted(fs: list[dict]) -> list[str] | None:
-    return next((x["converted"] for x in fs if x["format"] == "converted"), None)
-
-
-def _ocr(fs: list[dict]) -> tuple[list[str] | None, str | None]:
-    """The first valid OCR sidecar among byte-identical files (in the order given), else the first problem."""
-    problem = None
-    for x in fs:
-        pages, p = _sidecar(x["raw"], x, "ocr")
-        if pages is not None:
-            return pages, None
-        problem = problem or p
-    return None, problem
 
 
 def _chars(pages: list[str]) -> int:
@@ -336,21 +345,20 @@ def _chars(pages: list[str]) -> int:
 
 def _extract(doc: dict) -> dict:
     """The document's pages as (text, text_source); a scan with no text layer takes its valid OCR sidecar."""
-    files = sorted(doc["files"], key=lambda x: x["meeting_id"] != doc["meeting_id"])  # the owner's copy first
-    f = files[0]
+    f = next((x for x in doc["files"] if x["meeting_id"] == doc["meeting_id"]), doc["files"][0])
     out = {**doc, "error": None, "url_hint": f.get("url"), "sidecar_problem": None}
-    if (converted := _converted(files)) is not None:
-        return out | {"pages": [(_clean(t), "converted") for t in converted]}
+    sidecar = doc.get("sidecar")
     try:
+        if sidecar and sidecar[0] == "converted":
+            return out | {"pages": [(_clean(t), "converted") for t in sidecar[1]]}
         pages = extract_pages(f["abs"], f["format"])
+        if f["format"] == "pdf" and _chars(pages) < MIN_TEXT_CHARS:
+            if sidecar and sidecar[0] == "ocr":
+                return out | {"pages": [(_clean(t), "ocr") for t in sidecar[1]]}
+            out["sidecar_problem"] = doc.get("sidecar_problem")
+        return out | {"pages": [(t, "text") for t in pages]}
     except Exception as exc:
-        return out | {"pages": None, "error": f"text extraction failed: {exc}"}
-    if f["format"] == "pdf" and _chars(pages) < MIN_TEXT_CHARS:
-        ocr, problem = _ocr(files)
-        if ocr is not None:
-            return out | {"pages": [(_clean(t), "ocr") for t in ocr]}
-        out["sidecar_problem"] = problem
-    return out | {"pages": [(t, "text") for t in pages]}
+        return out | {"pages": None, "error": f"text extraction failed: {type(exc).__name__}: {exc}"}
 
 
 # --- build --------------------------------------------------------------------------------------------------------

@@ -592,3 +592,36 @@ def test_check_requires_a_verified_page_count_for_ocr():
         pages, problem = msc.check(doc, "a/minutes/x.pdf", "f" * 64, "ocr", count)
         assert pages is None and "page count" in problem
     assert msc.check(doc, "a/minutes/x.pdf", "f" * 64, "ocr", 1)[1] is None
+
+
+@pytest.mark.parametrize("kind", ["ocr", "converted"])
+def test_byte_identical_copies_whose_valid_sidecars_disagree_are_quarantined(world, kind):
+    data, ext = (make_pdf(["", "", ""]), "pdf") if kind == "ocr" else (OLE2_BYTES, "html")
+    cm3, cm4 = _share_cm3_cm4(world, data, ext)
+    a = "Planning Commission minutes, April 1, 2030." + LONG * 3
+    b = "Town Council minutes, April 2, 2030." + LONG * 3
+    pages = (lambda t: [t, "", PAGE3]) if kind == "ocr" else (lambda t: [t])
+    _write_sidecar(world["raw"], CM, f"meeting-{CM}-3", cm3, pages(b), text_source=kind)
+    _write_sidecar(world["raw"], CM, f"meeting-{CM}-4", cm4, pages(a), text_source=kind)
+    d = _disp(_build(world))
+    for f in (cm3, cm4):
+        assert d[f.name][0] == "quarantined-ambiguous" and "sidecars disagree" in d[f.name][1]
+    assert not _rows(world["out"], f"SELECT 1 FROM pages WHERE meeting_id IN ('meeting-{CM}-3', 'meeting-{CM}-4')")
+
+
+def test_a_sidecar_whose_page_text_is_not_a_string_is_rejected_and_the_build_completes(world):
+    raw, mid = world["raw"], f"meeting-{NOV}-3"
+    for p in (raw / NOV / "minutes").glob(f"{mid}.*"):
+        p.unlink()
+    original = _put(raw, NOV, f"{mid}.html", OLE2_BYTES)
+    doc = msc.make_sidecar(original.relative_to(raw).as_posix(), mti._sha(OLE2_BYTES), ["x"], "converted",
+                           tools={}, settings={})
+    doc["pages"][0]["text"] = 123
+    doc["text_sha256"] = msc.text_sha256([123])  # self-consistent, so only the type check can catch it
+    path = msc.sidecar_path(raw, NOV, mid, "converted")
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(doc))
+    report = _build(world)
+    disp, reason = _disp(report)[f"{mid}.html"]
+    assert disp == "unreadable" and "not a string" in reason
+    assert _disp(report)[f"meeting-{NOV}-1.html"][0] == "indexed"

@@ -66,6 +66,8 @@ def check(doc: dict, original_rel: str, original_sha256: str, text_source: str,
         if [e["page"] for e in entries] != list(range(1, len(entries) + 1)):
             return None, "page entries are not 1..n in order"
         pages = [e["text"] for e in entries]
+        if not all(isinstance(t, str) for t in pages):
+            return None, "a page's text is not a string"
         if text_sha256(pages) != doc["text_sha256"]:
             return None, "its text does not match its own text sha256"
         if text_source == "ocr" and not (isinstance(page_count, int) and page_count > 0):
