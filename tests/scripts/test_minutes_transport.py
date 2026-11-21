@@ -526,3 +526,56 @@ def test_the_live_client_reads_in_small_chunks_so_a_wall_prefix_survives_a_failu
     with pytest.raises(mt.PartialBody) as exc:
         mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: None)
     assert sizes == [mt.CHUNK] and mt.CHUNK <= 4096 and exc.value.body == CHALLENGE_HTML
+
+
+def test_a_trickling_body_is_cut_off_at_the_deadline_by_a_watchdog(monkeypatch):
+    """Socket timeouts measure silence; a server trickling bytes would never trip one. A wall-clock watchdog shuts
+    the socket down at the deadline, which ends the blocked read."""
+    import socket
+    import threading
+
+    import requests
+    a, b = socket.socketpair()
+    stop = threading.Event()
+
+    def trickle():
+        b.sendall(b"%PDF-1.4 ")
+        while not stop.wait(0.05):
+            try:
+                b.sendall(b"x")
+            except OSError:
+                return
+
+    class Conn:
+        sock = a
+
+    class Raw:
+        connection = Conn()
+
+    class Resp:
+        status_code, headers, raw = 200, {}, Raw()
+
+        def iter_content(self, n):  # like urllib3: one read blocks until it has n bytes
+            while True:
+                buf = b""
+                while len(buf) < n:
+                    data = a.recv(n - len(buf))
+                    if not data:
+                        raise ConnectionError("socket shut down")
+                    buf += data
+                yield buf
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(requests.Session, "send", lambda self, p, **kw: Resp())
+    threading.Thread(target=trickle, daemon=True).start()
+    import time as real_time
+    t0 = real_time.time()
+    try:
+        with pytest.raises(mt.PartialBody):
+            mt.http_get(NOV_DOC, {"User-Agent": mt.USER_AGENT}, lambda s, h: None, deadline=t0 + 0.5)
+        assert real_time.time() - t0 < 3
+    finally:
+        stop.set()
+        b.close()

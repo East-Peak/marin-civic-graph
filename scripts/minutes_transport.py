@@ -27,7 +27,9 @@ import hashlib
 import json
 import os
 import re
+import socket
 import tempfile
+import threading
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -132,6 +134,22 @@ def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = 
         left = deadline - time.time()
         timeout = (max(1.0, min(CONNECT_TIMEOUT_S, left)), max(1.0, min(READ_TIMEOUT_S, left)))
     resp = session.send(prepared, allow_redirects=False, stream=True, timeout=timeout, proxies={}, verify=True)
+    # Socket timeouts measure silence, not duration: a server trickling bytes never trips one. A wall-clock watchdog
+    # shuts the socket down at the deadline, which ends a blocked read; the transfer is bounded however it behaves.
+    watchdog = None
+    if deadline is not None:
+        sock = getattr(getattr(getattr(resp, "raw", None), "connection", None), "sock", None)
+
+        def cut() -> None:
+            try:
+                sock.shutdown(socket.SHUT_RDWR)
+            except Exception:
+                pass
+
+        if sock is not None:
+            watchdog = threading.Timer(max(0.0, deadline - time.time()), cut)
+            watchdog.daemon = True
+            watchdog.start()
     try:
         hdrs = {k.lower(): v for k, v in resp.headers.items()}
         on_head(resp.status_code, hdrs)
@@ -149,6 +167,8 @@ def http_get(url: str, headers: dict, on_head: OnHead, deadline: float | None = 
             raise PartialBody(exc, bytes(body)) from exc
         return resp.status_code, bytes(body), hdrs
     finally:
+        if watchdog is not None:
+            watchdog.cancel()
         resp.close()
         session.close()
 
