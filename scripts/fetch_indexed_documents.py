@@ -92,7 +92,14 @@ def is_word_doc(body: bytes) -> bool:
         if kind == 2 and 2 <= name_len <= 64:
             name = body[off:off + name_len - 2].decode("utf-16-le", "replace")
             if name == "WordDocument":
-                return True
+                sector, length = struct.unpack_from("<II", body, off + 116)  # v3 keeps a 32-bit size
+                if major == 4:
+                    length = struct.unpack_from("<Q", body, off + 120)[0]
+                # a Word stream is never a mini stream (it is far over 4096 bytes); it must lie in the file and
+                # begin with the Word FIB identifier (0xA5EC; 0xA5DC for Word 6/95)
+                at = max(512, size) + sector * size
+                return length >= 4096 and at + length <= len(body) + size and \
+                    body[at:at + 2] in (b"\xec\xa5", b"\xdc\xa5")
     return False
 
 

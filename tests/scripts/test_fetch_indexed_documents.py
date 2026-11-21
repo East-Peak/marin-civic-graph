@@ -573,8 +573,9 @@ def test_a_window_interruption_keeps_the_requested_hops_and_is_no_completed_prob
 # --- probe-driven changes (Phase C, 2026-11-21) ------------------------------------------------------------------
 
 TB, MV, SZ = "tiburon-town-council-granicus", "mill-valley-committees", "sausalito-city-council"
-def make_ole2(stream_name="WordDocument", sector_shift=9, truncate=None):
-    """A minimal compound file: header + one directory sector holding a root entry and one stream entry."""
+def make_ole2(stream_name="WordDocument", sector_shift=9, truncate=None, stream_sector=1, stream_size=4096,
+              fib=b"\xec\xa5"):
+    """A minimal compound file: header, one directory sector (root entry + one stream entry) and the stream."""
     import struct
     size = 1 << sector_shift
     header = bytearray(512)
@@ -586,7 +587,10 @@ def make_ole2(stream_name="WordDocument", sector_shift=9, truncate=None):
         raw = name.encode("utf-16-le") + b"\0\0"
         directory[i * 128:i * 128 + len(raw)] = raw
         struct.pack_into("<HB", directory, i * 128 + 64, len(raw), kind)
-    data = bytes(header) + (b"\0" * (size - 512) if size > 512 else b"") + bytes(directory)
+        if kind == 2:
+            struct.pack_into("<IQ", directory, i * 128 + 116, stream_sector, stream_size)
+    stream = fib + b"\0" * (4096 - len(fib))
+    data = bytes(header) + (b"\0" * (size - 512) if size > 512 else b"") + bytes(directory) + stream
     return data[:truncate] if truncate else data
 
 
@@ -687,7 +691,10 @@ def test_an_attempt_excluded_before_any_document_request_uses_no_probe_slot(worl
     make_ole2(truncate=700),                            # cut off inside the directory sector
     make_ole2(stream_name="Workbook"),                  # an Excel file, not Word
     make_ole2(stream_name="PowerPoint Document"),
-], ids=["signature-only", "truncated", "excel", "powerpoint"])
+    make_ole2(stream_sector=10000),                     # the stream points outside the file
+    make_ole2(stream_size=10_000_000),                  # a stream longer than the file
+    make_ole2(fib=b"\x00\x00"),                         # no Word FIB at the stream's start
+], ids=["signature-only", "truncated", "excel", "powerpoint", "stream-outside", "stream-too-long", "no-fib"])
 def test_only_a_structurally_valid_word_file_is_a_doc(data):
     assert fid._document_kind(data) is None
 
