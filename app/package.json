@@ -45,7 +45,7 @@
     "knip": "^6.24.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.11"
   },
   "engines": {
     "node": ">=22 <27"
