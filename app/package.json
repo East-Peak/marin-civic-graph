@@ -23,7 +23,7 @@
     "cytoscape": "^3.33.2",
     "cytoscape-fcose": "^2.2.0",
     "neo4j-driver": "^6.0.1",
-    "next": "16.2.4",
+    "next": "16.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "server-only": "^0.0.1"
@@ -38,14 +38,14 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.1",
-    "@vitest/ui": "^4.1.4",
+    "@vitest/ui": "^4.1.12",
     "eslint": "^9",
-    "eslint-config-next": "16.2.4",
+    "eslint-config-next": "16.4.6",
     "jsdom": "^29.0.2",
     "knip": "^6.24.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.12"
   },
   "engines": {
     "node": ">=22 <27"
